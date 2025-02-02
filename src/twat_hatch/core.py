@@ -63,13 +63,23 @@ class TemplateEngine:
 
         for template_file in theme_dir.rglob("*.j2"):
             rel_path = template_file.relative_to(theme_dir)
+
+            # Handle hidden prefix in file/directory names
+            parts = list(rel_path.parts)
+            for i, part in enumerate(parts):
+                if part.startswith("hidden"):
+                    parts[i] = "." + part[6:]  # Remove 'hidden' prefix and add '.'
+            rel_path = Path(*parts)
+
             output_path = target_dir / rel_path.with_suffix("")
 
             # Create parent directories
             output_path.parent.mkdir(parents=True, exist_ok=True)
 
             # Render and write template
-            content = self.render_template(f"{theme_name}/{rel_path}", context)
+            content = self.render_template(
+                f"{theme_name}/{template_file.relative_to(theme_dir)}", context
+            )
             output_path.write_text(content, encoding="utf-8")
             console.print(f"Created: [cyan]{output_path}[/]")
 
@@ -175,20 +185,32 @@ class PackageInitializer:
     """Manages creation of Python package structures."""
 
     def __init__(
-        self, out_dir: str | Path | None = None, config_path: Path | str | None = None
+        self,
+        out_dir: str | Path | None = None,
+        config_path: Path | str | None = None,
+        base_dir: str | Path | None = None,
     ) -> None:
         """Initialize package generator with output directory and optional config.
 
         Args:
             out_dir: Base directory for generated packages
             config_path: Path to TOML configuration file
+            base_dir: Base directory for resolving relative paths (defaults to cwd)
         """
         self.config: PackageConfig | None = None
+        self.base_dir = Path(base_dir) if base_dir else Path.cwd()
+
         if config_path:
             self.config = PackageConfig.from_toml(config_path)
-            out_dir = self.config.output_dir or out_dir
+            # If output_dir is specified in config and looks relative, make it relative to base_dir
+            if self.config.output_dir:
+                config_out_dir = Path(self.config.output_dir)
+                if not config_out_dir.is_absolute():
+                    out_dir = str(self.base_dir / config_out_dir)
+                else:
+                    out_dir = str(config_out_dir)
 
-        self.out_dir = Path(out_dir) if out_dir else Path.cwd()
+        self.out_dir = Path(out_dir) if out_dir else self.base_dir
 
         # Initialize template engine
         with path("twat_hatch.themes", "") as themes_dir:

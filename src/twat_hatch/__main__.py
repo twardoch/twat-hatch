@@ -10,6 +10,7 @@ and plugins using twat-hatch.
 """
 
 import sys
+import traceback
 from pathlib import Path
 from typing import Optional, Sequence
 
@@ -17,8 +18,12 @@ import fire
 from pydantic import ValidationError
 from rich.console import Console
 from rich.panel import Panel
+from rich.traceback import install
 
 from .core import PackageInitializer
+
+# Install rich traceback handler
+install(show_locals=True)
 
 console = Console()
 
@@ -85,7 +90,20 @@ def cli(
         return False
 
     try:
-        initializer = PackageInitializer(out_dir=out_dir, config_path=config)
+        config_path = Path(config)
+        # If out_dir is provided via CLI, use it as is
+        # Otherwise, make the output directory from config relative to config file location
+        if out_dir is None:
+            # The actual output directory will be determined in PackageInitializer
+            # based on config contents, but we pass the config file's parent directory
+            # as the base directory for relative paths
+            out_dir = str(config_path.parent)
+
+        initializer = PackageInitializer(
+            out_dir=out_dir,
+            config_path=str(config_path),
+            base_dir=str(config_path.parent),
+        )
         create_packages(initializer)
         return True
     except FileNotFoundError as e:
@@ -93,7 +111,8 @@ def cli(
     except ValidationError as e:
         console.print(f"[red]Invalid configuration:\n{str(e)}[/]")
     except Exception as e:
-        console.print(f"[red]Failed to initialize packages: {str(e)}[/]")
+        console.print(f"[red]Failed to initialize packages:[/]")
+        console.print(traceback.format_exc())
 
     return False
 
