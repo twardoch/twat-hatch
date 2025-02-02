@@ -1,64 +1,122 @@
 """Core functionality for Python package initialization."""
 
 import subprocess
-from dataclasses import dataclass
 from importlib.resources import path
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any, Callable, cast
 
 import tomli
+from jinja2 import Environment, FileSystemLoader, select_autoescape
+from pydantic import BaseModel, Field
 from rich.console import Console
 
 console = Console()
 
 
-@dataclass
-class PackageTemplate:
-    """Represents a collection of template files for package generation."""
+class TemplateEngine:
+    """Jinja2-based template engine for package generation."""
 
-    theme_path: Path
-
-    @classmethod
-    def from_theme(cls, theme_name: str = "default") -> "PackageTemplate":
-        """Load template files from a named theme directory.
+    def __init__(self, themes_dir: Path) -> None:
+        """Initialize template engine with themes directory.
 
         Args:
-            theme_name: Name of theme directory to load
+            themes_dir: Base directory containing theme templates
+        """
+        self.loader = FileSystemLoader(str(themes_dir))
+        self.env = Environment(
+            loader=self.loader,
+            autoescape=select_autoescape(),
+            trim_blocks=True,
+            lstrip_blocks=True,
+            keep_trailing_newline=True,
+        )
+
+    def render_template(self, template_path: str, context: dict[str, Any]) -> str:
+        """Render a template with given context.
+
+        Args:
+            template_path: Path to template file relative to themes directory
+            context: Template variables
 
         Returns:
-            Initialized PackageTemplate with theme files
+            Rendered template content
 
         Raises:
-            FileNotFoundError: If theme directory doesn't exist
+            jinja2.TemplateNotFound: If template doesn't exist
         """
-        with path("twat_hatch.themes", theme_name) as theme_path:
-            if not theme_path.exists():
-                raise FileNotFoundError(f"Theme '{theme_name}' not found")
-            return cls(theme_path=Path(theme_path))
+        template = self.env.get_template(template_path)
+        return template.render(**context)
+
+    def apply_theme(
+        self, theme_name: str, target_dir: Path, context: dict[str, Any]
+    ) -> None:
+        """Apply a theme to target directory.
+
+        Args:
+            theme_name: Name of theme to apply
+            target_dir: Directory to write rendered files to
+            context: Template variables
+        """
+        theme_dir = Path(cast(list[str], self.loader.searchpath)[0]) / theme_name
+        if not theme_dir.exists():
+            raise FileNotFoundError(f"Theme '{theme_name}' not found")
+
+        for template_file in theme_dir.rglob("*.j2"):
+            rel_path = template_file.relative_to(theme_dir)
+            output_path = target_dir / rel_path.with_suffix("")
+
+            # Create parent directories
+            output_path.parent.mkdir(parents=True, exist_ok=True)
+
+            # Render and write template
+            content = self.render_template(f"{theme_name}/{rel_path}", context)
+            output_path.write_text(content, encoding="utf-8")
+            console.print(f"Created: [cyan]{output_path}[/]")
 
 
-@dataclass
-class PackageConfig:
+class PackageConfig(BaseModel):
     """Stores configuration values for package generation."""
 
-    core_package: str | None
-    plugins: list[str]
-    output_dir: str | Path | None
-    author_name: str
-    author_email: str
-    github_username: str
-    min_python: str
-    license: str
-    development_status: str
-    core_dependencies: list[str]
-    plugin_dependencies: list[str]
-    dev_dependencies: list[str]
-    ruff_config: dict[str, Any]
-    mypy_config: dict[str, Any]
-    theme_name: str
-    use_mkdocs: bool = False
-    use_semver: bool = False
-    use_vcs: bool = False
+    # Package configuration
+    packages: list[str] = Field(description="List of packages to initialize")
+    plugin_host: str | None = Field(
+        None, description="Optional plugin host package name"
+    )
+    output_dir: Path | None = Field(None, description="Where to create packages")
+
+    # Package metadata
+    author_name: str = Field(..., description="Name of the package author")
+    author_email: str = Field(..., description="Email of the package author")
+    github_username: str = Field(..., description="GitHub username")
+    min_python: str = Field(..., description="Minimum Python version required")
+    license: str = Field(..., description="Package license")
+    development_status: str = Field(..., description="Package development status")
+
+    # Dependencies
+    dependencies: list[str] = Field(
+        default_factory=list, description="Regular package dependencies"
+    )
+    plugin_dependencies: list[str] = Field(
+        default_factory=list, description="Additional dependencies for plugins"
+    )
+    dev_dependencies: list[str] = Field(
+        default_factory=list, description="Development dependencies"
+    )
+
+    # Tool configurations
+    ruff_config: dict[str, Any] = Field(default_factory=dict)
+    mypy_config: dict[str, Any] = Field(default_factory=dict)
+
+    # Features
+    use_mkdocs: bool = Field(
+        default=False, description="Whether to use MkDocs for documentation"
+    )
+    use_semver: bool = Field(
+        default=False, description="Whether to use semantic versioning"
+    )
+    use_vcs: bool = Field(
+        default=False, description="Whether to initialize version control"
+    )
 
     @classmethod
     def from_toml(cls, config_path: Path | str) -> "PackageConfig":
@@ -72,33 +130,45 @@ class PackageConfig:
 
         Raises:
             FileNotFoundError: If config file doesn't exist
-            KeyError: If required fields are missing
+            ValidationError: If required fields are missing or invalid
         """
         config_file = Path(config_path)
         if not config_file.exists():
             raise FileNotFoundError(f"Missing config file: {config_file}")
 
         data = tomli.loads(config_file.read_text())
-        return cls(
-            core_package=data["project"].get("core_package"),
-            plugins=data["project"].get("plugins", []),
-            output_dir=data["project"].get("output_dir"),
-            author_name=data["author"]["name"],
-            author_email=data["author"]["email"],
-            github_username=data["author"]["github_username"],
-            min_python=data["package"]["min_python"],
-            license=data["package"]["license"],
-            development_status=data["package"]["development_status"],
-            core_dependencies=data["dependencies"].get("core", []),
-            plugin_dependencies=data["dependencies"].get("plugins", []),
-            dev_dependencies=data["development"].get("additional_dependencies", []),
-            ruff_config=data["tools"].get("ruff", {}),
-            mypy_config=data["tools"].get("mypy", {}),
-            theme_name=data["theme"].get("name", "default"),
-            use_mkdocs=data["features"].get("mkdocs", False),
-            use_semver=data["features"].get("semver", False),
-            use_vcs=data["features"].get("vcs", False),
-        )
+
+        # Extract sections
+        project_data = data.get("project", {})
+        author_data = data.get("author", {})
+        package_data = data.get("package", {})
+        dependencies_data = data.get("dependencies", {})
+        development_data = data.get("development", {})
+        tools_data = data.get("tools", {})
+        features_data = data.get("features", {})
+
+        # Combine all data into a single dict matching model structure
+        config_dict = {
+            "packages": project_data.get("packages", []),
+            "plugin_host": project_data.get("plugin_host"),
+            "output_dir": project_data.get("output_dir"),
+            "author_name": author_data.get("name"),
+            "author_email": author_data.get("email"),
+            "github_username": author_data.get("github_username"),
+            "min_python": package_data.get("min_python"),
+            "license": package_data.get("license"),
+            "development_status": package_data.get("development_status"),
+            "dependencies": dependencies_data.get("dependencies", []),
+            "plugin_dependencies": dependencies_data.get("plugin_dependencies", []),
+            "dev_dependencies": development_data.get("additional_dependencies", []),
+            "ruff_config": tools_data.get("ruff", {}),
+            "mypy_config": tools_data.get("mypy", {}),
+            "use_mkdocs": features_data.get("mkdocs", False),
+            "use_semver": features_data.get("semver", False),
+            "use_vcs": features_data.get("vcs", False),
+        }
+
+        return cls(**config_dict)
 
 
 class PackageInitializer:
@@ -119,24 +189,10 @@ class PackageInitializer:
             out_dir = self.config.output_dir or out_dir
 
         self.out_dir = Path(out_dir) if out_dir else Path.cwd()
-        theme_name = self.config.theme_name if self.config else "default"
-        self.template = PackageTemplate.from_theme(theme_name)
 
-    def _create_test_file(self, tests_dir: Path, import_name: str) -> None:
-        """Generate basic test file for package.
-
-        Args:
-            tests_dir: Directory to create test file in
-            import_name: Python import name for the package
-        """
-        test_content = f'''"""Test suite for {import_name}."""
-            
-def test_version():
-    """Verify package exposes version."""
-    import {import_name}
-    assert {import_name}.__version__
-'''
-        self._write_file(tests_dir / f"test_{import_name}.py", test_content)
+        # Initialize template engine
+        with path("twat_hatch.themes", "") as themes_dir:
+            self.template_engine = TemplateEngine(Path(themes_dir))
 
     def _init_git_repo(self, pkg_path: Path) -> None:
         """Initialize Git repository in target directory.
@@ -156,57 +212,40 @@ def test_version():
         except (subprocess.CalledProcessError, FileNotFoundError) as err:
             console.print(f"[yellow]Git init failed: {err}[/]")
 
-    def _write_file(self, file_path: Path, content: str) -> None:
-        """Write content to file with parent directory creation.
-
-        Args:
-            file_path: Target file path
-            content: Content to write
-        """
-        file_path.parent.mkdir(parents=True, exist_ok=True)
-        file_path.write_text(content, encoding="utf-8")
-        console.print(f"Created: [cyan]{file_path}[/]")
-
-    def _copy_template_file(
-        self, src: Path, dst: Path, replacements: dict[str, Any]
-    ) -> None:
-        """Copy template file with placeholder replacements.
-
-        Args:
-            src: Source template file
-            dst: Destination path
-            replacements: Key-value mappings for template variables
-        """
-        content = src.read_text(encoding="utf-8")
-        for key, value in replacements.items():
-            content = content.replace(f"{{{key}}}", str(value))
-        self._write_file(dst, content)
-
-    def _get_replacements(
-        self, name: str, core_name: str | None = None, is_plugin: bool = False
-    ) -> dict[str, Any]:
-        """Generate template variable replacements for package files.
+    def _get_context(self, name: str) -> dict[str, Any]:
+        """Generate template context for package files.
 
         Args:
             name: Package name
-            core_name: Core package name for plugins
-            is_plugin: Whether generating a plugin package
 
         Returns:
-            Dictionary of template replacements
+            Dictionary of template context variables
         """
         import_name = name.replace("-", "_")
-        plugin_name = name.split("-")[-1] if is_plugin else import_name
-        replacements = {
+        is_plugin = bool(self.config and self.config.plugin_host)
+        is_plugin_host = bool(
+            self.config and self.config.plugin_host and name == self.config.plugin_host
+        )
+
+        context = {
             "name": name,
-            "core_name": core_name or name,
-            "plugin_name": plugin_name,
             "import_name": import_name,
-            "description": f"Plugin for {core_name}" if is_plugin else "Core package",
+            "title": f"{name} Package",
+            "description": "Python package",
+            "is_plugin": is_plugin,
+            "is_plugin_host": is_plugin_host,
         }
 
+        if is_plugin and self.config and self.config.plugin_host:
+            context.update(
+                {
+                    "plugin_host": self.config.plugin_host,
+                    "description": f"Plugin for {self.config.plugin_host}",
+                }
+            )
+
         if self.config:
-            replacements.update(
+            context.update(
                 {
                     "author_name": self.config.author_name,
                     "author_email": self.config.author_email,
@@ -214,124 +253,72 @@ def test_version():
                     "min_python": self.config.min_python,
                     "license": self.config.license,
                     "development_status": self.config.development_status,
+                    "dependencies": self.config.dependencies,
+                    "plugin_dependencies": self.config.plugin_dependencies,
+                    "dev_dependencies": self.config.dev_dependencies,
+                    "ruff_config": self.config.ruff_config,
+                    "mypy_config": self.config.mypy_config,
+                    "use_mkdocs": self.config.use_mkdocs,
+                    "use_semver": self.config.use_semver,
+                    "use_vcs": self.config.use_vcs,
                 }
             )
 
-        return replacements
+        return context
 
-    def _process_theme_files(
-        self,
-        theme_path: Path,
-        transform: Callable[[Path], Path],
-        replacements: dict[str, Any],
-    ) -> None:
-        """Process template files from theme directory.
+    def initialize_package(self, name: str) -> None:
+        """Initialize a package with appropriate theme.
 
         Args:
-            theme_path: Path to theme directory
-            transform: Function to map source files to destination paths
-            replacements: Template variables to replace
+            name: Name of package to create
+
+        The theme selection logic works as follows:
+        1. If no plugin_host is specified, use default theme
+        2. If plugin_host is specified:
+           - If this package is the plugin_host, use plugin_host theme
+           - Otherwise, use plugin theme
         """
-        for file in (f for f in theme_path.rglob("*") if f.is_file()):
-            self._copy_template_file(file, transform(file), replacements)
+        if not self.config:
+            raise ValueError("No configuration provided")
 
-    def _create_dir(self, path: Path) -> None:
-        """Create directory if it doesn't exist.
+        pkg_path = self.out_dir / name
+        context = self._get_context(name)
 
-        Args:
-            path: Directory path to create
-        """
-        path.mkdir(parents=True, exist_ok=True)
+        # Always apply default theme first
+        self.template_engine.apply_theme("default", pkg_path, context)
 
-    def _create_directory_structure(
-        self, pkg_path: Path, src_path: Path, import_name: str
-    ) -> None:
-        """Create standard package directory structure.
+        # Apply additional theme based on package role
+        if self.config.plugin_host:
+            if name == self.config.plugin_host:
+                # This is the plugin host - apply plugin_host theme
+                self.template_engine.apply_theme("plugin_host", pkg_path, context)
+            else:
+                # This is a plugin - apply plugin theme
+                self.template_engine.apply_theme("plugin", pkg_path, context)
 
-        Args:
-            pkg_path: Root package directory
-            src_path: Source code directory
-            import_name: Python import name
-        """
-        self._create_dir(pkg_path)
-        self._create_dir(src_path)
+        # Apply optional themes
+        if self.config.use_mkdocs:
+            self.template_engine.apply_theme("mkdocs", pkg_path, context)
 
-        tests_dir = pkg_path / "tests"
-        self._create_dir(tests_dir)
-        (tests_dir / "__init__.py").touch()
-        self._create_test_file(tests_dir, import_name)
-
-        def core_transform(file: Path) -> Path:
-            target_name = file.name.replace("hatch_", "")
-            return (
-                src_path / target_name
-                if target_name.endswith(".py")
-                else pkg_path / target_name
-            )
-
-        core_replacements = {
-            "name": import_name,
-            "core_name": import_name,
-            "plugin_name": import_name.split("_")[-1],
-            "import_name": import_name,
-            "title": f"{import_name} - Core Package",
-            "description": "Core package for plugin management",
-            "usage": f"import {import_name}\nplugin = {import_name}.plugin_name",
-        }
-        self._process_theme_files(
-            self.template.theme_path, core_transform, core_replacements
-        )
-
-        if self.config and self.config.use_mkdocs:
-            self._setup_mkdocs(pkg_path, import_name)
-
-        if self.config and self.config.use_vcs:
+        # Initialize Git repository if requested
+        if self.config.use_vcs:
             self._init_git_repo(pkg_path)
 
-    def _setup_mkdocs(self, pkg_path: Path, import_name: str) -> None:
-        """Configure MkDocs documentation setup.
+    def initialize_all(self) -> None:
+        """Initialize all packages specified in config.
 
-        Args:
-            pkg_path: Root package directory
-            import_name: Python import name
+        The initialization order is:
+        1. Initialize plugin_host first (if specified)
+        2. Initialize all other packages
         """
-        docs_dir = pkg_path / "docs"
-        self._create_dir(docs_dir)
+        if not self.config:
+            raise ValueError("No configuration provided")
 
-        mkdocs_theme = PackageTemplate.from_theme("mkdocs")
+        # Initialize plugin host first if specified
+        if self.config.plugin_host:
+            self.initialize_package(self.config.plugin_host)
 
-        def mkdocs_transform(file: Path) -> Path:
-            match file.name:
-                case "hatch_mkdocs.yml":
-                    return pkg_path / "mkdocs.yml"
-                case _:
-                    return docs_dir / file.name.replace("hatch_docs_", "")
-
-        self._process_theme_files(
-            mkdocs_theme.theme_path,
-            mkdocs_transform,
-            self._get_replacements(import_name),
-        )
-
-    def init_core_package(self, name: str) -> None:
-        """Generate core package structure.
-
-        Args:
-            name: Name of core package
-        """
-        import_name = name.replace("-", "_")
-        pkg_path = self.out_dir / name
-        src_path = pkg_path / "src" / import_name
-        self._create_directory_structure(pkg_path, src_path, import_name)
-
-    def init_plugin_package(self, name: str, core_name: str) -> None:
-        """Generate plugin package structure.
-
-        Args:
-            name: Name of plugin package
-            core_name: Name of core package
-        """
-        import_name = name.replace("-", "_")
-        pkg_path = self.out_dir / name
-        src_path = pkg_path / "src" / import_name
-        self._create_directory_structure(pkg_path, src_path, import_name)
+        # Initialize all other packages
+        for name in self.config.packages:
+            if name != self.config.plugin_host:
+                self.initialize_package(name)

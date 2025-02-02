@@ -1,0 +1,82 @@
+# Project configuration
+[project]
+# List of packages to initialize
+packages = [
+    "twat-hatch",
+    "twat"  # Example plugin package
+]
+# Optional plugin host package name (required for plugin creation)
+plugin_host = "twat"
+# Output directory (optional, defaults to current directory)
+output_dir = "packages"
+
+# Author information
+[author]
+name = "Adam Twardoch"
+email = "adam+github@twardoch.com"
+github_username = "twardoch"
+
+# Package configuration
+[package]
+min_python = "3.8"
+license = "MIT"
+development_status = "4 - Beta"
+
+# Dependencies
+[dependencies]
+# Regular package dependencies
+dependencies = [
+    "fire>=0.5.0",
+    "rich>=13.7.0",
+    "pydantic>=2.0.0",
+    "tomli>=2.0.0; python_version < '3.11'",
+    "typing-extensions>=4.0.0; python_version < '3.10'",
+    "jinja2>=3.1.0"
+]
+# Additional dependencies for plugins
+plugin_dependencies = [
+    "pydantic>=2.0.0"
+]
+# Development dependencies
+dev_dependencies = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "ruff>=0.1.0",
+    "mypy>=1.0.0",
+    "pydantic[mypy]>=2.0.0"
+]
+
+# Tool configurations
+[tools]
+ruff = { line-length = 88, target-version = "py38", select = ["E", "F", "B", "I", "UP"] }
+mypy = { python_version = "3.8", warn_return_any = true, disallow_untyped_defs = true }
+
+# Features
+[features]
+mkdocs = false  # Enable MkDocs documentation
+semver = true   # Use semantic versioning
+vcs = true      # Enable version control system integration
+
+# Template configuration
+[template]
+name = "default"  # Template theme to use for package generation
+namespace_style = "modern"  # Use modern namespace package style
+entry_points = true  # Generate entry points for plugin discovery
+
+# Generated file structure
+[template.files]
+core = [
+    "README.md",
+    "pyproject.toml",
+    "src/{package}/__init__.py",
+    "tests/conftest.py",
+    "tests/test_{package}.py"
+]
+plugin = [
+    "README.md",
+    "pyproject.toml",
+    "src/{package}/__init__.py",
+    "src/{package}/plugin.py",
+    "tests/conftest.py",
+    "tests/test_{package}.py"
+] 

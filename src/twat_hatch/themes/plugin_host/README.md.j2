@@ -1,0 +1,23 @@
+{% extends "default/README.md.j2" %}
+
+{% block features %}
+- Plugin system for Python packages
+- Dynamic plugin loading and discovery
+- Modern Python packaging with PEP 621 compliance
+- Type hints and runtime type checking
+- Comprehensive test suite and documentation
+- CI/CD ready configuration
+{% endblock %}
+
+{% block usage %}
+```python
+import {{ import_name }}
+
+# Load a plugin
+plugin = {{ import_name }}.plugin_name
+
+# List available plugins
+from importlib.metadata import entry_points
+plugins = entry_points(group="{{ name }}.plugins")
+```
+{% endblock %} 

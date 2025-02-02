@@ -1,0 +1,15 @@
+{% extends "default/pyproject.toml.j2" %}
+
+{% block dependencies %}
+dependencies = [
+    "{{ plugin_host }}",
+    {% for dep in plugin_dependencies | default([]) %}
+    "{{ dep }}",
+    {% endfor %}
+]
+{% endblock %}
+
+{% block entry_points %}
+[project.entry-points."{{ plugin_host }}.plugins"]
+{{ name }} = "{{ import_name }}.plugin:Plugin"
+{% endblock %} 

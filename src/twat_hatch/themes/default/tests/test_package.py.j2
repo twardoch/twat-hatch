@@ -1,0 +1,15 @@
+"""Test suite for {{ import_name }}."""
+
+def test_version():
+    """Verify package exposes version."""
+    import {{ import_name }}
+    assert {{ import_name }}.__version__
+
+{% if is_plugin %}
+def test_plugin():
+    """Verify plugin functionality."""
+    import {{ import_name }}
+    plugin = {{ import_name }}.Plugin()
+    plugin.set("test", "value")
+    assert plugin.get("test") == "value"
+{% endif %} 

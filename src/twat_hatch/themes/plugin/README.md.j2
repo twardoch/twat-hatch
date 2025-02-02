@@ -1,0 +1,16 @@
+{% extends "default/README.md.j2" %}
+
+{% block features %}
+- Plugin for {{ plugin_host }}
+- Modern Python packaging with PEP 621 compliance
+- Type hints and runtime type checking
+- Comprehensive test suite and documentation
+- CI/CD ready configuration
+{% endblock %}
+
+{% block usage %}
+```python
+import {{ import_name }}
+plugin = {{ import_name }}.plugin
+```
+{% endblock %} 
