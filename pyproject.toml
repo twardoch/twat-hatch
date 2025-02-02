@@ -1,0 +1,106 @@
+[build-system]
+requires = ["hatchling>=1.9.3", "hatch-vcs>=0.3.0", "hatch-autorun", "hatch-semver", "hatch-minify", "hatch-pip-compile"]
+build-backend = "hatchling.build"
+
+[project]
+name = "twat-hatch"
+dynamic = ["version"]
+description = "Plugin for twat that provides package initialization functionality"
+readme = "README.md"
+requires-python = ">=3.8"
+license = "MIT"
+keywords = ["plugin", "twat-plugin", "package-template"]
+authors = [
+    { name = "Adam Twardoch", email = "adam+github@twardoch.com" }
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+dependencies = [
+    # "twat>=0.1.0",
+    "fire>=0.5.0",
+    "rich>=13.7.0",
+    "typing-extensions>=4.0.0; python_version < '3.10'"
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "ruff>=0.1.0",
+    "mypy>=1.0.0",
+]
+
+[project.urls]
+Documentation = "https://github.com/twardoch/twat-hatch#readme"
+Issues = "https://github.com/twardoch/twat-hatch/issues"
+Source = "https://github.com/twardoch/twat-hatch"
+
+[project.entry-points."twat.plugins"]
+hatch = "twat_hatch"
+
+[project.scripts]
+twat-hatch = "twat_hatch.cli:main"
+
+[tool.hatch.version]
+source = "vcs"
+raw-options = { version_scheme = "post-release" }
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/twat_hatch"]
+
+[tool.hatch.envs.default]
+dependencies = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "ruff>=0.1.0",
+    "mypy>=1.0.0",
+]
+
+[tool.hatch.envs.default.scripts]
+test = "pytest {args:tests}"
+test-cov = "pytest --cov={args:twat_hatch} tests/"
+lint = ["ruff check .", "mypy src/"]
+format = ["ruff check --fix ."]
+autorun = ["python", "-m", "twat_hatch.autorun"]
+
+[[tool.hatch.envs.default.matrix]]
+python = ["3.9", "3.10", "3.11", "3.12"]
+
+[tool.hatch.plugins.version-source.semver]
+# Configuration for hatch-semver
+
+[tool.hatch.build.hooks.minify]
+# Configuration for hatch-minify
+
+[tool.hatch.plugins.environment.pip-compile]
+# Configuration for hatch-pip-compile
+
+[tool.ruff]
+line-length = 88
+target-version = "py38"
+select = ["E", "F", "B", "I", "UP"]
+ignore = []
+
+[tool.mypy]
+python_version = "3.8"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_unreachable = true 

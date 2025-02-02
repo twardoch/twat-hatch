@@ -1,0 +1,81 @@
+# Project configuration
+[project]
+# Core package name (required for plugin creation)
+core_package = "my-core-package"
+
+# List of plugin packages to create
+plugins = [
+    "my-plugin-1",
+    "my-plugin-2"
+]
+
+# Output directory (optional, defaults to current directory)
+output_dir = "packages"
+
+# Author information
+[author]
+name = "Your Name"
+email = "you@example.com"
+github_username = "username"
+
+# Package configuration
+[package]
+min_python = "3.8"
+license = "MIT"
+development_status = "4 - Beta"
+
+# Dependencies
+[dependencies]
+# Additional core package dependencies beyond the defaults
+core = [
+    "importlib-metadata>=4.6; python_version < '3.10'",
+    "typing-extensions>=4.0.0; python_version < '3.10'"
+]
+# Additional dependencies for plugins
+plugins = [
+    "pydantic>=2.0.0"
+]
+
+# Development configuration
+[development]
+# Development dependencies beyond the defaults
+additional_dependencies = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "ruff>=0.1.0",
+    "mypy>=1.0.0"
+]
+
+# Tool configurations
+[tools.ruff]
+line_length = 88
+target_version = "py38"
+select = ["E", "F", "B", "I", "UP"]
+ignore = []
+fix = true
+unsafe-fixes = false
+format = true
+
+[tools.mypy]
+python_version = "3.8"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_unreachable = true
+
+# Theme configuration
+[theme]
+name = "default"  # Theme to use for package generation
+
+# Feature flags
+[features]
+mkdocs = false  # Enable MkDocs documentation
+semver = true  # Use semantic versioning
+vcs = true     # Enable VCS integration 
