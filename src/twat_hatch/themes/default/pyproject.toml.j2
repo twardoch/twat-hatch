@@ -1,10 +1,11 @@
 [build-system]
 requires = [
-    "hatchling>=1.21.0",
-    "hatch-vcs>=0.3.0",
-    "hatch-semver>=0.1.0"
+    "hatchling> = 1.21.0",
+    "hatch-vcs> = 0.3.0",
+    "hatch-semver> = 0.1.0",
 ]
 build-backend = "hatchling.build"
+
 
 [project]
 name = "{{ name }}"
@@ -14,9 +15,6 @@ readme = "README.md"
 requires-python = ">={{ min_python }}"
 license = "{{ license }}"
 keywords = []
-authors = [
-    { name = "{{ author_name }}", email = "{{ author_email }}" }
-]
 classifiers = [
     "Development Status :: {{ development_status }}",
     "Programming Language :: Python",
@@ -30,20 +28,36 @@ classifiers = [
 ]
 
 {% block dependencies %}
-dependencies = {{ dependencies | default([]) }}
+dependencies = [
+    {% for dep in dependencies | default([]) %}
+    "{{ dep }}",
+    {% endfor %}
+]
 {% endblock %}
+
+
+[[project.authors]]
+name = "{{ author_name }}"
+email = "{{ author_email }}"
+
 
 [project.urls]
 Documentation = "https://github.com/{{ github_username }}/{{ name }}#readme"
 Issues = "https://github.com/{{ github_username }}/{{ name }}/issues"
 Source = "https://github.com/{{ github_username }}/{{ name }}"
 
+
 {% block entry_points %}
 {% endblock %}
 
+
 [tool.hatch.version]
 source = "vcs"
-raw-options = { version_scheme = "semver-pep440" }
+
+
+[tool.hatch.version.raw-options]
+version_scheme = "semver-pep440"
+
 
 [tool.hatch.envs.default]
 dependencies = [
@@ -56,14 +70,17 @@ dependencies = [
     {% endfor %}
 ]
 
+
 [tool.hatch.envs.default.scripts]
 test = "pytest {args:tests}"
 test-cov = "pytest --cov-report=term-missing --cov-config=pyproject.toml --cov=src/{{ import_name }} --cov=tests {args:tests}"
 type-check = "mypy src/{{ import_name }} tests"
 lint = ["ruff check src/{{ import_name }} tests", "ruff format src/{{ import_name }} tests"]
 
+
 [[tool.hatch.envs.all.matrix]]
 python = ["3.8", "3.9", "3.10", "3.11", "3.12"]
+
 
 [tool.hatch.envs.lint]
 detached = true
@@ -72,16 +89,20 @@ dependencies = [
     "mypy>=1.0.0",
     "ruff>=0.1.0",
 ]
+
+
 [tool.hatch.envs.lint.scripts]
 typing = "mypy --install-types --non-interactive {args:src/{{ import_name }} tests}"
 style = ["ruff check {args:.}", "ruff format {args:.}"]
 fmt = ["ruff format {args:.}", "ruff check --fix {args:.}"]
 all = ["style", "typing"]
 
+
 [tool.black]
 target-version = ["py38"]
 line-length = 88
 skip-string-normalization = true
+
 
 [tool.ruff]
 target-version = "py38"
@@ -118,8 +139,10 @@ ignore = [
     "ISC001",   # Implicit string concatenation
 ]
 
+
 [tool.ruff.per-file-ignores]
 "tests/*" = ["S101"]
+
 
 [tool.coverage.run]
 source_pkgs = ["{{ import_name }}", "tests"]
@@ -129,9 +152,11 @@ omit = [
     "src/{{ import_name }}/__about__.py",
 ]
 
+
 [tool.coverage.paths]
 {{ import_name }} = ["src/{{ import_name }}", "*/{{ name }}/src/{{ import_name }}"]
 tests = ["tests", "*/{{ name }}/tests"]
+
 
 [tool.coverage.report]
 exclude_lines = [

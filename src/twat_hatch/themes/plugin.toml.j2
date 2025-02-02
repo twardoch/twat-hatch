@@ -1,13 +1,11 @@
-# Project configuration
+# Project configuration for plugin theme
 [project]
 # List of packages to initialize
 packages = [
-    "my-package",
-    "my-plugin-1",
-    "my-plugin-2"
+    "my-plugin"
 ]
 
-# Optional plugin host package (if creating a plugin system)
+# Plugin host package (required for plugins)
 plugin_host = "my-package"
 
 # Output directory (optional, defaults to current directory)
@@ -33,7 +31,7 @@ dependencies = [
     "typing-extensions>=4.0.0; python_version < '3.10'"
 ]
 
-# Additional dependencies for plugins
+# Plugin-specific dependencies
 plugin_dependencies = [
     "pydantic>=2.0.0"
 ]

@@ -298,10 +298,13 @@ class PackageInitializer:
             name: Name of package to create
 
         The theme selection logic works as follows:
-        1. If no plugin_host is specified, use default theme
-        2. If plugin_host is specified:
-           - If this package is the plugin_host, use plugin_host theme
-           - Otherwise, use plugin theme
+        1. Always apply default theme first as the base
+        2. Then apply one of:
+           - If plugin_host is specified:
+             * If this package is the plugin_host, apply plugin_host theme
+             * Otherwise, apply plugin theme
+           - Otherwise, apply package theme for regular packages
+        3. Apply optional themes (e.g. mkdocs) if enabled
         """
         if not self.config:
             raise ValueError("No configuration provided")
@@ -309,7 +312,7 @@ class PackageInitializer:
         pkg_path = self.out_dir / name
         context = self._get_context(name)
 
-        # Always apply default theme first
+        # Always apply default theme first as the base
         self.template_engine.apply_theme("default", pkg_path, context)
 
         # Apply additional theme based on package role
@@ -320,6 +323,9 @@ class PackageInitializer:
             else:
                 # This is a plugin - apply plugin theme
                 self.template_engine.apply_theme("plugin", pkg_path, context)
+        else:
+            # Regular package - apply package theme
+            self.template_engine.apply_theme("package", pkg_path, context)
 
         # Apply optional themes
         if self.config.use_mkdocs:
