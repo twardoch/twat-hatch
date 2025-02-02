@@ -67,8 +67,11 @@ class TemplateEngine:
             # Handle hidden prefix in file/directory names
             parts = list(rel_path.parts)
             for i, part in enumerate(parts):
-                if part.startswith("hidden"):
-                    parts[i] = "." + part[6:]  # Remove 'hidden' prefix and add '.'
+                if part.startswith("hidden."):
+                    parts[i] = part.replace("hidden.", ".")
+                # Handle __package_name__ template
+                elif part == "__package_name__.py.j2":
+                    parts[i] = f"{context['import_name']}.py.j2"
             rel_path = Path(*parts)
 
             output_path = target_dir / rel_path.with_suffix("")
