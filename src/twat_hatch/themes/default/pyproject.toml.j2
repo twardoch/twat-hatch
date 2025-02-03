@@ -5,6 +5,8 @@ requires = [
 ]
 build-backend = "hatchling.build"
 
+[tool.hatch.build.targets.wheel]
+packages = ["src/{{ import_name }}"]
 
 [project]
 name = "{{ name }}"

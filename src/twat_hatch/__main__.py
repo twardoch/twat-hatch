@@ -9,10 +9,8 @@ This module provides the main CLI interface for creating Python packages
 and plugins using twat-hatch.
 """
 
-import sys
 import traceback
 from pathlib import Path
-from typing import Optional, Sequence
 
 import fire
 from pydantic import ValidationError
@@ -20,7 +18,7 @@ from rich.console import Console
 from rich.panel import Panel
 from rich.traceback import install
 
-from .core import PackageInitializer
+from .hatch import PackageInitializer
 
 # Install rich traceback handler
 install(show_locals=True)

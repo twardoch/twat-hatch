@@ -309,8 +309,8 @@ class PackageInitializer:
         if not self.config:
             raise ValueError("No configuration provided")
 
-        pkg_path = self.out_dir / name
         context = self._get_context(name)
+        pkg_path = self.out_dir / context["import_name"]
 
         # Always apply default theme first as the base
         self.template_engine.apply_theme("default", pkg_path, context)

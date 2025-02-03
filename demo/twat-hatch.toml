@@ -1,7 +1,7 @@
 [project]
-packages = [ "twat-hatch", "twat" ]
+packages = [ "twat-cache", "twat-multi", "twat-pipeline" ]
 plugin_host = "twat"
-output_dir = "packages"
+output_dir = "."
 
 
 [author]
@@ -11,19 +11,19 @@ github_username = "twardoch"
 
 
 [package]
-min_python = "3.8"
+min_python = "3.10"
 license = "MIT"
 development_status = "4 - Beta"
 
 
 [dependencies]
 dependencies = [
-"fire> = 0.5.0",
-"rich> = 13.7.0",
-"pydantic> = 2.0.0",
-"tomli> = 2.0.0; python_version < '3.11'",
-"typing-extensions> = 4.0.0; python_version < '3.10'",
-"jinja2> = 3.1.0"
+"fire>=0.5.0",
+"rich>=13.7.0",
+"pydantic>=2.0.0",
+"tomli>=2.0.0; python_version < '3.11'",
+"typing-extensions>=4.0.0; python_version < '3.10'",
+"jinja2>=3.1.0"
 ]
 plugin_dependencies = [ "pydantic>=2.0.0" ]
 dev_dependencies = [
@@ -37,17 +37,15 @@ dev_dependencies = [
 
 [tools.ruff]
 line-length = 88
-target-version = "py38"
+target-version = "py310"
 select = [ "E", "F", "B", "I", "UP" ]
 
 
 [tools.mypy]
-python_version = "3.8"
+python_version = "3.10"
 warn_return_any = true
 disallow_untyped_defs = true
 
 
 [features]
-mkdocs = false
-semver = true
 vcs = true
