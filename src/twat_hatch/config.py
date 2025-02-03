@@ -207,13 +207,14 @@ class ConfigurationGenerator:
     def __init__(self) -> None:
         """Initialize generator with template engine."""
         with path("twat_hatch.themes", "") as themes_dir:
-            self.loader = FileSystemLoader(str(themes_dir))
+            self.loader = FileSystemLoader(str(themes_dir), followlinks=True)
             self.env = Environment(
                 loader=self.loader,
                 autoescape=select_autoescape(),
                 trim_blocks=True,
                 lstrip_blocks=True,
                 keep_trailing_newline=True,
+                auto_reload=True,
             )
         self.prompts = ConfigurationPrompts()
 
@@ -316,10 +317,8 @@ class ConfigurationGenerator:
             context.update(kwargs)
             if "python_version_info" not in context:
                 # Get min_python with a default value
-                min_python_val = context.get("min_python")
-                min_python = (
-                    str(min_python_val) if min_python_val is not None else "3.8"
-                )
+                min_python_val = context.get("min_python", "3.10")
+                min_python = str(min_python_val)
                 max_python = context.get("max_python")
                 context["python_version_info"] = self._get_python_version_info(
                     min_python,
@@ -331,6 +330,28 @@ class ConfigurationGenerator:
                 context["name"] = "my-package"
             if package_type == "plugin" and "plugin_host" not in context:
                 context["plugin_host"] = "my-plugin-host"
+            if "min_python" not in context:
+                context["min_python"] = "3.10"
+            if "license" not in context:
+                context["license"] = "MIT"
+            if "development_status" not in context:
+                context["development_status"] = "4 - Beta"
+            if "use_mkdocs" not in context:
+                context["use_mkdocs"] = False
+            if "use_semver" not in context:
+                context["use_semver"] = True
+            if "use_vcs" not in context:
+                context["use_vcs"] = True
+            if "dependencies" not in context:
+                context["dependencies"] = []
+            if "dev_dependencies" not in context:
+                context["dev_dependencies"] = []
+            if "plugin_dependencies" not in context:
+                context["plugin_dependencies"] = []
+
+        # Print debug information
+        console.print(f"[yellow]Template path: {template.template_path}[/]")
+        console.print(f"[yellow]Context: {context}[/]")
 
         # Render template
         template_obj = self.env.get_template(template.template_path)
