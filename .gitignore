@@ -1,5 +1,6 @@
 *_autogen/
 .DS_Store
+__version__.py
 __pycache__/
 _Chutzpah*
 _deps
@@ -243,4 +244,3 @@ UpgradeLog*.htm
 UpgradeLog*.XML
 x64/
 x86/
-src/twat_hatch/__version__.py
