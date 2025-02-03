@@ -95,9 +95,6 @@ autorun = ["python", "-m", "twat_hatch.autorun"]
 [[tool.hatch.envs.default.matrix]]
 python = ["3.10", "3.11", "3.12"]
 
-[tool.hatch.plugins.version-source]
-semver = {  }
-
 [tool.hatch.plugins.environment]
 pip-compile = {  }
 

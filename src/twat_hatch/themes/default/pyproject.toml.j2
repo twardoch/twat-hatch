@@ -87,7 +87,6 @@ python = {{ python_version_info.classifiers | map('split', ' :: ') | map('last')
 [tool.hatch.envs.lint]
 detached = true
 dependencies = [
-    "black>=23.1.0",
     "mypy>=1.0.0",
     "ruff>=0.1.0",
 ]
@@ -98,12 +97,6 @@ typing = "mypy --install-types --non-interactive {args:src/{{ import_name }} tes
 style = ["ruff check {args:.}", "ruff format {args:.}"]
 fmt = ["ruff format {args:.}", "ruff check --fix {args:.}"]
 all = ["style", "typing"]
-
-
-[tool.black]
-target-version = {{ python_version_info.black_target | tojson }}
-line-length = 88
-skip-string-normalization = true
 
 
 [tool.ruff]

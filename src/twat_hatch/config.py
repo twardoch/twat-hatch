@@ -8,11 +8,8 @@ from typing import Any, Literal
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from pydantic import BaseModel, Field
-from rich.console import Console
-from rich.prompt import Confirm, IntPrompt, Prompt
-from rich.theme import Theme
 
-console = Console(theme=Theme({"prompt": "cyan", "question": "bold cyan"}))
+from .utils import PyVer
 
 PackageType = Literal["package", "plugin", "plugin-host"]
 
@@ -45,162 +42,6 @@ PACKAGE_TEMPLATES = {
 }
 
 
-class ConfigurationPrompts:
-    """Interactive configuration prompts."""
-
-    def __init__(self) -> None:
-        """Initialize prompts."""
-        self.console = Console()
-
-    def get_package_name(self, package_type: PackageType) -> str:
-        """Get package name from user.
-
-        Args:
-            package_type: Type of package being created
-
-        Returns:
-            Package name
-        """
-        default = "my-package"
-        if package_type == "plugin":
-            default = "my-plugin"
-        elif package_type == "plugin-host":
-            default = "my-plugin-host"
-
-        return Prompt.ask(
-            "[question]Package name[/]",
-            default=default,
-            show_default=True,
-        )
-
-    def get_plugin_host(self) -> str:
-        """Get plugin host package name for plugins.
-
-        Returns:
-            Plugin host package name
-        """
-        return Prompt.ask(
-            "[question]Plugin host package name[/]",
-            default="my-plugin-host",
-            show_default=True,
-        )
-
-    def get_author_info(self) -> dict[str, str]:
-        """Get author information.
-
-        Returns:
-            Dictionary with author name, email, and GitHub username
-        """
-        return {
-            "author_name": Prompt.ask(
-                "[question]Author name[/]",
-                default="Your Name",
-                show_default=True,
-            ),
-            "author_email": Prompt.ask(
-                "[question]Author email[/]",
-                default="your.email@example.com",
-                show_default=True,
-            ),
-            "github_username": Prompt.ask(
-                "[question]GitHub username[/]",
-                default="yourusername",
-                show_default=True,
-            ),
-        }
-
-    def get_python_versions(self) -> dict[str, str | None]:
-        """Get Python version requirements.
-
-        Returns:
-            Dictionary with min_python and optional max_python
-        """
-        min_major = IntPrompt.ask(
-            "[question]Minimum Python major version[/]",
-            default=3,
-            show_default=True,
-        )
-        min_minor = IntPrompt.ask(
-            "[question]Minimum Python minor version[/]",
-            default=8,
-            show_default=True,
-        )
-        min_python = f"{min_major}.{min_minor}"
-
-        if Confirm.ask(
-            "[question]Specify maximum Python version?[/]",
-            default=False,
-            show_default=True,
-        ):
-            max_major = IntPrompt.ask(
-                "[question]Maximum Python major version[/]",
-                default=min_major,
-                show_default=True,
-            )
-            max_minor = IntPrompt.ask(
-                "[question]Maximum Python minor version[/]",
-                default=12,
-                show_default=True,
-            )
-            max_python = f"{max_major}.{max_minor}"
-        else:
-            max_python = None
-
-        return {"min_python": min_python, "max_python": max_python}
-
-    def get_package_info(self) -> dict[str, Any]:
-        """Get package information.
-
-        Returns:
-            Dictionary with license and development status
-        """
-        return {
-            "license": Prompt.ask(
-                "[question]License[/]",
-                default="MIT",
-                show_default=True,
-            ),
-            "development_status": Prompt.ask(
-                "[question]Development status[/]",
-                default="4 - Beta",
-                show_default=True,
-                choices=[
-                    "1 - Planning",
-                    "2 - Pre-Alpha",
-                    "3 - Alpha",
-                    "4 - Beta",
-                    "5 - Production/Stable",
-                    "6 - Mature",
-                    "7 - Inactive",
-                ],
-            ),
-        }
-
-    def get_features(self) -> dict[str, bool]:
-        """Get feature flags.
-
-        Returns:
-            Dictionary with feature flags
-        """
-        return {
-            "use_mkdocs": Confirm.ask(
-                "[question]Use MkDocs for documentation?[/]",
-                default=False,
-                show_default=True,
-            ),
-            "use_semver": Confirm.ask(
-                "[question]Use semantic versioning?[/]",
-                default=True,
-                show_default=True,
-            ),
-            "use_vcs": Confirm.ask(
-                "[question]Initialize Git repository?[/]",
-                default=True,
-                show_default=True,
-            ),
-        }
-
-
 class ConfigurationGenerator:
     """Generates package configuration files."""
 
@@ -216,57 +57,6 @@ class ConfigurationGenerator:
                 keep_trailing_newline=True,
                 auto_reload=True,
             )
-        self.prompts = ConfigurationPrompts()
-
-    def _get_python_version_info(
-        self, min_python: str | None = None, max_python: str | None = None
-    ) -> dict[str, Any]:
-        """Get Python version information in various formats needed by tools.
-
-        Args:
-            min_python: Minimum Python version (e.g. "3.8")
-            max_python: Maximum Python version (e.g. "3.12") or None
-
-        Returns:
-            Dictionary with Python version information
-        """
-        # Use default min_python if not provided
-        min_python = min_python if min_python is not None else "3.8"
-
-        # Extract major.minor from min_python (e.g. "3.8" from "3.8")
-        min_ver = min_python.split(".")
-        min_major, min_minor = int(min_ver[0]), int(min_ver[1])
-
-        # Default max version is current latest Python
-        current_max = 12  # Update this as new Python versions are released
-
-        # If max_python is specified, use it instead
-        if max_python:
-            max_ver = max_python.split(".")
-            max_major, max_minor = int(max_ver[0]), int(max_ver[1])
-            if max_major != min_major:
-                raise ValueError(
-                    f"Maximum Python version {max_python} must have same major version as minimum {min_python}"
-                )
-            current_max = max_minor
-
-        # Generate supported version classifiers
-        classifiers = []
-        for i in range(min_minor, current_max + 1):
-            classifiers.append(f"Programming Language :: Python :: {min_major}.{i}")
-
-        # Build requires-python string
-        requires = f">={min_python}"
-        if max_python:
-            requires += f",<{max_python}.999"
-
-        return {
-            "requires_python": requires,
-            "classifiers": classifiers,
-            "ruff_target": f"py{min_major}{min_minor}",
-            "black_target": [f"py{min_major}{min_minor}"],
-            "mypy_version": min_python,
-        }
 
     def generate_config(
         self,
@@ -274,84 +64,67 @@ class ConfigurationGenerator:
         interactive: bool = True,
         **kwargs: Any,
     ) -> str:
-        """Generate configuration file content.
+        """Generate configuration content.
 
         Args:
-            package_type: Type of package to generate config for
-            interactive: Whether to prompt for values interactively
-            **kwargs: Optional pre-defined values
+            package_type: Type of package to create
+            interactive: Whether to prompt for missing values (unused, handled by CLI)
+            **kwargs: Configuration values to use
 
         Returns:
-            Generated configuration file content
+            Configuration content as string
         """
+        # Get template
         template = PACKAGE_TEMPLATES[package_type]
-        context = {}
 
-        if interactive:
-            # Get package name
-            context["name"] = self.prompts.get_package_name(package_type)
+        # Initialize context with provided values
+        context = kwargs.copy()
 
-            # Get plugin host for plugins
-            if package_type == "plugin":
-                context["plugin_host"] = self.prompts.get_plugin_host()
+        # Set default values for missing fields
+        if not context.get("name"):
+            context["name"] = "my-package"
+        if package_type == "plugin" and not context.get("plugin_host"):
+            context["plugin_host"] = "my-plugin-host"
 
-            # Get author information
-            context.update(self.prompts.get_author_info())
+        # Set author defaults if not provided
+        if not context.get("author_name"):
+            context["author_name"] = "AUTHOR_NAME"
+        if not context.get("author_email"):
+            context["author_email"] = "author@example.com"
+        if not context.get("github_username"):
+            context["github_username"] = "github_username"
 
-            # Get Python versions and version info
-            python_versions = self.prompts.get_python_versions()
-            min_python = python_versions["min_python"]
-            max_python = python_versions.get("max_python")
-            context.update(python_versions)
-            context["python_version_info"] = self._get_python_version_info(
-                min_python,
-                max_python,
-            )
+        # Set standard defaults
+        if not context.get("license"):
+            context["license"] = "MIT"
+        if not context.get("development_status"):
+            context["development_status"] = "4 - Beta"
+        context["use_mkdocs"] = bool(context.get("use_mkdocs", False))
+        context["use_vcs"] = bool(context.get("use_vcs", True))
+        if "dependencies" not in context:
+            context["dependencies"] = []
+        if "dev_dependencies" not in context:
+            context["dev_dependencies"] = []
+        if "plugin_dependencies" not in context:
+            context["plugin_dependencies"] = []
 
-            # Get package information
-            context.update(self.prompts.get_package_info())
+        # Parse Python versions
+        min_ver = PyVer.parse(context.get("min_python")) or PyVer(3, 10)
+        max_ver = (
+            PyVer.parse(context.get("max_python"))
+            if context.get("max_python")
+            else None
+        )
 
-            # Get feature flags
-            context.update(self.prompts.get_features())
-        else:
-            context.update(kwargs)
-            if "python_version_info" not in context:
-                # Get min_python with a default value
-                min_python_val = context.get("min_python", "3.10")
-                min_python = str(min_python_val)
-                max_python = context.get("max_python")
-                context["python_version_info"] = self._get_python_version_info(
-                    min_python,
-                    max_python,
-                )
-
-            # Set default values for missing fields
-            if "name" not in context:
-                context["name"] = "my-package"
-            if package_type == "plugin" and "plugin_host" not in context:
-                context["plugin_host"] = "my-plugin-host"
-            if "min_python" not in context:
-                context["min_python"] = "3.10"
-            if "license" not in context:
-                context["license"] = "MIT"
-            if "development_status" not in context:
-                context["development_status"] = "4 - Beta"
-            if "use_mkdocs" not in context:
-                context["use_mkdocs"] = False
-            if "use_semver" not in context:
-                context["use_semver"] = True
-            if "use_vcs" not in context:
-                context["use_vcs"] = True
-            if "dependencies" not in context:
-                context["dependencies"] = []
-            if "dev_dependencies" not in context:
-                context["dev_dependencies"] = []
-            if "plugin_dependencies" not in context:
-                context["plugin_dependencies"] = []
-
-        # Print debug information
-        console.print(f"[yellow]Template path: {template.template_path}[/]")
-        console.print(f"[yellow]Context: {context}[/]")
+        # Update context with version info
+        context["min_python"] = str(min_ver)
+        context["max_python"] = str(max_ver) if max_ver else None
+        context["python_version_info"] = {
+            "requires_python": min_ver.requires_python(max_ver),
+            "classifiers": PyVer.get_supported_versions(min_ver, max_ver),
+            "ruff_target": min_ver.ruff_target,
+            "mypy_version": min_ver.mypy_version,
+        }
 
         # Render template
         template_obj = self.env.get_template(template.template_path)
@@ -369,10 +142,9 @@ class ConfigurationGenerator:
         Args:
             package_type: Type of package to generate config for
             output_path: Where to write the configuration file
-            interactive: Whether to prompt for values interactively
+            interactive: Whether to prompt for values (unused, handled by CLI)
             **kwargs: Optional pre-defined values
         """
         content = self.generate_config(package_type, interactive, **kwargs)
         output_file = Path(output_path)
         output_file.write_text(content)
-        console.print(f"[green]Created configuration file: {output_file}[/]")

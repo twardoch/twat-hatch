@@ -10,6 +10,8 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 from pydantic import BaseModel, Field
 from rich.console import Console
 
+from .utils import PyVer
+
 console = Console()
 
 
@@ -138,39 +140,19 @@ class PackageConfig(BaseModel):
     @property
     def python_version_info(self) -> dict[str, Any]:
         """Get Python version information in various formats needed by tools."""
-        # Extract major.minor from min_python (e.g. "3.8" from "3.8")
-        min_ver = self.min_python.split(".")
-        min_major, min_minor = int(min_ver[0]), int(min_ver[1])
+        min_ver = PyVer.parse(self.min_python) or PyVer(3, 10)
+        max_ver = PyVer.parse(self.max_python)
 
-        # Default max version is current latest Python
-        current_max = 12  # Update this as new Python versions are released
-
-        # If max_python is specified, use it instead
-        if self.max_python:
-            max_ver = self.max_python.split(".")
-            max_major, max_minor = int(max_ver[0]), int(max_ver[1])
-            if max_major != min_major:
-                raise ValueError(
-                    f"Maximum Python version {self.max_python} must have same major version as minimum {self.min_python}"
-                )
-            current_max = max_minor
-
-        # Generate supported version classifiers
-        classifiers = []
-        for i in range(min_minor, current_max + 1):
-            classifiers.append(f"Programming Language :: Python :: {min_major}.{i}")
-
-        # Build requires-python string
-        requires = f">={self.min_python}"
-        if self.max_python:
-            requires += f",<{self.max_python}.999"
+        if max_ver and max_ver.major != min_ver.major:
+            raise ValueError(
+                f"Maximum Python version {max_ver} must have same major version as minimum {min_ver}"
+            )
 
         return {
-            "requires_python": requires,
-            "classifiers": classifiers,
-            "ruff_target": f"py{min_major}{min_minor}",
-            "black_target": [f"py{min_major}{min_minor}"],
-            "mypy_version": self.min_python,
+            "requires_python": min_ver.requires_python(max_ver),
+            "classifiers": PyVer.get_supported_versions(min_ver, max_ver),
+            "ruff_target": min_ver.ruff_target,
+            "mypy_version": min_ver.mypy_version,
         }
 
     @classmethod
@@ -203,6 +185,10 @@ class PackageConfig(BaseModel):
         tools_data = data.get("tools", {})
         features_data = data.get("features", {})
 
+        # Parse Python versions
+        min_ver = PyVer.parse(package_data.get("min_python")) or PyVer(3, 10)
+        max_ver = PyVer.parse(package_data.get("max_python"))
+
         # Combine all data into a single dict matching model structure
         config_dict = {
             "packages": project_data.get("packages", []),
@@ -211,8 +197,8 @@ class PackageConfig(BaseModel):
             "author_name": author_data.get("name"),
             "author_email": author_data.get("email"),
             "github_username": author_data.get("github_username"),
-            "min_python": package_data.get("min_python"),
-            "max_python": package_data.get("max_python"),
+            "min_python": str(min_ver),
+            "max_python": str(max_ver) if max_ver else None,
             "license": package_data.get("license"),
             "development_status": package_data.get("development_status"),
             "dependencies": dependencies_data.get("dependencies", []),
@@ -283,57 +269,43 @@ class PackageInitializer:
             console.print(f"[yellow]Git init failed: {err}[/]")
 
     def _get_context(self, name: str) -> dict[str, Any]:
-        """Generate template context for package files.
+        """Get template context for package.
 
         Args:
             name: Package name
 
         Returns:
-            Dictionary of template context variables
+            Template context dictionary
         """
-        import_name = name.replace("-", "_")
-        is_plugin = bool(self.config and self.config.plugin_host)
-        is_plugin_host = bool(
-            self.config and self.config.plugin_host and name == self.config.plugin_host
-        )
+        if not self.config:
+            msg = "Configuration not loaded"
+            raise RuntimeError(msg)
 
+        # Convert package name to Python import name
+        import_name = name.replace("-", "_")
+
+        # Build template context
         context = {
             "name": name,
             "import_name": import_name,
-            "title": f"{name} Package",
-            "description": "Python package",
-            "is_plugin": is_plugin,
-            "is_plugin_host": is_plugin_host,
+            "author_name": self.config.author_name,
+            "author_email": self.config.author_email,
+            "github_username": self.config.github_username,
+            "min_python": self.config.min_python,
+            "max_python": self.config.max_python,
+            "license": self.config.license,
+            "development_status": self.config.development_status,
+            "dependencies": self.config.dependencies,
+            "plugin_dependencies": self.config.plugin_dependencies,
+            "dev_dependencies": self.config.dev_dependencies,
+            "use_mkdocs": self.config.use_mkdocs,
+            "use_vcs": self.config.use_vcs,
+            "python_version_info": self.config.python_version_info,
         }
 
-        if is_plugin and self.config and self.config.plugin_host:
-            context.update(
-                {
-                    "plugin_host": self.config.plugin_host,
-                    "description": f"Plugin for {self.config.plugin_host}",
-                }
-            )
-
-        if self.config:
-            context.update(
-                {
-                    "author_name": self.config.author_name,
-                    "author_email": self.config.author_email,
-                    "github_username": self.config.github_username,
-                    "min_python": self.config.min_python,
-                    "max_python": self.config.max_python,
-                    "license": self.config.license,
-                    "development_status": self.config.development_status,
-                    "dependencies": self.config.dependencies,
-                    "plugin_dependencies": self.config.plugin_dependencies,
-                    "dev_dependencies": self.config.dev_dependencies,
-                    "ruff_config": self.config.ruff_config,
-                    "mypy_config": self.config.mypy_config,
-                    "use_mkdocs": self.config.use_mkdocs,
-                    "use_semver": self.config.use_semver,
-                    "use_vcs": self.config.use_vcs,
-                }
-            )
+        # Add plugin host if specified
+        if self.config.plugin_host:
+            context["plugin_host"] = self.config.plugin_host
 
         return context
 

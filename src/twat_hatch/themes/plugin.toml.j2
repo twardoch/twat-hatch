@@ -75,6 +75,5 @@ warn_no_return = true
 warn_unreachable = true
 
 [features]
-mkdocs = {{ use_mkdocs | default(false) }}  # Enable MkDocs documentation
-semver = {{ use_semver | default(true) }}   # Use semantic versioning
-vcs = {{ use_vcs | default(true) }}      # Enable VCS integration 
+mkdocs = {{ use_mkdocs | lower }}  # Enable MkDocs documentation
+vcs = {{ use_vcs | lower }}      # Enable VCS integration 
