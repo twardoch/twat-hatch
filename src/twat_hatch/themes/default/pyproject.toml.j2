@@ -1,8 +1,7 @@
 [build-system]
 requires = [
-    "hatchling> = 1.21.0",
-    "hatch-vcs> = 0.3.0",
-    "hatch-semver> = 0.1.0",
+    "hatchling>=1.21.0",
+    "hatch-vcs>=0.3.0",
 ]
 build-backend = "hatchling.build"
 
@@ -54,9 +53,12 @@ Source = "https://github.com/{{ github_username }}/{{ name }}"
 [tool.hatch.version]
 source = "vcs"
 
-
 [tool.hatch.version.raw-options]
-version_scheme = "semver-pep440"
+version_scheme = "post-release"
+
+[tool.hatch.build.hooks.vcs]
+version-file = "_version.py"
+
 
 
 [tool.hatch.envs.default]

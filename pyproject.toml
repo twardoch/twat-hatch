@@ -1,5 +1,11 @@
 [build-system]
-requires = ["hatchling>=1.9.3", "hatch-vcs>=0.3.0", "hatch-autorun", "hatch-semver", "hatch-minify", "hatch-pip-compile"]
+requires = [
+    "hatchling>=1.9.3",
+    "hatch-vcs>=0.3.0",
+    "hatch-autorun",
+    "hatch-minify",
+    "hatch-pip-compile"
+]
 build-backend = "hatchling.build"
 
 [project]
@@ -7,33 +13,33 @@ name = "twat-hatch"
 dynamic = ["version"]
 description = "Plugin for twat that provides package initialization functionality"
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.10"
 license = "MIT"
-keywords = ["plugin", "twat-plugin", "package-template"]
-authors = [
-    { name = "Adam Twardoch", email = "adam+github@twardoch.com" }
-]
+keywords = ["twat", "twat-plugin", "package-template"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
-    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Software Development :: Libraries :: Python Modules"
 ]
+
 dependencies = [
-    # "twat>=0.1.0",
+    "twat",
     "fire>=0.5.0",
     "rich>=13.7.0",
     "pydantic>=2.0.0",
     "tomli>=2.0.0; python_version < '3.11'",
-    "typing-extensions>=4.0.0; python_version < '3.10'",
     "jinja2>=3.1.0"
 ]
+
+[[project.authors]]
+name = "Adam Twardoch"
+email = "adam+github@twardoch.com"
+
 
 [project.optional-dependencies]
 dev = [
@@ -41,7 +47,7 @@ dev = [
     "pytest-cov>=4.0.0",
     "ruff>=0.1.0",
     "mypy>=1.0.0",
-    "pydantic[mypy]>=2.0.0",  # For better type checking with Pydantic
+    "pydantic[mypy]>=2.0.0"
 ]
 
 [project.urls]
@@ -52,22 +58,28 @@ Source = "https://github.com/twardoch/twat-hatch"
 [project.entry-points."twat.plugins"]
 hatch = "twat_hatch"
 
+
 [project.scripts]
 twat-hatch = "twat_hatch.__main__:cli"
 
 [tool.hatch.version]
 source = "vcs"
-raw-options = { version_scheme = "post-release" }
+
+[tool.hatch.version.raw-options]
+version_scheme = "post-release"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/twat_hatch"]
 
+[tool.hatch.build.hooks]
+minify = {  }
+
 [tool.hatch.envs.default]
 dependencies = [
-    "pytest>=7.0.0",
-    "pytest-cov>=4.0.0",
-    "ruff>=0.1.0",
-    "mypy>=1.0.0",
+    "pytest> = 7.0.0",
+    "pytest-cov> = 4.0.0",
+    "ruff> = 0.1.0",
+    "mypy> = 1.0.0"
 ]
 
 [tool.hatch.envs.default.scripts]
@@ -78,25 +90,52 @@ format = ["ruff check --fix ."]
 autorun = ["python", "-m", "twat_hatch.autorun"]
 
 [[tool.hatch.envs.default.matrix]]
-python = ["3.9", "3.10", "3.11", "3.12"]
+python = ["3.10", "3.11", "3.12"]
 
-[tool.hatch.plugins.version-source.semver]
-# Configuration for hatch-semver
+[tool.hatch.plugins.version-source]
+semver = {  }
 
-[tool.hatch.build.hooks.minify]
-# Configuration for hatch-minify
-
-[tool.hatch.plugins.environment.pip-compile]
-# Configuration for hatch-pip-compile
+[tool.hatch.plugins.environment]
+pip-compile = {  }
 
 [tool.ruff]
+target-version = "py310"
 line-length = 88
-target-version = "py38"
-select = ["E", "F", "B", "I", "UP"]
-ignore = []
+select = [
+    "A",
+    "ARG",
+    "B",
+    "C",
+    "DTZ",
+    "E",
+    "EM",
+    "F",
+    "FBT",
+    "I",
+    "ICN",
+    "ISC",
+    "N",
+    "PLC",
+    "PLE",
+    "PLR",
+    "PLW",
+    "Q",
+    "RUF",
+    "S",
+    "T",
+    "TID",
+    "UP",
+    "W",
+    "YTT",
+]
+ignore = [
+    "PLR0913", # Too many arguments to function call
+    "ISC001", # Implicit string concatenation
+
+]
 
 [tool.mypy]
-python_version = "3.8"
+python_version = "3.10"
 warn_return_any = true
 warn_unused_configs = true
 disallow_untyped_defs = true
@@ -108,10 +147,10 @@ warn_redundant_casts = true
 warn_unused_ignores = true
 warn_no_return = true
 warn_unreachable = true
-plugins = ["pydantic.mypy"]  # Enable Pydantic's MyPy plugin
+plugins = ["pydantic.mypy"]
 
 [tool.pydantic-mypy]
 init_forbid_extra = true
 init_typed = true
 warn_required_dynamic_aliases = true
-warn_untyped_fields = true 
+warn_untyped_fields = true

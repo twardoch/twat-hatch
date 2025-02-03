@@ -11,5 +11,5 @@ dependencies = [
 
 {% block entry_points %}
 [project.entry-points."{{ plugin_host }}.plugins"]
-{{ name }} = "{{ import_name }}.plugin:Plugin"
+{{ name }} = "{{ import_name }}"
 {% endblock %} 
