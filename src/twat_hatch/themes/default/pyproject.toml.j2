@@ -57,7 +57,7 @@ source = "vcs"
 version_scheme = "post-release"
 
 [tool.hatch.build.hooks.vcs]
-version-file = "_version.py"
+version-file = "src/{{ import_name }}/__version__.py"
 
 
 

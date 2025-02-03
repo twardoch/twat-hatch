@@ -243,3 +243,4 @@ UpgradeLog*.htm
 UpgradeLog*.XML
 x64/
 x86/
+src/twat_hatch/__version__.py
