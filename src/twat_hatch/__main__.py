@@ -1,6 +1,6 @@
 #!/usr/bin/env -S uv run
 # /// script
-# dependencies = ["fire", "rich", "pydantic"]
+# dependencies = ["fire", "rich", "pydantic", "jinja2", "tomli"]
 # ///
 
 """Command-line interface for twat-hatch.
@@ -9,8 +9,9 @@ This module provides the main CLI interface for creating Python packages
 and plugins using twat-hatch.
 """
 
-import traceback
+import sys
 from pathlib import Path
+from typing import Any, Optional
 
 import fire
 from pydantic import ValidationError
@@ -18,6 +19,7 @@ from rich.console import Console
 from rich.panel import Panel
 from rich.traceback import install
 
+from .config import ConfigurationGenerator, PackageType
 from .hatch import PackageInitializer
 
 # Install rich traceback handler
@@ -26,94 +28,75 @@ install(show_locals=True)
 console = Console()
 
 
-def create_packages(initializer: PackageInitializer) -> None:
-    """Create packages using the provided initializer.
+def init(
+    type: PackageType = "package",
+    output: str = "twat-hatch.toml",
+    interactive: bool = True,
+    **kwargs: Any,
+) -> None:
+    """Initialize a new package configuration.
 
     Args:
-        initializer: Configured PackageInitializer instance
+        type: Type of package to create (package, plugin, plugin-host)
+        output: Output file path
+        interactive: Whether to prompt for values interactively
+        **kwargs: Optional pre-defined values
     """
-    if not initializer.config:
-        console.print("[red]No configuration provided[/]")
-        return
+    try:
+        generator = ConfigurationGenerator()
+        generator.write_config(type, output, interactive, **kwargs)
+    except Exception as e:
+        console.print(f"[red]Error creating configuration: {str(e)}[/]")
+        sys.exit(1)
+
+
+def config(command: str = "show", type: PackageType = "package") -> None:
+    """Show example configuration for a package type.
+
+    Args:
+        command: Command to execute (show)
+        type: Type of package to show config for
+    """
+    if command != "show":
+        console.print("[red]Invalid command. Use 'show'.[/]")
+        sys.exit(1)
 
     try:
-        # Initialize plugin host first if specified
-        if initializer.config.plugin_host:
-            initializer.initialize_package(initializer.config.plugin_host)
+        generator = ConfigurationGenerator()
+        content = generator.generate_config(type, interactive=False)
+        console.print(Panel(content, title=f"Example {type} configuration"))
+    except Exception as e:
+        console.print(f"[red]Error showing configuration: {str(e)}[/]")
+        sys.exit(1)
 
-        # Initialize all other packages
-        for package in initializer.config.packages:
-            if package != initializer.config.plugin_host:
-                initializer.initialize_package(package)
 
+def create(config_path: Optional[str] = None) -> None:
+    """Create packages from configuration.
+
+    Args:
+        config_path: Path to configuration file (defaults to twat-hatch.toml)
+    """
+    if not config_path:
+        config_path = "twat-hatch.toml"
+
+    try:
+        initializer = PackageInitializer(config_path=config_path)
+        initializer.initialize_all()
     except Exception as e:
         console.print(f"[red]Error creating packages: {str(e)}[/]")
+        sys.exit(1)
 
 
-def show_usage_help() -> None:
-    """Display usage help when no configuration is provided."""
-    console.print(
-        Panel(
-            """[yellow]No configuration provided. Either:
-- Provide a configuration file with --config
-- Have twat-hatch.toml in the current directory
-- Use --help for usage information[/]"""
-        )
+def main() -> None:
+    """Main entry point."""
+    fire.Fire(
+        {
+            "init": init,
+            "config": config,
+            "create": create,
+        }
     )
 
 
-def cli(
-    config: str | None = None,
-    out_dir: str | None = None,
-) -> bool:
-    """Initialize Python packages with optional plugin functionality.
-
-    Creates packages based on configuration file. If a plugin host is specified,
-    additional packages will be set up as plugins. Without a plugin host,
-    packages are created as standalone packages.
-
-    Args:
-        config: Path to TOML configuration file
-        out_dir: Output directory for created packages (overrides config)
-
-    Returns:
-        True if packages were created successfully, False otherwise
-    """
-    # Use default config if exists
-    if not config and Path("twat-hatch.toml").exists():
-        config = "twat-hatch.toml"
-
-    if not config:
-        show_usage_help()
-        return False
-
-    try:
-        config_path = Path(config)
-        # If out_dir is provided via CLI, use it as is
-        # Otherwise, make the output directory from config relative to config file location
-        if out_dir is None:
-            # The actual output directory will be determined in PackageInitializer
-            # based on config contents, but we pass the config file's parent directory
-            # as the base directory for relative paths
-            out_dir = str(config_path.parent)
-
-        initializer = PackageInitializer(
-            out_dir=out_dir,
-            config_path=str(config_path),
-            base_dir=str(config_path.parent),
-        )
-        create_packages(initializer)
-        return True
-    except FileNotFoundError as e:
-        console.print(f"[red]Configuration file not found: {str(e)}[/]")
-    except ValidationError as e:
-        console.print(f"[red]Invalid configuration:\n{str(e)}[/]")
-    except Exception as e:
-        console.print(f"[red]Failed to initialize packages:[/]")
-        console.print(traceback.format_exc())
-
-    return False
-
-
 if __name__ == "__main__":
-    fire.Fire(cli)
+    main()

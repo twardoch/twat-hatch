@@ -3,7 +3,7 @@
 import subprocess
 from importlib.resources import path
 from pathlib import Path
-from typing import Any, Callable, cast
+from typing import Any, cast
 
 import tomli
 from jinja2 import Environment, FileSystemLoader, select_autoescape
@@ -59,7 +59,8 @@ class TemplateEngine:
         """
         theme_dir = Path(cast(list[str], self.loader.searchpath)[0]) / theme_name
         if not theme_dir.exists():
-            raise FileNotFoundError(f"Theme '{theme_name}' not found")
+            msg = f"Theme '{theme_name}' not found"
+            raise FileNotFoundError(msg)
 
         for template_file in theme_dir.rglob("*.j2"):
             rel_path = template_file.relative_to(theme_dir)
@@ -102,6 +103,9 @@ class PackageConfig(BaseModel):
     author_email: str = Field(..., description="Email of the package author")
     github_username: str = Field(..., description="GitHub username")
     min_python: str = Field(..., description="Minimum Python version required")
+    max_python: str | None = Field(
+        None, description="Maximum Python version supported (optional)"
+    )
     license: str = Field(..., description="Package license")
     development_status: str = Field(..., description="Package development status")
 
@@ -131,6 +135,44 @@ class PackageConfig(BaseModel):
         default=False, description="Whether to initialize version control"
     )
 
+    @property
+    def python_version_info(self) -> dict[str, Any]:
+        """Get Python version information in various formats needed by tools."""
+        # Extract major.minor from min_python (e.g. "3.8" from "3.8")
+        min_ver = self.min_python.split(".")
+        min_major, min_minor = int(min_ver[0]), int(min_ver[1])
+
+        # Default max version is current latest Python
+        current_max = 12  # Update this as new Python versions are released
+
+        # If max_python is specified, use it instead
+        if self.max_python:
+            max_ver = self.max_python.split(".")
+            max_major, max_minor = int(max_ver[0]), int(max_ver[1])
+            if max_major != min_major:
+                raise ValueError(
+                    f"Maximum Python version {self.max_python} must have same major version as minimum {self.min_python}"
+                )
+            current_max = max_minor
+
+        # Generate supported version classifiers
+        classifiers = []
+        for i in range(min_minor, current_max + 1):
+            classifiers.append(f"Programming Language :: Python :: {min_major}.{i}")
+
+        # Build requires-python string
+        requires = f">={self.min_python}"
+        if self.max_python:
+            requires += f",<{self.max_python}.999"
+
+        return {
+            "requires_python": requires,
+            "classifiers": classifiers,
+            "ruff_target": f"py{min_major}{min_minor}",
+            "black_target": [f"py{min_major}{min_minor}"],
+            "mypy_version": self.min_python,
+        }
+
     @classmethod
     def from_toml(cls, config_path: Path | str) -> "PackageConfig":
         """Create configuration from TOML file.
@@ -147,7 +189,8 @@ class PackageConfig(BaseModel):
         """
         config_file = Path(config_path)
         if not config_file.exists():
-            raise FileNotFoundError(f"Missing config file: {config_file}")
+            msg = f"Missing config file: {config_file}"
+            raise FileNotFoundError(msg)
 
         data = tomli.loads(config_file.read_text())
 
@@ -169,6 +212,7 @@ class PackageConfig(BaseModel):
             "author_email": author_data.get("email"),
             "github_username": author_data.get("github_username"),
             "min_python": package_data.get("min_python"),
+            "max_python": package_data.get("max_python"),
             "license": package_data.get("license"),
             "development_status": package_data.get("development_status"),
             "dependencies": dependencies_data.get("dependencies", []),
@@ -232,6 +276,7 @@ class PackageInitializer:
                 check=True,
                 capture_output=True,
                 text=True,
+                shell=False,
             )
             console.print(f"[green]Initialized Git repo: {pkg_path}[/]")
         except (subprocess.CalledProcessError, FileNotFoundError) as err:
@@ -276,6 +321,7 @@ class PackageInitializer:
                     "author_email": self.config.author_email,
                     "github_username": self.config.github_username,
                     "min_python": self.config.min_python,
+                    "max_python": self.config.max_python,
                     "license": self.config.license,
                     "development_status": self.config.development_status,
                     "dependencies": self.config.dependencies,
@@ -307,7 +353,8 @@ class PackageInitializer:
         3. Apply optional themes (e.g. mkdocs) if enabled
         """
         if not self.config:
-            raise ValueError("No configuration provided")
+            msg = "No configuration provided"
+            raise ValueError(msg)
 
         context = self._get_context(name)
         pkg_path = self.out_dir / context["import_name"]
@@ -343,7 +390,8 @@ class PackageInitializer:
         2. Initialize all other packages
         """
         if not self.config:
-            raise ValueError("No configuration provided")
+            msg = "No configuration provided"
+            raise ValueError(msg)
 
         # Initialize plugin host first if specified
         if self.config.plugin_host:

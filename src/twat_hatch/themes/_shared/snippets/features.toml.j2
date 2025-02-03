@@ -1,0 +1,5 @@
+# Feature flags
+[features]
+mkdocs = {{ use_mkdocs | default(false) | tojson }}  # Enable MkDocs documentation
+semver = {{ use_semver | default(true) | tojson }}   # Use semantic versioning
+vcs = {{ use_vcs | default(true) | tojson }}         # Enable VCS integration 

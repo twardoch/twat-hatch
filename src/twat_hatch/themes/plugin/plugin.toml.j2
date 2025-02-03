@@ -1,0 +1,23 @@
+{% extends "_shared/base.toml.j2" %}
+
+{% block header_comment %}# Configuration for Python plugin package{% endblock %}
+
+{% block packages %}
+    "{{ name }}"  # Your plugin name
+{% endblock %}
+
+{% block plugin_host %}
+# Plugin host package (required for plugins)
+plugin_host = "{{ plugin_host }}"
+{% endblock %}
+
+{% block dependencies %}
+{{ super() }}
+# Plugin-specific dependencies
+plugin_dependencies = [
+    "pydantic>=2.0.0",
+    {% for dep in plugin_dependencies | default([]) %}
+    "{{ dep }}",
+    {% endfor %}
+]
+{% endblock %} 

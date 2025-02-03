@@ -1,0 +1,31 @@
+# Base configuration for all package types
+{% block header_comment %}# Package configuration{% endblock %}
+
+[project]
+{% block project %}
+# List of packages to initialize
+packages = [
+    {% block packages %}
+    "my-package"  # Replace with your package name
+    {% endblock %}
+]
+
+{% block plugin_host %}{% endblock %}
+
+# Output directory (optional, defaults to current directory)
+output_dir = "packages"
+{% endblock %}
+
+{% include '_shared/snippets/author.toml.j2' %}
+
+{% include '_shared/snippets/package.toml.j2' %}
+
+{% include '_shared/snippets/dependencies.toml.j2' %}
+
+{% include '_shared/snippets/development.toml.j2' %}
+
+{% include '_shared/snippets/tools.toml.j2' %}
+
+{% include '_shared/snippets/features.toml.j2' %}
+
+{% block additional_config %}{% endblock %} 

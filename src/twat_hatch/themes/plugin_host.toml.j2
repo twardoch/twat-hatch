@@ -2,12 +2,12 @@
 [project]
 # List of packages to initialize
 packages = [
-    "my-package",
-    "my-plugin-1",
-    "my-plugin-2"
+    "my-package", # Include if you want to initialize the plugin host package
+    "my-plugin-1", # Include if you want to initialize a plugin
+    "my-plugin-2" # Include if you want to initialize a plugin
 ]
 
-# Plugin host package (this package will be the plugin host)
+# Refers to the plugin host package (this package will be the plugin host)
 plugin_host = "my-package"
 
 # Output directory (optional, defaults to current directory)
@@ -21,9 +21,10 @@ github_username = "{{ github_username }}"
 
 # Package configuration
 [package]
-min_python = "3.8"
-license = "MIT"
-development_status = "4 - Beta"
+min_python = "{{ min_python }}"
+{% if max_python %}max_python = "{{ max_python }}"{% endif %}
+license = "{{ license }}"
+development_status = "{{ development_status }}"
 
 # Dependencies
 [dependencies]
@@ -53,12 +54,12 @@ additional_dependencies = [
 # Tool configurations
 [tools.ruff]
 line_length = 88
-target_version = "py38"
+target_version = "{{ python_version_info.ruff_target }}"
 select = ["E", "F", "B", "I", "UP"]
 ignore = []
 
 [tools.mypy]
-python_version = "3.8"
+python_version = "{{ python_version_info.mypy_version }}"
 warn_return_any = true
 warn_unused_configs = true
 disallow_untyped_defs = true

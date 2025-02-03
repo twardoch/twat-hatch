@@ -1,0 +1,13 @@
+# Dependencies
+[dependencies]
+{% block dependencies %}
+# Regular package dependencies
+dependencies = [
+    "importlib-metadata>=6.0.0",
+    "importlib-resources>=5.0.0",
+    "typing-extensions>=4.0.0; python_version < '3.10'",
+    {% for dep in dependencies | default([]) %}
+    "{{ dep }}",
+    {% endfor %}
+]
+{% endblock %} 

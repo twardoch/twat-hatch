@@ -1,0 +1,12 @@
+# Development configuration
+[development]
+# Additional development dependencies
+additional_dependencies = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "ruff>=0.1.0",
+    "mypy>=1.0.0",
+    {% for dep in dev_dependencies | default([]) %}
+    "{{ dep }}",
+    {% endfor %}
+] 

@@ -16,9 +16,10 @@ github_username = "{{ github_username }}"
 
 # Package configuration
 [package]
-min_python = "3.8"
-license = "MIT"
-development_status = "4 - Beta"
+min_python = "{{ min_python }}"
+{% if max_python %}max_python = "{{ max_python }}"{% endif %}
+license = "{{ license }}"
+development_status = "{{ development_status }}"
 
 # Dependencies
 [dependencies]
@@ -42,12 +43,12 @@ additional_dependencies = [
 # Tool configurations
 [tools.ruff]
 line_length = 88
-target_version = "py38"
+target_version = "{{ python_version_info.ruff_target }}"
 select = ["E", "F", "B", "I", "UP"]
 ignore = []
 
 [tools.mypy]
-python_version = "3.8"
+python_version = "{{ python_version_info.mypy_version }}"
 warn_return_any = true
 warn_unused_configs = true
 disallow_untyped_defs = true
