@@ -30,17 +30,17 @@ PACKAGE_TEMPLATES = {
     "package": PackageTemplate(
         type="package",
         description="Standalone Python package",
-        template_path="package/package.toml.j2",
+        template_path="package.toml.j2",
     ),
     "plugin": PackageTemplate(
         type="plugin",
         description="Plugin package for a plugin host",
-        template_path="plugin/plugin.toml.j2",
+        template_path="plugin.toml.j2",
     ),
     "plugin-host": PackageTemplate(
         type="plugin-host",
         description="Plugin host package that can load plugins",
-        template_path="plugin_host/plugin_host.toml.j2",
+        template_path="plugin_host.toml.j2",
     ),
 }
 
@@ -217,6 +217,56 @@ class ConfigurationGenerator:
             )
         self.prompts = ConfigurationPrompts()
 
+    def _get_python_version_info(
+        self, min_python: str | None = None, max_python: str | None = None
+    ) -> dict[str, Any]:
+        """Get Python version information in various formats needed by tools.
+
+        Args:
+            min_python: Minimum Python version (e.g. "3.8")
+            max_python: Maximum Python version (e.g. "3.12") or None
+
+        Returns:
+            Dictionary with Python version information
+        """
+        # Use default min_python if not provided
+        min_python = min_python if min_python is not None else "3.8"
+
+        # Extract major.minor from min_python (e.g. "3.8" from "3.8")
+        min_ver = min_python.split(".")
+        min_major, min_minor = int(min_ver[0]), int(min_ver[1])
+
+        # Default max version is current latest Python
+        current_max = 12  # Update this as new Python versions are released
+
+        # If max_python is specified, use it instead
+        if max_python:
+            max_ver = max_python.split(".")
+            max_major, max_minor = int(max_ver[0]), int(max_ver[1])
+            if max_major != min_major:
+                raise ValueError(
+                    f"Maximum Python version {max_python} must have same major version as minimum {min_python}"
+                )
+            current_max = max_minor
+
+        # Generate supported version classifiers
+        classifiers = []
+        for i in range(min_minor, current_max + 1):
+            classifiers.append(f"Programming Language :: Python :: {min_major}.{i}")
+
+        # Build requires-python string
+        requires = f">={min_python}"
+        if max_python:
+            requires += f",<{max_python}.999"
+
+        return {
+            "requires_python": requires,
+            "classifiers": classifiers,
+            "ruff_target": f"py{min_major}{min_minor}",
+            "black_target": [f"py{min_major}{min_minor}"],
+            "mypy_version": min_python,
+        }
+
     def generate_config(
         self,
         package_type: PackageType,
@@ -247,8 +297,15 @@ class ConfigurationGenerator:
             # Get author information
             context.update(self.prompts.get_author_info())
 
-            # Get Python versions
-            context.update(self.prompts.get_python_versions())
+            # Get Python versions and version info
+            python_versions = self.prompts.get_python_versions()
+            min_python = python_versions["min_python"]
+            max_python = python_versions.get("max_python")
+            context.update(python_versions)
+            context["python_version_info"] = self._get_python_version_info(
+                min_python,
+                max_python,
+            )
 
             # Get package information
             context.update(self.prompts.get_package_info())
@@ -257,6 +314,23 @@ class ConfigurationGenerator:
             context.update(self.prompts.get_features())
         else:
             context.update(kwargs)
+            if "python_version_info" not in context:
+                # Get min_python with a default value
+                min_python_val = context.get("min_python")
+                min_python = (
+                    str(min_python_val) if min_python_val is not None else "3.8"
+                )
+                max_python = context.get("max_python")
+                context["python_version_info"] = self._get_python_version_info(
+                    min_python,
+                    max_python,
+                )
+
+            # Set default values for missing fields
+            if "name" not in context:
+                context["name"] = "my-package"
+            if package_type == "plugin" and "plugin_host" not in context:
+                context["plugin_host"] = "my-plugin-host"
 
         # Render template
         template_obj = self.env.get_template(template.template_path)

@@ -3,22 +3,21 @@
 [project]
 # List of packages to initialize
 packages = [
-    "{{ name }}"  # Your package name
+    "twat-llm"  # Your package name
 ]
 
 # Output directory (optional, defaults to current directory)
 output_dir = "."
 
 [author]
-name = "{{ author_name }}"
-email = "{{ author_email }}"
-github_username = "{{ github_username }}"
+name = "Adam Twardoch"
+email = "adam+github@twardoch.com"
+github_username = "twardoch"
 
 [package]
-min_python = "{{ min_python }}"
-{% if max_python %}max_python = "{{ max_python }}"{% endif %}
-license = "{{ license }}"
-development_status = "{{ development_status }}"
+min_python = ""
+license = ""
+development_status = ""
 
 [dependencies]
 dependencies = [
@@ -28,9 +27,6 @@ dependencies = [
     "tomli>=2.0.0; python_version < '3.11'",
     "typing-extensions>=4.0.0; python_version < '3.10'",
     "jinja2>=3.1.0",
-    {% for dep in dependencies | default([]) %}
-    "{{ dep }}",
-    {% endfor %}
 ]
 
 dev_dependencies = [
@@ -39,19 +35,16 @@ dev_dependencies = [
     "ruff>=0.1.0",
     "mypy>=1.0.0",
     "pydantic[mypy]>=2.0.0",
-    {% for dep in dev_dependencies | default([]) %}
-    "{{ dep }}",
-    {% endfor %}
 ]
 
 [tools.ruff]
 line_length = 88
-target_version = "{{ python_version_info.ruff_target }}"
+target_version = "py38"
 select = ["E", "F", "B", "I", "UP"]
 ignore = []
 
 [tools.mypy]
-python_version = "{{ python_version_info.mypy_version }}"
+python_version = "3.8"
 warn_return_any = true
 warn_unused_configs = true
 disallow_untyped_defs = true
@@ -65,6 +58,6 @@ warn_no_return = true
 warn_unreachable = true
 
 [features]
-mkdocs = {{ use_mkdocs | default(false) }}  # Enable MkDocs documentation
-semver = {{ use_semver | default(true) }}   # Use semantic versioning
-vcs = {{ use_vcs | default(true) }}      # Enable VCS integration 
+mkdocs = False  # Enable MkDocs documentation
+semver = True   # Use semantic versioning
+vcs = True      # Enable VCS integration 

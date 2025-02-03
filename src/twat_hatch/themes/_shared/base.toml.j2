@@ -6,14 +6,14 @@
 # List of packages to initialize
 packages = [
     {% block packages %}
-    "my-package"  # Replace with your package name
+    "{{ name }}"  # Package name
     {% endblock %}
 ]
 
 {% block plugin_host %}{% endblock %}
 
 # Output directory (optional, defaults to current directory)
-output_dir = "packages"
+output_dir = "."
 {% endblock %}
 
 {% include '_shared/snippets/author.toml.j2' %}

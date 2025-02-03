@@ -60,7 +60,7 @@ hatch = "twat_hatch"
 
 
 [project.scripts]
-twat-hatch = "twat_hatch.__main__:cli"
+twat-hatch = "twat_hatch.__main__:main"
 
 [tool.hatch.version]
 source = "vcs"

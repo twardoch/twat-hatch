@@ -1,54 +1,59 @@
-# Project configuration for plugin theme
+# Configuration for plugin package
+
 [project]
 # List of packages to initialize
 packages = [
-    "my-plugin" # Include if you want to initialize a plugin
+    "{{ name }}"  # Your plugin name
 ]
 
 # Refers to the plugin host package (required for plugins)
-plugin_host = "my-package" 
+plugin_host = "{{ plugin_host }}"
 
 # Output directory (optional, defaults to current directory)
-output_dir = "packages"
+output_dir = "."
 
-# Author information
 [author]
 name = "{{ author_name }}"
 email = "{{ author_email }}"
 github_username = "{{ github_username }}"
 
-# Package configuration
 [package]
 min_python = "{{ min_python }}"
 {% if max_python %}max_python = "{{ max_python }}"{% endif %}
 license = "{{ license }}"
 development_status = "{{ development_status }}"
 
-# Dependencies
 [dependencies]
-# Regular package dependencies
 dependencies = [
-    "importlib-metadata>=6.0.0",
-    "importlib-resources>=5.0.0",
-    "typing-extensions>=4.0.0; python_version < '3.10'"
+    "fire>=0.5.0",
+    "rich>=13.7.0",
+    "pydantic>=2.0.0",
+    "tomli>=2.0.0; python_version < '3.11'",
+    "typing-extensions>=4.0.0; python_version < '3.10'",
+    "jinja2>=3.1.0",
+    {% for dep in dependencies | default([]) %}
+    "{{ dep }}",
+    {% endfor %}
 ]
 
-# Plugin-specific dependencies
 plugin_dependencies = [
-    "pydantic>=2.0.0"
+    "pydantic>=2.0.0",
+    {% for dep in plugin_dependencies | default([]) %}
+    "{{ dep }}",
+    {% endfor %}
 ]
 
-# Development configuration
-[development]
-# Additional development dependencies
-additional_dependencies = [
+dev_dependencies = [
     "pytest>=7.0.0",
     "pytest-cov>=4.0.0",
     "ruff>=0.1.0",
-    "mypy>=1.0.0"
+    "mypy>=1.0.0",
+    "pydantic[mypy]>=2.0.0",
+    {% for dep in dev_dependencies | default([]) %}
+    "{{ dep }}",
+    {% endfor %}
 ]
 
-# Tool configurations
 [tools.ruff]
 line_length = 88
 target_version = "{{ python_version_info.ruff_target }}"
@@ -69,8 +74,7 @@ warn_unused_ignores = true
 warn_no_return = true
 warn_unreachable = true
 
-# Feature flags
 [features]
-mkdocs = false  # Enable MkDocs documentation
-semver = true   # Use semantic versioning
-vcs = true      # Enable VCS integration 
+mkdocs = {{ use_mkdocs | default(false) }}  # Enable MkDocs documentation
+semver = {{ use_semver | default(true) }}   # Use semantic versioning
+vcs = {{ use_vcs | default(true) }}      # Enable VCS integration 

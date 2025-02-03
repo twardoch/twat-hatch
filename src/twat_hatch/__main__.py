@@ -31,20 +31,76 @@ console = Console()
 def init(
     type: PackageType = "package",
     output: str = "twat-hatch.toml",
-    interactive: bool = True,
-    **kwargs: Any,
+    name: str | None = None,
+    author_name: str | None = None,
+    author_email: str | None = None,
+    github_username: str | None = None,
+    min_python: str | None = None,
+    max_python: str | None = None,
+    license: str | None = None,
+    development_status: str | None = None,
+    use_mkdocs: bool | None = None,
+    use_semver: bool | None = None,
+    use_vcs: bool | None = None,
 ) -> None:
     """Initialize a new package configuration.
 
     Args:
         type: Type of package to create (package, plugin, plugin-host)
         output: Output file path
-        interactive: Whether to prompt for values interactively
-        **kwargs: Optional pre-defined values
+        name: Package name
+        author_name: Author's name
+        author_email: Author's email
+        github_username: GitHub username
+        min_python: Minimum Python version (e.g. "3.8")
+        max_python: Maximum Python version (e.g. "3.12")
+        license: Package license
+        development_status: Development status
+        use_mkdocs: Whether to use MkDocs for documentation
+        use_semver: Whether to use semantic versioning
+        use_vcs: Whether to initialize version control
     """
     try:
+        # Determine if we have enough parameters to run non-interactively
+        has_required_params = all(
+            [
+                name,
+                author_name,
+                author_email,
+                github_username,
+            ]
+        )
+
+        # Build kwargs for non-interactive mode
+        kwargs = {}
+        if has_required_params:
+            kwargs.update(
+                {
+                    "name": name,
+                    "author_name": author_name,
+                    "author_email": author_email,
+                    "github_username": github_username,
+                }
+            )
+            if min_python:
+                kwargs["min_python"] = min_python
+            if max_python:
+                kwargs["max_python"] = max_python
+            if license:
+                kwargs["license"] = license
+            if development_status:
+                kwargs["development_status"] = development_status
+            if use_mkdocs is not None:
+                kwargs["use_mkdocs"] = use_mkdocs
+            if use_semver is not None:
+                kwargs["use_semver"] = use_semver
+            if use_vcs is not None:
+                kwargs["use_vcs"] = use_vcs
+
         generator = ConfigurationGenerator()
-        generator.write_config(type, output, interactive, **kwargs)
+        generator.write_config(
+            type, output, interactive=not has_required_params, **kwargs
+        )
     except Exception as e:
         console.print(f"[red]Error creating configuration: {str(e)}[/]")
         sys.exit(1)
