@@ -6,11 +6,19 @@
 # List of packages to initialize
 packages = [
     {% block packages %}
-    "{{ name }}"  # Package name
+    "{{ name }}"
     {% endblock %}
 ]
 
-{% block plugin_host %}{% endblock %}
+{% block plugin_host %}
+{% if is_plugin_host %}
+# This package will be the plugin host
+plugin_host = "{{ name }}"
+{% elif is_plugin %}
+# Plugin host package
+plugin_host = "{{ plugin_host }}"
+{% endif %}
+{% endblock %}
 
 # Output directory (optional, defaults to current directory)
 output_dir = "."
@@ -20,7 +28,19 @@ output_dir = "."
 
 {% include '_shared/snippets/package.toml.j2' %}
 
+{% block dependencies %}
 {% include '_shared/snippets/dependencies.toml.j2' %}
+
+{% if is_plugin_host %}
+plugin_dependencies = [
+    "pydantic>=2.0.0",
+    "importlib-resources>=5.0.0",
+    {% for dep in plugin_dependencies | default([]) %}
+    "{{ dep }}",
+    {% endfor %}
+]
+{% endif %}
+{% endblock %}
 
 {% include '_shared/snippets/development.toml.j2' %}
 

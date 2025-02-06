@@ -57,6 +57,8 @@ class ConfigurationGenerator:
                 keep_trailing_newline=True,
                 auto_reload=True,
             )
+            # Add the split filter
+            self.env.filters["split"] = lambda value, delimiter: value.split(delimiter)
 
     def generate_config(
         self,

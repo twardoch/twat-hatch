@@ -1,4 +1,4 @@
 # Feature flags
 [features]
-mkdocs = {{ use_mkdocs | default(false) | tojson }}  # Enable MkDocs documentation
-vcs = {{ use_vcs | default(true) | tojson }}         # Enable VCS integration 
+mkdocs = {{ use_mkdocs | default(false) | lower }}  # Enable MkDocs documentation
+vcs = {{ use_vcs | default(true) | lower }}         # Enable VCS integration 

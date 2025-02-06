@@ -8,6 +8,9 @@ requires = [
 ]
 build-backend = "hatchling.build"
 
+[tool.hatch.build.targets.wheel]
+packages = ["src/twat_hatch"]
+
 [project]
 name = "twat-hatch"
 dynamic = ["version"]
@@ -41,14 +44,6 @@ name = "Adam Twardoch"
 email = "adam+github@twardoch.com"
 
 
-[project.optional-dependencies]
-dev = [
-    "pytest>=7.0.0",
-    "pytest-cov>=4.0.0",
-    "ruff>=0.1.0",
-    "mypy>=1.0.0",
-    "pydantic[mypy]>=2.0.0"
-]
 
 [project.urls]
 Documentation = "https://github.com/twardoch/twat-hatch#readme"
@@ -71,8 +66,6 @@ version_scheme = "post-release"
 [tool.hatch.build.hooks.vcs]
 version-file = "src/twat_hatch/__version__.py"
 
-[tool.hatch.build.targets.wheel]
-packages = ["src/twat_hatch"]
 
 [tool.hatch.build.hooks]
 minify = {  }
@@ -83,13 +76,17 @@ dependencies = [
     "pytest-cov",
     "mypy>=1.0.0",
     "ruff>=0.1.0",
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "ruff>=0.1.0",
+    "mypy>=1.0.0",
 ]
 
 [tool.hatch.envs.default.scripts]
 test = "pytest {args:tests}"
-test-cov = "pytest --cov={args:twat_hatch} tests/"
-lint = ["ruff check .", "mypy src/"]
-format = ["ruff check --fix ."]
+test-cov = "pytest --cov-report=term-missing --cov-config=pyproject.toml --cov=src/twat_hatch --cov=tests {args:tests}"
+type-check = "mypy src/twat_hatch tests"
+lint = ["ruff check src/twat_hatch tests", "ruff format src/twat_hatch tests"]
 autorun = ["python", "-m", "twat_hatch.autorun"]
 
 [[tool.hatch.envs.default.matrix]]
@@ -98,10 +95,23 @@ python = ["3.10", "3.11", "3.12"]
 [tool.hatch.plugins.environment]
 pip-compile = {  }
 
+[tool.hatch.envs.lint]
+detached = true
+dependencies = [
+    "mypy>=1.0.0",
+    "ruff>=0.1.0",
+]
+
+[tool.hatch.envs.lint.scripts]
+typing = "mypy --install-types --non-interactive {args:src/twat_hatch tests}"
+style = ["ruff check {args:.}", "ruff format {args:.}"]
+fmt = ["ruff format {args:.}", "ruff check --fix {args:.}"]
+all = ["style", "typing"]
+
 [tool.ruff]
 target-version = "py310"
 line-length = 88
-select = [
+lint.extend-select = [
     "A",
     "ARG",
     "B",
@@ -128,11 +138,15 @@ select = [
     "W",
     "YTT",
 ]
-ignore = [
-    "PLR0913", # Too many arguments to function call
-    "ISC001", # Implicit string concatenation
-
+lint.ignore = [
+    "ARG001", # Unused function argument
+    "E501",   # Line too long
+    "I001",
 ]
+
+[tool.ruff.per-file-ignores]
+"tests/*" = ["S101"]
+
 
 [tool.mypy]
 python_version = "3.10"
@@ -147,10 +161,89 @@ warn_redundant_casts = true
 warn_unused_ignores = true
 warn_no_return = true
 warn_unreachable = true
-plugins = ["pydantic.mypy"]
 
 [tool.pydantic-mypy]
 init_forbid_extra = true
 init_typed = true
 warn_required_dynamic_aliases = true
 warn_untyped_fields = true
+
+[tool.coverage.run]
+source_pkgs = ["twat_hatch", "tests"]
+branch = true
+parallel = true
+omit = [
+    "src/twat_hatch/__about__.py",
+]
+
+
+[tool.coverage.paths]
+twat_hatch = ["src/twat_hatch", "*/twat-hatch/src/twat_hatch"]
+tests = ["tests", "*/twat-hatch/tests"]
+
+
+[tool.coverage.report]
+exclude_lines = [
+    "no cov",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+]
+
+[project.optional-dependencies]
+test = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "pytest-xdist>=3.5.0",  # For parallel test execution
+    "pytest-benchmark[histogram]>=4.0.0",  # For performance testing
+]
+
+dev = [
+    "pre-commit>=3.6.0",
+    "ruff>=0.1.0",
+    "mypy>=1.0.0",
+]
+
+all = [
+    "pre-commit>=3.6.0",
+    "ruff>=0.1.0",
+    "mypy>=1.0.0",
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "pytest-xdist>=3.5.0",
+    "pytest-benchmark[histogram]>=4.0.0",
+]
+
+[tool.hatch.envs.test]
+dependencies = [".[test]"]
+
+[tool.hatch.envs.test.scripts]
+test = "python -m pytest -n auto {args:tests}"
+test-cov = "python -m pytest -n auto --cov-report=term-missing --cov-config=pyproject.toml --cov=src/twat_hatch --cov=tests {args:tests}"
+bench = "python -m pytest -v -p no:briefcase tests/test_benchmark.py --benchmark-only"
+bench-save = "python -m pytest -v -p no:briefcase tests/test_benchmark.py --benchmark-only --benchmark-json=benchmark/results.json"
+
+[tool.pytest.ini_options]
+markers = ["benchmark: marks tests as benchmarks (select with '-m benchmark')"]
+addopts = "-v -p no:briefcase"
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+filterwarnings = ["ignore::DeprecationWarning", "ignore::UserWarning"]
+asyncio_mode = "auto"
+
+[tool.pytest-benchmark]
+min_rounds = 100
+min_time = 0.1
+histogram = true
+storage = "file"
+save-data = true
+compare = [
+    "min",    # Minimum time
+    "max",    # Maximum time
+    "mean",   # Mean time
+    "stddev", # Standard deviation
+    "median", # Median time
+    "iqr",    # Inter-quartile range
+    "ops",    # Operations per second
+    "rounds", # Number of rounds
+] 
+

@@ -15,55 +15,18 @@ email = "{{ author_email }}"
 github_username = "{{ github_username }}"
 
 [package]
-min_python = "{{ min_python }}"
-{% if max_python %}max_python = "{{ max_python }}"{% endif %}
-license = "{{ license }}"
-development_status = "{{ development_status }}"
+description = "{{ description }}"
+min_python = "3.10"
+license = "MIT"
+development_status = "4 - Beta"
 
-[dependencies]
-dependencies = [
-    "fire>=0.5.0",
-    "rich>=13.7.0",
-    "pydantic>=2.0.0",
-    "tomli>=2.0.0; python_version < '3.11'",
-    "typing-extensions>=4.0.0; python_version < '3.10'",
-    "jinja2>=3.1.0",
-    {% for dep in dependencies | default([]) %}
-    "{{ dep }}",
-    {% endfor %}
-]
-
-dev_dependencies = [
-    "pytest>=7.0.0",
-    "pytest-cov>=4.0.0",
-    "ruff>=0.1.0",
-    "mypy>=1.0.0",
-    "pydantic[mypy]>=2.0.0",
-    {% for dep in dev_dependencies | default([]) %}
-    "{{ dep }}",
-    {% endfor %}
-]
-
-[tools.ruff]
-line_length = 88
-target_version = "{{ python_version_info.ruff_target }}"
-select = ["E", "F", "B", "I", "UP"]
-ignore = []
-
-[tools.mypy]
-python_version = "{{ python_version_info.mypy_version }}"
-warn_return_any = true
-warn_unused_configs = true
-disallow_untyped_defs = true
-disallow_incomplete_defs = true
-check_untyped_defs = true
-disallow_untyped_decorators = true
-no_implicit_optional = true
-warn_redundant_casts = true
-warn_unused_ignores = true
-warn_no_return = true
-warn_unreachable = true
+[package.options]
+include_cli = true        # Include CLI boilerplate
+include_logging = true    # Include logging setup
+use_pydantic = true      # Use Pydantic for data validation
+use_rich = true          # Use Rich for terminal output
 
 [features]
-mkdocs = {{ use_mkdocs | lower }}  # Enable MkDocs documentation
-vcs = {{ use_vcs | lower }}      # Enable VCS integration 
+mkdocs = false           # Enable MkDocs documentation
+vcs = true              # Initialize Git repository
+github_actions = true   # Add GitHub Actions workflows 

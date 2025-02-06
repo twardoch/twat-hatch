@@ -184,11 +184,11 @@ class PyVer:
             max_ver: Maximum Python version or None
 
         Returns:
-            requires-python string (e.g. ">=3.10" or ">=3.10,<3.12.999")
+            requires-python string (e.g. ">=3.10" or ">=3.10,<3.12")
         """
         requires = f">={self}"
         if max_ver:
-            requires += f",<{max_ver}.999"
+            requires += f",<{max_ver}"
         return requires
 
     @classmethod

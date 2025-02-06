@@ -1,13 +1,39 @@
 # Dependencies
 [dependencies]
-{% block dependencies %}
 # Regular package dependencies
 dependencies = [
+    {% if is_plugin_host %}
     "importlib-metadata>=6.0.0",
     "importlib-resources>=5.0.0",
     "typing-extensions>=4.0.0; python_version < '3.10'",
+    {% elif is_plugin %}
+    "{{ plugin_host }}",
+    "pydantic>=2.0.0",
+    {% endif %}
     {% for dep in dependencies | default([]) %}
     "{{ dep }}",
     {% endfor %}
 ]
-{% endblock %} 
+
+{% if is_plugin %}
+# Plugin-specific dependencies
+plugin_dependencies = [
+    {% for dep in plugin_dependencies | default([]) %}
+    "{{ dep }}",
+    {% endfor %}
+]
+{% endif %}
+
+# Development dependencies
+dev_dependencies = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "pytest-xdist>=3.5.0",
+    "pytest-benchmark[histogram]>=4.0.0",
+    "ruff>=0.1.0",
+    "mypy>=1.0.0",
+    "pre-commit>=3.6.0",
+    {% for dep in dev_dependencies | default([]) %}
+    "{{ dep }}",
+    {% endfor %}
+] 

@@ -1,6 +1,7 @@
 """Core functionality for Python package initialization."""
 
 import subprocess
+from datetime import datetime
 from importlib.resources import path
 from pathlib import Path
 from typing import Any, cast
@@ -32,6 +33,9 @@ class TemplateEngine:
             lstrip_blocks=True,
             keep_trailing_newline=True,
         )
+        # Add filters
+        self.env.filters["split"] = lambda value, delimiter: value.split(delimiter)
+        self.env.filters["strftime"] = lambda format: datetime.now().strftime(format)
 
     def render_template(self, template_path: str, context: dict[str, Any]) -> str:
         """Render a template with given context.
@@ -72,9 +76,9 @@ class TemplateEngine:
             for i, part in enumerate(parts):
                 if part.startswith("hidden."):
                     parts[i] = part.replace("hidden.", ".")
-                # Handle __package_name__ template
-                elif part == "__package_name__.py.j2":
-                    parts[i] = f"{context['import_name']}.py.j2"
+                # Handle __package_name__ template in both files and directories
+                elif "__package_name__" in part:
+                    parts[i] = part.replace("__package_name__", context["import_name"])
             rel_path = Path(*parts)
 
             output_path = target_dir / rel_path.with_suffix("")
@@ -139,9 +143,17 @@ class PackageConfig(BaseModel):
 
     @property
     def python_version_info(self) -> dict[str, Any]:
-        """Get Python version information in various formats needed by tools."""
+        """Get Python version information in various formats needed by tools.
+
+        Returns:
+            Dictionary containing:
+            - requires_python: Version specifier string for pyproject.toml
+            - classifiers: List of Python version classifiers
+            - ruff_target: Target version for ruff
+            - mypy_version: Version for mypy config
+        """
         min_ver = PyVer.parse(self.min_python) or PyVer(3, 10)
-        max_ver = PyVer.parse(self.max_python)
+        max_ver = PyVer.parse(self.max_python) if self.max_python else None
 
         if max_ver and max_ver.major != min_ver.major:
             raise ValueError(
@@ -187,7 +199,11 @@ class PackageConfig(BaseModel):
 
         # Parse Python versions
         min_ver = PyVer.parse(package_data.get("min_python")) or PyVer(3, 10)
-        max_ver = PyVer.parse(package_data.get("max_python"))
+        max_ver = (
+            PyVer.parse(package_data.get("max_python"))
+            if package_data.get("max_python")
+            else None
+        )
 
         # Combine all data into a single dict matching model structure
         config_dict = {
@@ -268,6 +284,18 @@ class PackageInitializer:
         except (subprocess.CalledProcessError, FileNotFoundError) as err:
             console.print(f"[yellow]Git init failed: {err}[/]")
 
+    def _create_version_file(self, pkg_path: Path, import_name: str) -> None:
+        """Create empty __version__.py file in package source directory.
+
+        Args:
+            pkg_path: Base package directory
+            import_name: Python import name for the package
+        """
+        version_file = pkg_path / "src" / import_name / "__version__.py"
+        version_file.parent.mkdir(parents=True, exist_ok=True)
+        version_file.touch()
+        console.print(f"[green]Created version file: {version_file}[/]")
+
     def _get_context(self, name: str) -> dict[str, Any]:
         """Get template context for package.
 
@@ -284,10 +312,24 @@ class PackageInitializer:
         # Convert package name to Python import name
         import_name = name.replace("-", "_")
 
+        # For plugins, create a shorter import name by removing the plugin host prefix if present
+        plugin_import_name = import_name
+        if self.config.plugin_host:
+            plugin_host_prefix = f"{self.config.plugin_host}_"
+            if import_name.startswith(plugin_host_prefix):
+                plugin_import_name = import_name[len(plugin_host_prefix) :]
+            elif import_name.startswith(self.config.plugin_host):
+                plugin_import_name = import_name[len(self.config.plugin_host) :]
+                if plugin_import_name.startswith("-") or plugin_import_name.startswith(
+                    "_"
+                ):
+                    plugin_import_name = plugin_import_name[1:]
+
         # Build template context
         context = {
             "name": name,
             "import_name": import_name,
+            "plugin_import_name": plugin_import_name,
             "author_name": self.config.author_name,
             "author_email": self.config.author_email,
             "github_username": self.config.github_username,
@@ -331,6 +373,10 @@ class PackageInitializer:
         context = self._get_context(name)
         pkg_path = self.out_dir / context["import_name"]
 
+        # Create package source directory structure
+        src_path = pkg_path / "src" / context["import_name"]
+        src_path.mkdir(parents=True, exist_ok=True)
+
         # Always apply default theme first as the base
         self.template_engine.apply_theme("default", pkg_path, context)
 
@@ -350,23 +396,47 @@ class PackageInitializer:
         if self.config.use_mkdocs:
             self.template_engine.apply_theme("mkdocs", pkg_path, context)
 
+        # Create version file
+        self._create_version_file(pkg_path, context["import_name"])
+
         # Initialize Git repository if requested
         if self.config.use_vcs:
             self._init_git_repo(pkg_path)
+            # Add all files and make initial commit
+            try:
+                subprocess.run(
+                    ["git", "add", "."],
+                    cwd=pkg_path,
+                    check=True,
+                    capture_output=True,
+                    text=True,
+                    shell=False,
+                )
+                subprocess.run(
+                    ["git", "commit", "-m", "Initial commit"],
+                    cwd=pkg_path,
+                    check=True,
+                    capture_output=True,
+                    text=True,
+                    shell=False,
+                )
+                console.print(f"[green]Created initial commit in: {pkg_path}[/]")
+            except (subprocess.CalledProcessError, FileNotFoundError) as err:
+                console.print(f"[yellow]Git commit failed: {err}[/]")
 
     def initialize_all(self) -> None:
         """Initialize all packages specified in config.
 
         The initialization order is:
-        1. Initialize plugin_host first (if specified)
+        1. Initialize plugin_host first (if specified AND included in packages)
         2. Initialize all other packages
         """
         if not self.config:
             msg = "No configuration provided"
             raise ValueError(msg)
 
-        # Initialize plugin host first if specified
-        if self.config.plugin_host:
+        # Initialize plugin host first if specified AND included in packages
+        if self.config.plugin_host and self.config.plugin_host in self.config.packages:
             self.initialize_package(self.config.plugin_host)
 
         # Initialize all other packages
