@@ -1,1 +1,1 @@
-"""Theme templates for package generation.""" 
+"""Theme templates for package generation."""

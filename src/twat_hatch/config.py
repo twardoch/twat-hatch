@@ -7,7 +7,6 @@ from pathlib import Path
 from typing import Any, Literal
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
-from pydantic import BaseModel, Field
 
 from .utils import PyVer
 

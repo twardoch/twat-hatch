@@ -3,7 +3,7 @@
 import re
 import sys
 from dataclasses import dataclass
-from typing import Any, Optional, Tuple, Union
+from typing import Any, Optional
 
 
 @dataclass(frozen=True)
@@ -27,9 +27,11 @@ class PyVer:
     def __post_init__(self) -> None:
         """Validate version numbers."""
         if self.minor < 0 or self.minor > 99:
-            raise ValueError(f"Invalid minor version: {self.minor}")
+            msg = f"Invalid minor version: {self.minor}"
+            raise ValueError(msg)
         if self.micro < 0:
-            raise ValueError(f"Invalid micro version: {self.micro}")
+            msg = f"Invalid micro version: {self.micro}"
+            raise ValueError(msg)
 
     def __str__(self) -> str:
         """Convert to string format (e.g. '3.10')."""
@@ -39,7 +41,7 @@ class PyVer:
         """Full representation including micro version."""
         return f"PyVer(major={self.major}, minor={self.minor}, micro={self.micro})"
 
-    def as_tuple(self) -> Tuple[int, int, int]:
+    def as_tuple(self) -> tuple[int, int, int]:
         """Get version as a tuple (major, minor, micro)."""
         return (self.major, self.minor, self.micro)
 
@@ -64,9 +66,7 @@ class PyVer:
         return f"{self.major}.{self.minor:02d}.{self.micro}"
 
     @classmethod
-    def parse(
-        cls, version: Optional[Union[str, Tuple[int, ...], Any]] = None
-    ) -> "PyVer":
+    def parse(cls, version: str | tuple[int, ...] | Any | None = None) -> "PyVer":
         """Parse a version from various formats into a PyVer instance.
 
         Args:
@@ -98,10 +98,12 @@ class PyVer:
                     getattr(version, "micro", version[2] if len(version) > 2 else 0)
                 )
                 if minor < 0 or minor > 99:
-                    raise ValueError(f"Invalid minor version: {minor}")
+                    msg = f"Invalid minor version: {minor}"
+                    raise ValueError(msg)
                 return cls(major=major, minor=minor, micro=micro)
             except (IndexError, AttributeError, ValueError) as e:
-                raise ValueError(f"Invalid version tuple/object: {version}") from e
+                msg = f"Invalid version tuple/object: {version}"
+                raise ValueError(msg) from e
 
         # Convert to string and clean it up
         version_str = str(version).strip().lower()
@@ -113,9 +115,11 @@ class PyVer:
                 major = int(match.group(1))
                 minor = int(match.group(2))
                 if minor < 0 or minor > 99:
-                    raise ValueError(f"Invalid minor version: {minor}")
+                    msg = f"Invalid minor version: {minor}"
+                    raise ValueError(msg)
                 return cls(major=major, minor=minor)
-            raise ValueError(f"Invalid Ruff version format: {version_str}")
+            msg = f"Invalid Ruff version format: {version_str}"
+            raise ValueError(msg)
 
         # Handle version strings (3.10 or 3.10.0 or 3.10 Final)
         # Split on first space to ignore any additional text
@@ -127,7 +131,8 @@ class PyVer:
             major = int(match.group(1))
             minor = int(match.group(2))
             if minor < 0 or minor > 99:
-                raise ValueError(f"Invalid minor version: {minor}")
+                msg = f"Invalid minor version: {minor}"
+                raise ValueError(msg)
             return cls(major=major, minor=minor)
 
         # Then try to parse as X.Y.Z format
@@ -137,7 +142,8 @@ class PyVer:
             minor = int(match.group(2))
             micro = int(match.group(3))
             if minor < 0 or minor > 99:
-                raise ValueError(f"Invalid minor version: {minor}")
+                msg = f"Invalid minor version: {minor}"
+                raise ValueError(msg)
             return cls(major=major, minor=minor, micro=micro)
 
         # Finally try to parse as just X format
@@ -145,7 +151,8 @@ class PyVer:
             major = int(version_str)
             return cls(major=major, minor=0)
         except ValueError as e:
-            raise ValueError(f"Invalid version string: {version_str}") from e
+            msg = f"Invalid version string: {version_str}"
+            raise ValueError(msg) from e
 
     @classmethod
     def from_sys_version(cls) -> "PyVer":
@@ -168,9 +175,8 @@ class PyVer:
         current_max = 12  # Update this as new Python versions are released
         max_minor = max_ver.minor if max_ver else current_max
         if max_ver and max_ver.major != min_ver.major:
-            raise ValueError(
-                f"Maximum Python version {max_ver} must have same major version as minimum {min_ver}"
-            )
+            msg = f"Maximum Python version {max_ver} must have same major version as minimum {min_ver}"
+            raise ValueError(msg)
 
         return [
             f"Programming Language :: Python :: {min_ver.major}.{i:02d}"
@@ -193,7 +199,7 @@ class PyVer:
 
     @classmethod
     def from_cli_input(
-        cls, version: Optional[Union[str, tuple[int, ...], Any]] = None
+        cls, version: str | tuple[int, ...] | Any | None = None
     ) -> "PyVer":
         """Parse Python version from command-line input.
 
@@ -213,14 +219,16 @@ class PyVer:
             return cls(major=3, minor=10)
 
         if isinstance(version, float):
-            raise ValueError(
+            msg = (
                 "Python version must be specified as comma-separated integers. "
                 'Use: "3,10" NOT "3.10"'
             )
+            raise ValueError(msg)
 
         if isinstance(version, tuple):
             if len(version) != 2:
-                raise ValueError("Version tuple must have exactly 2 elements")
+                msg = "Version tuple must have exactly 2 elements"
+                raise ValueError(msg)
             return cls(major=version[0], minor=version[1])
 
         if isinstance(version, str):
@@ -228,8 +236,8 @@ class PyVer:
                 major, minor = map(int, version.split(","))
                 return cls(major=major, minor=minor)
             except ValueError:
-                raise ValueError(
-                    'Version string must be comma-separated integers (e.g. "3,10")'
-                )
+                msg = 'Version string must be comma-separated integers (e.g. "3,10")'
+                raise ValueError(msg)
 
-        raise ValueError(f"Unsupported version format: {version}")
+        msg = f"Unsupported version format: {version}"
+        raise ValueError(msg)

@@ -156,9 +156,8 @@ class PackageConfig(BaseModel):
         max_ver = PyVer.parse(self.max_python) if self.max_python else None
 
         if max_ver and max_ver.major != min_ver.major:
-            raise ValueError(
-                f"Maximum Python version {max_ver} must have same major version as minimum {min_ver}"
-            )
+            msg = f"Maximum Python version {max_ver} must have same major version as minimum {min_ver}"
+            raise ValueError(msg)
 
         return {
             "requires_python": min_ver.requires_python(max_ver),
@@ -272,7 +271,7 @@ class PackageInitializer:
             pkg_path: Directory to initialize repository in
         """
         try:
-            result = subprocess.run(
+            subprocess.run(
                 ["git", "init"],
                 cwd=pkg_path,
                 check=True,

@@ -11,7 +11,7 @@ and plugins using twat-hatch.
 
 import sys
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 import fire
 from pydantic import ValidationError
@@ -19,7 +19,6 @@ from rich.ansi import AnsiDecoder
 from rich.console import Console, Group
 from rich.panel import Panel
 from rich.prompt import Confirm, IntPrompt, Prompt
-from rich.text import Text
 from rich.theme import Theme
 from rich.traceback import install
 
@@ -329,11 +328,11 @@ def config(command: str = "show", type: PackageType = "package") -> None:
         content = generator.generate_config(type, interactive=False)
         console.print(Panel(content, title=f"Example {type} configuration"))
     except Exception as e:
-        console.print(f"[red]Error showing configuration: {str(e)}[/]")
+        console.print(f"[red]Error showing configuration: {e!s}[/]")
         sys.exit(1)
 
 
-def create(config_path: Optional[str] = None) -> None:
+def create(config_path: str | None = None) -> None:
     """Create packages from configuration.
 
     Args:
@@ -346,7 +345,7 @@ def create(config_path: Optional[str] = None) -> None:
         initializer = PackageInitializer(config_path=config_path)
         initializer.initialize_all()
     except Exception as e:
-        console.print(f"[red]Error creating packages: {str(e)}[/]")
+        console.print(f"[red]Error creating packages: {e!s}[/]")
         sys.exit(1)
 
 
