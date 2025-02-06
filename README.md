@@ -1,5 +1,7 @@
 # `twat-hatch`
 
+(work in progress)
+
 A powerful Python package initializer that supports both standalone packages and plugin-based architectures. Built with modern Python practices and robust configuration management.
 
 ## Features
