@@ -265,7 +265,7 @@ class PackageInitializer:
             self.template_engine = TemplateEngine(Path(themes_dir))
 
     def _init_git_repo(self, pkg_path: Path) -> None:
-        """Initialize Git repository in target directory.
+        """Initialize Git repository in target directory with 'main' branch.
 
         Args:
             pkg_path: Directory to initialize repository in
@@ -279,9 +279,43 @@ class PackageInitializer:
                 text=True,
                 shell=False,
             )
-            console.print(f"[green]Initialized Git repo: {pkg_path}[/]")
+            # Rename default branch to 'main'
+            subprocess.run(
+                ["git", "branch", "-M", "main"],
+                cwd=pkg_path,
+                check=True,
+                capture_output=True,
+                text=True,
+                shell=False,
+            )
+            console.print(f"[green]Initialized Git repo: {pkg_path} (branch: main)[/]")
         except (subprocess.CalledProcessError, FileNotFoundError) as err:
             console.print(f"[yellow]Git init failed: {err}[/]")
+
+    def _create_github_repo(self, pkg_path: Path, repo_name: str) -> None:
+        """Create and link GitHub repository using gh CLI.
+
+        Args:
+            pkg_path: Package directory path.
+            repo_name: Repository name (local package import name)
+        """
+        owner = self.config.github_username  # Assumes non-empty if GitHub linking is desired
+        full_repo = f"{owner}/{repo_name}"
+        try:
+            subprocess.run(
+                [
+                    "gh", "repo", "create", full_repo, "--public",
+                    "--source", str(pkg_path), "--remote=origin", "--push"
+                ],
+                cwd=pkg_path,
+                check=True,
+                capture_output=True,
+                text=True,
+                shell=False,
+            )
+            console.print(f"[green]Linked GitHub repo: {full_repo}[/]")
+        except subprocess.CalledProcessError as e:
+            console.print(f"[yellow]GitHub repo creation failed: {e}[/]")
 
     def _create_version_file(self, pkg_path: Path, import_name: str) -> None:
         """Create empty __version__.py file in package source directory.
@@ -422,6 +456,9 @@ class PackageInitializer:
                 console.print(f"[green]Created initial commit in: {pkg_path}[/]")
             except (subprocess.CalledProcessError, FileNotFoundError) as err:
                 console.print(f"[yellow]Git commit failed: {err}[/]")
+            # Create and link GitHub repository if GitHub username is provided
+            if self.config.github_username:
+                self._create_github_repo(pkg_path, context["import_name"])
 
     def initialize_all(self) -> None:
         """Initialize all packages specified in config.

@@ -1,13 +1,4 @@
-[build-system]
-requires = [
-    "hatchling>=1.21.0",
-    "hatch-vcs>=0.3.0",
-]
-build-backend = "hatchling.build"
-
-[tool.hatch.build.targets.wheel]
-packages = ["src/{{ import_name }}"]
-
+# this_file: pyproject.toml
 [project]
 name = "{{ name }}"
 dynamic = ["version"]
@@ -35,10 +26,51 @@ dependencies = [
 {% endblock %}
 
 
+[project.optional-dependencies]
+{% block optional_dependencies %}
+
+dev = [
+{% block dev_dependencies %}
+    "pre-commit>=3.6.0",
+    "ruff>=0.1.0",
+    "mypy>=1.0.0",
+    "pyupgrade>=3.19.0",
+{% endblock %}
+]
+
+test = [
+{% block test_dependencies %}
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+{% endblock %}
+]
+
+{% endblock %}
+
+all = [
+{% block all_dependencies %}
+{% for dep in dev_dependencies | default([]) %}
+    "{{ dep }}",
+{% endfor %}
+{% for dep in test_dependencies | default([]) %}
+    "{{ dep }}",
+{% endfor %}
+{% if additional_dependencies %}
+    "{{ additional_dependencies | join('", "') }}",
+{% endif %}
+{% endblock %}
+]
+
+[project.scripts]
+{% block entry_points %}
+# CLINAME = "{{ import_name }}.__main__:main"
+{% endblock %}
+
+
+
 [[project.authors]]
 name = "{{ author_name }}"
 email = "{{ author_email }}"
-
 
 [project.urls]
 Documentation = "https://github.com/{{ github_username }}/{{ name }}#readme"
@@ -46,63 +78,133 @@ Issues = "https://github.com/{{ github_username }}/{{ name }}/issues"
 Source = "https://github.com/{{ github_username }}/{{ name }}"
 
 
-{% block entry_points %}
-{% endblock %}
+[build-system]
+build-backend = "hatchling.build"
+requires = [
+    "hatchling>=1.21.0", 
+    "hatch-vcs>=0.3.0"
+]
 
 
-[tool.hatch.version]
-source = "vcs"
+[tool.coverage.paths]
+{{ import_name }} = ["src/{{ import_name }}", "*/{{ name }}/src/{{ import_name }}"]
+tests = ["tests", "*/{{ name }}/tests"]
 
-[tool.hatch.version.raw-options]
-version_scheme = "post-release"
+
+
+[tool.coverage.report]
+exclude_lines = [
+    "no cov",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+]
+
+[tool.coverage.run]
+source_pkgs = ["{{ import_name }}", "tests"]
+branch = true
+parallel = true
+omit = [
+    "src/{{ import_name }}/__about__.py",
+]
+
+
 
 [tool.hatch.build.hooks.vcs]
 version-file = "src/{{ import_name }}/__version__.py"
 
 
+[tool.hatch.build.targets.wheel]
+packages = ["src/{{ import_name }}"]
+
+
 
 [tool.hatch.envs.default]
 dependencies = [
-    "pytest",
-    "pytest-cov",
-    "mypy>=1.0.0",
-    "ruff>=0.1.0",
+    {% for dep in test_dependencies | default([]) %}
+    "{{ dep }}",
+    {% endfor %}
     {% for dep in dev_dependencies | default([]) %}
     "{{ dep }}",
     {% endfor %}
+    {% if additional_dependencies %}
+    "{{ additional_dependencies | join('", "') }}",
+    {% endif %}
 ]
+
+[[tool.hatch.envs.all.matrix]]
+python = {{ python_version_info.classifiers | map('split', ' :: ') | map('last') | list | tojson }}
 
 
 [tool.hatch.envs.default.scripts]
 test = "pytest {args:tests}"
 test-cov = "pytest --cov-report=term-missing --cov-config=pyproject.toml --cov=src/{{ import_name }} --cov=tests {args:tests}"
 type-check = "mypy src/{{ import_name }} tests"
-lint = ["ruff check src/{{ import_name }} tests", "ruff format src/{{ import_name }} tests"]
+lint = ["ruff check src/{{ import_name }} tests", "ruff format --respect-gitignore src/{{ import_name }} tests"]
+fix = ["ruff check  --fix --unsafe-fixes src/{{ import_name }} tests", "ruff format --respect-gitignore src/{{ import_name }} tests"]
 
-
-[[tool.hatch.envs.all.matrix]]
-python = {{ python_version_info.classifiers | map('split', ' :: ') | map('last') | list | tojson }}
 
 
 [tool.hatch.envs.lint]
 detached = true
 dependencies = [
-    "mypy>=1.0.0",
-    "ruff>=0.1.0",
+    {% for dep in dev_dependencies | default([]) %}
+    "{{ dep }}",
+    {% endfor %}
+    {% if additional_dependencies %}
+    "{{ additional_dependencies | join('", "') }}",
+    {% endif %}
 ]
 
 
 [tool.hatch.envs.lint.scripts]
 typing = "mypy --install-types --non-interactive {args:src/{{ import_name }} tests}"
-style = ["ruff check {args:.}", "ruff format {args:.}"]
-fmt = ["ruff format {args:.}", "ruff check --fix {args:.}"]
+style = ["ruff check {args:.}", "ruff format --respect-gitignore {args:.}"]
+fmt = ["ruff format --respect-gitignore {args:.}", "ruff check --fix {args:.}"]
 all = ["style", "typing"]
+
+
+[tool.hatch.envs.test]
+dependencies = [
+    {% for dep in test_dependencies | default([]) %}
+    "{{ dep }}",
+    {% endfor %}
+]
+
+[tool.hatch.envs.test.scripts]
+test = "python -m pytest -n auto -p no:briefcase {args:tests}"
+test-cov = "python -m pytest -n auto -p no:briefcase --cov-report=term-missing --cov-config=pyproject.toml --cov=src/{{ import_name }} --cov=tests {args:tests}"
+bench = "python -m pytest -v -p no:briefcase tests/test_benchmark.py --benchmark-only"
+bench-save = "python -m pytest -v -p no:briefcase tests/test_benchmark.py --benchmark-only --benchmark-json=benchmark/results.json"
+
+[tool.hatch.version]
+source = "vcs"
+
+
+[tool.hatch.version.raw-options]
+version_scheme = "post-release"
+
+
+[tool.mypy]
+python_version = "{{ python_version_info.mypy_version }}"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_unreachable = true
 
 
 [tool.ruff]
 target-version = "{{ python_version_info.ruff_target }}"
 line-length = 88
-lint.extend-select = [
+
+[tool.ruff.lint]
+extend-select = [
     "A",
     "ARG",
     "B",
@@ -129,93 +231,47 @@ lint.extend-select = [
     "W",
     "YTT",
 ]
-lint.ignore = [
-    "ARG001", # Unused function argument
-    "E501",   # Line too long
-    "I001",
-]
+ignore = ["ARG001", "E501", "I001", "RUF001", "PLR2004", "EXE003", "ISC001"]
+
 
 
 [tool.ruff.per-file-ignores]
 "tests/*" = ["S101"]
 
 
-[tool.mypy]
-python_version = "{{ python_version_info.mypy_version }}"
-warn_return_any = true
-warn_unused_configs = true
-disallow_untyped_defs = true
-disallow_incomplete_defs = true
-check_untyped_defs = true
-disallow_untyped_decorators = true
-no_implicit_optional = true
-warn_redundant_casts = true
-warn_unused_ignores = true
-warn_no_return = true
-warn_unreachable = true
 
 
-[tool.coverage.run]
-source_pkgs = ["{{ import_name }}", "tests"]
-branch = true
-parallel = true
-omit = [
-    "src/{{ import_name }}/__about__.py",
-]
-
-
-[tool.coverage.paths]
-{{ import_name }} = ["src/{{ import_name }}", "*/{{ name }}/src/{{ import_name }}"]
-tests = ["tests", "*/{{ name }}/tests"]
-
-
-[tool.coverage.report]
-exclude_lines = [
-    "no cov",
-    "if __name__ == .__main__.:",
-    "if TYPE_CHECKING:",
-]
-
-[project.optional-dependencies]
-test = [
-    "pytest>=7.0.0",
-    "pytest-cov>=4.0.0",
-    "pytest-xdist>=3.5.0",  # For parallel test execution
-    "pytest-benchmark[histogram]>=4.0.0",  # For performance testing
-]
-
-dev = [
-    "pre-commit>=3.6.0",
-    "ruff>=0.1.0",
-    "mypy>=1.0.0",
-]
-
-all = [
-    "pre-commit>=3.6.0",
-    "ruff>=0.1.0",
-    "mypy>=1.0.0",
-    "pytest>=7.0.0",
-    "pytest-cov>=4.0.0",
-    "pytest-xdist>=3.5.0",
-    "pytest-benchmark[histogram]>=4.0.0",
-]
-
-[tool.hatch.envs.test]
-dependencies = [".[test]"]
-
-[tool.hatch.envs.test.scripts]
-test = "python -m pytest -n auto {args:tests}"
-test-cov = "python -m pytest -n auto --cov-report=term-missing --cov-config=pyproject.toml --cov=src/{{ import_name }} --cov=tests {args:tests}"
-bench = "python -m pytest -v -p no:briefcase tests/test_benchmark.py --benchmark-only"
-bench-save = "python -m pytest -v -p no:briefcase tests/test_benchmark.py --benchmark-only --benchmark-json=benchmark/results.json"
 
 [tool.pytest.ini_options]
-markers = ["benchmark: marks tests as benchmarks (select with '-m benchmark')"]
-addopts = "-v -p no:briefcase"
-testpaths = ["tests"]
-python_files = ["test_*.py"]
-filterwarnings = ["ignore::DeprecationWarning", "ignore::UserWarning"]
+addopts = "-v --durations=10 -p no:briefcase"
 asyncio_mode = "auto"
+console_output_style = "progress"
+filterwarnings = ["ignore::DeprecationWarning", "ignore::UserWarning"]
+log_cli = true
+log_cli_level = "INFO"
+markers = [
+  "benchmark: marks tests as benchmarks (select with '-m benchmark')",
+  "unit: mark a test as a unit test",
+  "integration: mark a test as an integration test",
+  "permutation: tests for permutation functionality",
+  "parameter: tests for parameter parsing",
+  "prompt: tests for prompt parsing",
+]
+norecursedirs = [
+  ".*",
+  "build",
+  "dist",
+  "venv",
+  "__pycache__",
+  "*.egg-info",
+  "_private",
+]
+
+python_classes = ["Test*"]
+python_files = ["test_*.py"]
+python_functions = ["test_*"]
+testpaths = ["tests"]
+
 
 [tool.pytest-benchmark]
 min_rounds = 100
