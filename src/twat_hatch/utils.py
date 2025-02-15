@@ -1,4 +1,5 @@
 """Utility functions for twat-hatch."""
+
 from __future__ import annotations
 
 import re

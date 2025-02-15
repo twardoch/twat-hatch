@@ -1,4 +1,5 @@
 """Core functionality for Python package initialization."""
+
 from __future__ import annotations
 
 import subprocess
@@ -300,13 +301,22 @@ class PackageInitializer:
             pkg_path: Package directory path.
             repo_name: Repository name (local package import name)
         """
-        owner = self.config.github_username  # Assumes non-empty if GitHub linking is desired
+        owner = (
+            self.config.github_username
+        )  # Assumes non-empty if GitHub linking is desired
         full_repo = f"{owner}/{repo_name}"
         try:
             subprocess.run(
                 [
-                    "gh", "repo", "create", full_repo, "--public",
-                    "--source", str(pkg_path), "--remote=origin", "--push"
+                    "gh",
+                    "repo",
+                    "create",
+                    full_repo,
+                    "--public",
+                    "--source",
+                    str(pkg_path),
+                    "--remote=origin",
+                    "--push",
                 ],
                 cwd=pkg_path,
                 check=True,

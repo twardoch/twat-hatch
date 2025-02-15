@@ -8,6 +8,7 @@
 This module provides the main CLI interface for creating Python packages
 and plugins using twat-hatch.
 """
+
 from __future__ import annotations
 
 import sys

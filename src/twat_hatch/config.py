@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Configuration generation and management for twat-hatch."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass
