@@ -1,4 +1,5 @@
 """Core functionality for Python package initialization."""
+from __future__ import annotations
 
 import subprocess
 from datetime import datetime
@@ -11,7 +12,7 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 from pydantic import BaseModel, Field
 from rich.console import Console
 
-from .utils import PyVer
+from twat_hatch.utils import PyVer
 
 console = Console()
 
@@ -167,7 +168,7 @@ class PackageConfig(BaseModel):
         }
 
     @classmethod
-    def from_toml(cls, config_path: Path | str) -> "PackageConfig":
+    def from_toml(cls, config_path: Path | str) -> PackageConfig:
         """Create configuration from TOML file.
 
         Args:
@@ -353,9 +354,7 @@ class PackageInitializer:
                 plugin_import_name = import_name[len(plugin_host_prefix) :]
             elif import_name.startswith(self.config.plugin_host):
                 plugin_import_name = import_name[len(self.config.plugin_host) :]
-                if plugin_import_name.startswith("-") or plugin_import_name.startswith(
-                    "_"
-                ):
+                if plugin_import_name.startswith(("-", "_")):
                     plugin_import_name = plugin_import_name[1:]
 
         # Build template context

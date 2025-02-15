@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Configuration generation and management for twat-hatch."""
+from __future__ import annotations
 
 from dataclasses import dataclass
 from importlib.resources import path
@@ -8,7 +9,7 @@ from typing import Any, Literal
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
-from .utils import PyVer
+from twat_hatch.utils import PyVer
 
 PackageType = Literal["package", "plugin", "plugin-host"]
 

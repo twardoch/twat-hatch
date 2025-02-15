@@ -8,6 +8,7 @@
 This module provides the main CLI interface for creating Python packages
 and plugins using twat-hatch.
 """
+from __future__ import annotations
 
 import sys
 from pathlib import Path
@@ -22,9 +23,9 @@ from rich.prompt import Confirm, IntPrompt, Prompt
 from rich.theme import Theme
 from rich.traceback import install
 
-from .config import ConfigurationGenerator, PackageType
-from .hatch import PackageInitializer
-from .utils import PyVer
+from twat_hatch.config import ConfigurationGenerator, PackageType
+from twat_hatch.hatch import PackageInitializer
+from twat_hatch.utils import PyVer
 
 # Install rich traceback handler
 install(show_locals=True)

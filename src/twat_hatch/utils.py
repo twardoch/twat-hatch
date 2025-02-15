@@ -1,9 +1,10 @@
 """Utility functions for twat-hatch."""
+from __future__ import annotations
 
 import re
 import sys
 from dataclasses import dataclass
-from typing import Any, Optional
+from typing import Any
 
 
 @dataclass(frozen=True)
@@ -66,7 +67,7 @@ class PyVer:
         return f"{self.major}.{self.minor:02d}.{self.micro}"
 
     @classmethod
-    def parse(cls, version: str | tuple[int, ...] | Any | None = None) -> "PyVer":
+    def parse(cls, version: str | tuple[int, ...] | Any | None = None) -> PyVer:
         """Parse a version from various formats into a PyVer instance.
 
         Args:
@@ -155,13 +156,13 @@ class PyVer:
             raise ValueError(msg) from e
 
     @classmethod
-    def from_sys_version(cls) -> "PyVer":
+    def from_sys_version(cls) -> PyVer:
         """Create PyVer from current Python version."""
         return cls.parse(sys.version_info)
 
     @classmethod
     def get_supported_versions(
-        cls, min_ver: "PyVer", max_ver: Optional["PyVer"] = None
+        cls, min_ver: PyVer, max_ver: PyVer | None = None
     ) -> list[str]:
         """Get list of supported Python version classifiers.
 
@@ -183,7 +184,7 @@ class PyVer:
             for i in range(min_ver.minor, max_minor + 1)
         ]
 
-    def requires_python(self, max_ver: Optional["PyVer"] = None) -> str:
+    def requires_python(self, max_ver: PyVer | None = None) -> str:
         """Get requires-python string.
 
         Args:
@@ -200,7 +201,7 @@ class PyVer:
     @classmethod
     def from_cli_input(
         cls, version: str | tuple[int, ...] | Any | None = None
-    ) -> "PyVer":
+    ) -> PyVer:
         """Parse Python version from command-line input.
 
         Args:
