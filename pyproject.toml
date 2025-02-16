@@ -1,22 +1,29 @@
+# this_file: twat_hatch/pyproject.toml
+
+# Build system configuration
+# Specifies the build backend and its requirements for building the package
 [build-system]
 requires = [
-    "hatchling>=1.9.3",
-    "hatch-vcs>=0.3.0",
-    "hatch-autorun",
-    "hatch-minify",
-    "hatch-pip-compile"
+    "hatchling>=1.27.0",     # Core build backend for Hatch
+    "hatch-vcs>=0.4.0",      # Version Control System plugin for Hatch
+    "hatch-autorun",         # Plugin for running scripts during build
+    "hatch-minify",          # Plugin for minifying files during build
+    "hatch-pip-compile"      # Plugin for managing dependencies with pip-compile
 ]
-build-backend = "hatchling.build"
+build-backend = "hatchling.build"  # Use Hatchling as the build backend
 
+# Wheel build configuration
+# Specifies which packages to include in the wheel distribution
 [tool.hatch.build.targets.wheel]
 packages = ["src/twat_hatch"]
 
+# Core project metadata
 [project]
 name = "twat-hatch"
-dynamic = ["version"]
+dynamic = ["version"]  # Version is determined dynamically from VCS
 description = "Plugin for twat that provides package initialization functionality"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.10"  # Minimum Python version required
 license = "MIT"
 keywords = ["twat", "twat-plugin", "package-template"]
 classifiers = [
@@ -30,56 +37,58 @@ classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules"
 ]
 
+# Core dependencies required for the package to function
 dependencies = [
-    "twat>=1.0.0",
-    "pydantic>=2.0.0",
-    "tomli>=2.0.0; python_version < '3.11'",
-    "jinja2>=3.1.0"
+    "twat>=1.8.1",           # Main twat package
+    "pydantic>=2.10.6",      # Data validation using Python type annotations
+    "tomli>=2.0.0; python_version < '3.11'",  # TOML parser for Python <3.11
+    "jinja2>=3.1.5"          # Template engine for Python
 ]
 
+# Project author information
 [[project.authors]]
 name = "Adam Twardoch"
 email = "adam+github@twardoch.com"
 
-
-
+# Project URLs for documentation and source code
 [project.urls]
 Documentation = "https://github.com/twardoch/twat-hatch#readme"
 Issues = "https://github.com/twardoch/twat-hatch/issues"
 Source = "https://github.com/twardoch/twat-hatch"
 
+# Entry points for twat plugins
 [project.entry-points."twat.plugins"]
 hatch = "twat_hatch"
 
-
+# Command-line scripts provided by the package
 [project.scripts]
 twat-hatch = "twat_hatch.__main__:main"
 
+# Version configuration using VCS (Git)
 [tool.hatch.version]
 source = "vcs"
 
 [tool.hatch.version.raw-options]
 version_scheme = "post-release"
 
+# VCS hook configuration for version file generation
 [tool.hatch.build.hooks.vcs]
 version-file = "src/twat_hatch/__version__.py"
 
-
+# Build hooks configuration
 [tool.hatch.build.hooks]
-minify = {  }
+minify = {  }  # Minification configuration (empty for defaults)
 
+# Default development environment configuration
 [tool.hatch.envs.default]
 dependencies = [
     "pytest",
     "pytest-cov",
-    "mypy>=1.0.0",
-    "ruff>=0.1.0",
-    "pytest>=7.0.0",
-    "pytest-cov>=4.0.0",
-    "ruff>=0.1.0",
-    "mypy>=1.0.0",
+    "mypy>=1.15.0",         # Static type checker
+    "ruff>=0.9.6",          # Fast Python linter and formatter
 ]
 
+# Scripts available in the default environment
 [tool.hatch.envs.default.scripts]
 test = "pytest {args:tests}"
 test-cov = "pytest --cov-report=term-missing --cov-config=pyproject.toml --cov=src/twat_hatch --cov=tests {args:tests}"
@@ -87,65 +96,70 @@ type-check = "mypy src/twat_hatch tests"
 lint = ["ruff check src/twat_hatch tests", "ruff format src/twat_hatch tests"]
 autorun = ["python", "-m", "twat_hatch.autorun"]
 
+# Python version matrix for testing
 [[tool.hatch.envs.default.matrix]]
 python = ["3.10", "3.11", "3.12"]
 
+# Environment plugin configuration
 [tool.hatch.plugins.environment]
-pip-compile = {  }
+pip-compile = {  }  # pip-compile configuration (empty for defaults)
 
+# Linting environment configuration
 [tool.hatch.envs.lint]
-detached = true
+detached = true  # Run in isolated environment
 dependencies = [
-    "mypy>=1.0.0",
-    "ruff>=0.1.0",
+    "mypy>=1.15.0",
+    "ruff>=0.9.6",
 ]
 
+# Linting environment scripts
 [tool.hatch.envs.lint.scripts]
 typing = "mypy --install-types --non-interactive {args:src/twat_hatch tests}"
 style = ["ruff check {args:.}", "ruff format {args:.}"]
 fmt = ["ruff format {args:.}", "ruff check --fix {args:.}"]
 all = ["style", "typing"]
 
+# Ruff (linter) configuration
 [tool.ruff]
 target-version = "py310"
 line-length = 88
-lint.extend-select = [
-    "A",
-    "ARG",
-    "B",
-    "C",
-    "DTZ",
-    "E",
-    "EM",
-    "F",
-    "FBT",
-    "I",
-    "ICN",
-    "ISC",
-    "N",
-    "PLC",
-    "PLE",
-    "PLR",
-    "PLW",
-    "Q",
-    "RUF",
-    "S",
-    "T",
-    "TID",
-    "UP",
-    "W",
-    "YTT",
-]
-lint.ignore = [
-    "ARG001", # Unused function argument
-    "E501",   # Line too long
-    "I001",
-]
 
+# Ruff lint rules configuration
+[tool.ruff.lint]
+extend-select = [
+    "A",     # flake8-builtins
+    "ARG",   # flake8-unused-arguments
+    "B",     # flake8-bugbear
+    "C",     # flake8-comprehensions
+    "DTZ",   # flake8-datetimez
+    "E",     # pycodestyle errors
+    "EM",    # flake8-errmsg
+    "F",     # pyflakes
+    "FBT",   # flake8-boolean-trap
+    "I",     # isort
+    "ICN",   # flake8-import-conventions
+    "ISC",   # flake8-implicit-str-concat
+    "N",     # pep8-naming
+    "PLC",   # pylint convention
+    "PLE",   # pylint error
+    "PLR",   # pylint refactor
+    "PLW",   # pylint warning
+    "Q",     # flake8-quotes
+    "RUF",   # Ruff-specific rules
+    "S",     # flake8-bandit
+    "T",     # flake8-debugger
+    "TID",   # flake8-tidy-imports
+    "UP",    # pyupgrade
+    "W",     # pycodestyle warnings
+    "YTT",   # flake8-2020
+]
+ignore = ["ARG001", "E501", "I001", "RUF001", "PLR2004", "EXE003", "ISC001"]
+
+# File-specific Ruff configurations
 [tool.ruff.per-file-ignores]
-"tests/*" = ["S101"]
+"tests/*" = ["S101"]  # Allow assert in tests
 
-
+# MyPy (type checker) configuration
 [tool.mypy]
 python_version = "3.10"
 warn_return_any = true
@@ -160,12 +174,14 @@ warn_unused_ignores = true
 warn_no_return = true
 warn_unreachable = true
 
+# Pydantic MyPy plugin configuration
 [tool.pydantic-mypy]
 init_forbid_extra = true
 init_typed = true
 warn_required_dynamic_aliases = true
 warn_untyped_fields = true
 
+# Coverage.py configuration for test coverage
 [tool.coverage.run]
 source_pkgs = ["twat_hatch", "tests"]
 branch = true
@@ -174,12 +190,12 @@ omit = [
     "src/twat_hatch/__about__.py",
 ]
 
-
+# Coverage path mappings
 [tool.coverage.paths]
 twat_hatch = ["src/twat_hatch", "*/twat-hatch/src/twat_hatch"]
 tests = ["tests", "*/twat-hatch/tests"]
 
-
+# Coverage report configuration
 [tool.coverage.report]
 exclude_lines = [
     "no cov",
@@ -187,36 +203,40 @@ exclude_lines = [
     "if TYPE_CHECKING:",
 ]
 
+# Optional dependencies
 [project.optional-dependencies]
 test = [
-    "pytest>=7.0.0",
-    "pytest-cov>=4.0.0",
-    "pytest-xdist>=3.5.0",  # For parallel test execution
-    "pytest-benchmark[histogram]>=4.0.0",  # For performance testing
+    "pytest>=8.3.4",
+    "pytest-cov>=6.0.0",
+    "pytest-xdist>=3.6.1",                # For parallel test execution
+    "pytest-benchmark[histogram]>=5.1.0",  # For performance testing
 ]
 
 dev = [
-    "pre-commit>=3.6.0",
-    "ruff>=0.1.0",
-    "mypy>=1.0.0",
+    "pre-commit>=4.1.0",
+    "ruff>=0.9.6",
+    "mypy>=1.15.0",
 ]
 
 all = [
-    "twat>=1.0.0",
-    "pydantic>=2.0.0",
+    "twat>=1.8.1",
+    "pydantic>=2.10.6",
     "tomli>=2.0.0; python_version < '3.11'",
-    "jinja2>=3.1.0"
+    "jinja2>=3.1.5"
 ]
 
+# Test environment configuration
 [tool.hatch.envs.test]
 dependencies = [".[test]"]
 
+# Test environment scripts
 [tool.hatch.envs.test.scripts]
 test = "python -m pytest -n auto {args:tests}"
 test-cov = "python -m pytest -n auto --cov-report=term-missing --cov-config=pyproject.toml --cov=src/twat_hatch --cov=tests {args:tests}"
 bench = "python -m pytest -v -p no:briefcase tests/test_benchmark.py --benchmark-only"
 bench-save = "python -m pytest -v -p no:briefcase tests/test_benchmark.py --benchmark-only --benchmark-json=benchmark/results.json"
 
+# Pytest configuration
 [tool.pytest.ini_options]
 markers = ["benchmark: marks tests as benchmarks (select with '-m benchmark')"]
 addopts = "-v -p no:briefcase"
@@ -225,6 +245,7 @@ python_files = ["test_*.py"]
 filterwarnings = ["ignore::DeprecationWarning", "ignore::UserWarning"]
 asyncio_mode = "auto"
 
+# Pytest-benchmark configuration
 [tool.pytest-benchmark]
 min_rounds = 100
 min_time = 0.1
