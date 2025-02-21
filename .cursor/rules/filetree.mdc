@@ -2,13 +2,13 @@
 description: File tree of the project
 globs: 
 ---
-[ 992]  .
+[ 768]  .
 ├── [  64]  .benchmarks
 ├── [  96]  .cursor
 │   └── [ 224]  rules
 │       ├── [ 821]  0project.mdc
 │       ├── [ 516]  cleanup.mdc
-│       ├── [  54]  filetree.mdc
+│       ├── [2.5K]  filetree.mdc
 │       └── [2.0K]  quality.mdc
 ├── [  96]  .github
 │   └── [ 128]  workflows
@@ -17,55 +17,66 @@ globs:
 ├── [3.5K]  .gitignore
 ├── [ 532]  .pre-commit-config.yaml
 ├── [1.0K]  LICENSE
-├── [2.9K]  LOG.md
-├── [ 153]  MANIFEST.in
-├── [ 12K]  README.md
-├── [5.2K]  TODO.md
+├── [3.1K]  LOG.md
+├── [6.8K]  README.md
+├── [   8]  TODO.md
 ├── [   7]  VERSION.txt
 ├── [ 11K]  cleanup.py
-├── [  96]  dist
-├── [  96]  examples
-│   └── [ 948]  upload_example.py
-├── [ 306]  filetree.sh
-├── [ 439]  mypy.ini
-├── [6.9K]  pyproject.toml
+├── [ 160]  dist
+├── [8.2K]  pyproject.toml
 ├── [ 128]  src
-│   └── [ 384]  twat_fs
-│       ├── [ 447]  __init__.py
-│       ├── [ 733]  __main__.py
-│       ├── [8.9K]  cli.py
-│       ├── [ 128]  data
-│       │   ├── [1.5K]  _test.jpg
-│       │   └── [383K]  test.jpg
-│       ├── [   1]  py.typed
-│       ├── [ 24K]  upload.py
-│       └── [ 640]  upload_providers
-│           ├── [3.5K]  __init__.py
-│           ├── [6.2K]  bashupload.py
-│           ├── [5.3K]  catbox.py
-│           ├── [ 12K]  core.py
-│           ├── [ 20K]  dropbox.py
-│           ├── [8.5K]  fal.py
-│           ├── [5.0K]  filebin.py
-│           ├── [ 10K]  litterbox.py
-│           ├── [6.1K]  pixeldrain.py
-│           ├── [4.0K]  protocols.py
-│           ├── [5.1K]  s3.py
-│           ├── [6.0K]  simple.py
-│           ├── [ 728]  types.py
-│           ├── [4.3K]  uguu.py
-│           ├── [6.9K]  utils.py
-│           └── [4.1K]  www0x0.py
-├── [ 352]  tests
-│   ├── [  63]  __init__.py
-│   ├── [  96]  data
-│   │   └── [ 100]  test.txt
-│   ├── [3.1K]  test_filebin_pixeldrain.py
-│   ├── [9.0K]  test_integration.py
-│   ├── [8.7K]  test_s3_advanced.py
-│   ├── [ 180]  test_twat_fs.py
-│   └── [ 29K]  test_upload.py
-├── [3.0K]  update_providers.py
-└── [382K]  uv.lock
+│   └── [ 352]  twat_hatch
+│       ├── [ 224]  __init__.py
+│       ├── [ 11K]  __main__.py
+│       ├── [5.0K]  config.py
+│       ├── [ 19K]  hatch.py
+│       ├── [ 448]  themes
+│       │   ├── [  46]  __init__.py
+│       │   ├── [  64]  _default
+│       │   ├── [ 160]  _shared
+│       │   │   ├── [1.1K]  base.toml.j2
+│       │   │   └── [ 256]  snippets
+│       │   │       ├── [ 128]  author.toml.j2
+│       │   │       ├── [ 896]  dependencies.toml.j2
+│       │   │       ├── [ 280]  development.toml.j2
+│       │   │       ├── [ 186]  features.toml.j2
+│       │   │       ├── [ 202]  package.toml.j2
+│       │   │       └── [2.0K]  tools.toml.j2
+│       │   ├── [ 352]  default
+│       │   │   ├── [  96]  .github
+│       │   │   │   └── [ 160]  workflows
+│       │   │   │       ├── [2.8K]  push.yml.j2
+│       │   │   │       └── [1.4K]  release.yml.j2
+│       │   │   ├── [ 532]  .pre-commit-config.yaml.j2
+│       │   │   ├── [1.1K]  LICENSE.j2
+│       │   │   ├── [ 820]  README.md.j2
+│       │   │   ├── [  96]  dist
+│       │   │   │   └── [   1]  .gitkeep.j2
+│       │   │   ├── [3.5K]  hidden.gitignore.j2
+│       │   │   ├── [6.5K]  pyproject.toml.j2
+│       │   │   └── [  96]  tests
+│       │   │       └── [ 173]  test_package.py.j2
+│       │   ├── [ 160]  package
+│       │   │   ├── [ 426]  package.toml.j2
+│       │   │   └── [ 128]  src
+│       │   │       └── [  96]  __package_name__
+│       │   │           └── [1.8K]  __package_name__.py.j2
+│       │   ├── [ 854]  package.toml.j2
+│       │   ├── [ 160]  plugin
+│       │   │   ├── [ 374]  README.md.j2
+│       │   │   ├── [ 355]  pyproject.toml.j2
+│       │   │   └── [  96]  src
+│       │   │       └── [  96]  __package_name__
+│       │   │           └── [ 130]  __init__.py.j2
+│       │   ├── [1.2K]  plugin.toml.j2
+│       │   ├── [ 160]  plugin_host
+│       │   │   ├── [ 561]  README.md.j2
+│       │   │   ├── [ 308]  pyproject.toml.j2
+│       │   │   └── [  96]  src
+│       │   │       └── [2.1K]  __init__.py.j2
+│       │   └── [1.3K]  plugin_host.toml.j2
+│       └── [8.3K]  utils.py
+└── [ 128]  tests
+    └── [ 154]  test_twat_hatch.py
 
-14 directories, 51 files
+27 directories, 49 files
