@@ -234,6 +234,20 @@ class PackageConfig(BaseModel):
 class PackageInitializer:
     """Manages creation of Python package structures."""
 
+    @staticmethod
+    def _convert_name(name: str, to_import: bool = True) -> str:
+        """Convert between package name formats.
+
+        Args:
+            name: Package name to convert
+            to_import: If True, converts to import name (using underscores)
+                      If False, converts to distribution name (using hyphens)
+
+        Returns:
+            Converted name string
+        """
+        return name.replace("-", "_") if to_import else name.replace("_", "-")
+
     def __init__(
         self,
         out_dir: str | Path | None = None,
@@ -294,17 +308,17 @@ class PackageInitializer:
         except (subprocess.CalledProcessError, FileNotFoundError) as err:
             console.print(f"[yellow]Git init failed: {err}[/]")
 
-    def _create_github_repo(self, pkg_path: Path, repo_name: str) -> None:
+    def _create_github_repo(self, pkg_path: Path, name: str) -> None:
         """Create and link GitHub repository using gh CLI.
 
         Args:
             pkg_path: Package directory path.
-            repo_name: Repository name (local package import name)
+            name: Package name from pyproject.toml (distribution name)
         """
         owner = (
             self.config.github_username
         )  # Assumes non-empty if GitHub linking is desired
-        full_repo = f"{owner}/{repo_name}"
+        full_repo = f"{owner}/{name}"
         try:
             subprocess.run(
                 [
@@ -397,23 +411,16 @@ class PackageInitializer:
         """Initialize a package with appropriate theme.
 
         Args:
-            name: Name of package to create
-
-        The theme selection logic works as follows:
-        1. Always apply default theme first as the base
-        2. Then apply one of:
-           - If plugin_host is specified:
-             * If this package is the plugin_host, apply plugin_host theme
-             * Otherwise, apply plugin theme
-           - Otherwise, apply package theme for regular packages
-        3. Apply optional themes (e.g. mkdocs) if enabled
+            name: Name of package to create (distribution name with hyphens)
         """
         if not self.config:
             msg = "No configuration provided"
             raise ValueError(msg)
 
-        context = self._get_context(name)
-        pkg_path = self.out_dir / context["import_name"]
+        # Convert hyphenated name to import name for local paths
+        import_name = self._convert_name(name, to_import=True)
+        context = self._get_context(name)  # Pass original name to get context
+        pkg_path = self.out_dir / import_name
 
         # Create package source directory structure
         src_path = pkg_path / "src" / context["import_name"]
@@ -467,7 +474,7 @@ class PackageInitializer:
                 console.print(f"[yellow]Git commit failed: {err}[/]")
             # Create and link GitHub repository if GitHub username is provided
             if self.config.github_username:
-                self._create_github_repo(pkg_path, context["import_name"])
+                self._create_github_repo(pkg_path, name)
 
     def initialize_all(self) -> None:
         """Initialize all packages specified in config.
