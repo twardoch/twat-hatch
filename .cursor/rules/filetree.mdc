@@ -2,26 +2,27 @@
 description: File tree of the project
 globs: 
 ---
-[ 768]  .
+[ 800]  .
 ├── [  64]  .benchmarks
 ├── [  96]  .cursor
 │   └── [ 224]  rules
 │       ├── [ 821]  0project.mdc
 │       ├── [ 516]  cleanup.mdc
-│       ├── [2.5K]  filetree.mdc
+│       ├── [3.7K]  filetree.mdc
 │       └── [2.0K]  quality.mdc
 ├── [  96]  .github
 │   └── [ 128]  workflows
 │       ├── [2.7K]  push.yml
 │       └── [1.4K]  release.yml
 ├── [3.5K]  .gitignore
-├── [ 532]  .pre-commit-config.yaml
+├── [ 470]  .pre-commit-config.yaml
+├── [ 939]  CLEANUP.txt
 ├── [1.0K]  LICENSE
 ├── [3.1K]  LOG.md
 ├── [6.8K]  README.md
 ├── [   8]  TODO.md
 ├── [   7]  VERSION.txt
-├── [ 11K]  cleanup.py
+├── [ 13K]  cleanup.py
 ├── [ 160]  dist
 ├── [8.2K]  pyproject.toml
 ├── [ 128]  src
@@ -47,7 +48,7 @@ globs:
 │       │   │   │   └── [ 160]  workflows
 │       │   │   │       ├── [2.8K]  push.yml.j2
 │       │   │   │       └── [1.4K]  release.yml.j2
-│       │   │   ├── [ 532]  .pre-commit-config.yaml.j2
+│       │   │   ├── [ 502]  .pre-commit-config.yaml.j2
 │       │   │   ├── [1.1K]  LICENSE.j2
 │       │   │   ├── [ 820]  README.md.j2
 │       │   │   ├── [  96]  dist
@@ -79,4 +80,4 @@ globs:
 └── [ 128]  tests
     └── [ 154]  test_twat_hatch.py
 
-27 directories, 49 files
+27 directories, 50 files
