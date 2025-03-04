@@ -1,0 +1,3526 @@
+This file is a merged representation of a subset of the codebase, containing files not matching ignore patterns, combined into a single document by Repomix. The content has been processed where empty lines have been removed.
+
+================================================================
+File Summary
+================================================================
+
+Purpose:
+--------
+This file contains a packed representation of the entire repository's contents.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+
+File Format:
+------------
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Multiple file entries, each consisting of:
+  a. A separator line (================)
+  b. The file path (File: path/to/file)
+  c. Another separator line
+  d. The full contents of the file
+  e. A blank line
+
+Usage Guidelines:
+-----------------
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+
+Notes:
+------
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Files matching these patterns are excluded: .specstory/**/*.md, .venv/**, _private/**, CLEANUP.txt, **/*.json, *.lock
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Empty lines have been removed from all files
+
+Additional Info:
+----------------
+
+================================================================
+Directory Structure
+================================================================
+.cursor/
+  rules/
+    0project.mdc
+    cleanup.mdc
+    filetree.mdc
+    quality.mdc
+.github/
+  workflows/
+    push.yml
+    release.yml
+src/
+  twat_hatch/
+    themes/
+      _shared/
+        snippets/
+          author.toml.j2
+          dependencies.toml.j2
+          development.toml.j2
+          features.toml.j2
+          package.toml.j2
+          tools.toml.j2
+        base.toml.j2
+      default/
+        .github/
+          workflows/
+            push.yml.j2
+            release.yml.j2
+        dist/
+          .gitkeep.j2
+        tests/
+          test_package.py.j2
+        .pre-commit-config.yaml.j2
+        hidden.gitignore.j2
+        LICENSE.j2
+        pyproject.toml.j2
+        README.md.j2
+      package/
+        src/
+          __package_name__/
+            __package_name__.py.j2
+        package.toml.j2
+      plugin/
+        src/
+          __package_name__/
+            __init__.py.j2
+        pyproject.toml.j2
+        README.md.j2
+      plugin_host/
+        src/
+          __init__.py.j2
+        pyproject.toml.j2
+        README.md.j2
+      __init__.py
+      package.toml.j2
+      plugin_host.toml.j2
+      plugin.toml.j2
+    __init__.py
+    __main__.py
+    config.py
+    hatch.py
+    utils.py
+tests/
+  test_twat_hatch.py
+.gitignore
+.pre-commit-config.yaml
+cleanup.py
+LICENSE
+LOG.md
+pyproject.toml
+README.md
+TODO.md
+VERSION.txt
+
+================================================================
+Files
+================================================================
+
+================
+File: .cursor/rules/0project.mdc
+================
+---
+description: About this project
+globs:
+---
+# About this project
+
+`twat-fs` is a file system utility library focused on robust and extensible file upload capabilities with multiple provider support. It provides:
+
+- Multi-provider upload system with smart fallback (catbox.moe default, plus Dropbox, S3, etc.)
+- Automatic retry for temporary failures, fallback for permanent ones
+- URL validation and clean developer experience with type hints
+- Simple CLI: `python -m twat_fs upload_file path/to/file.txt`
+- Easy installation: `uv pip install twat-fs` (basic) or `uv pip install 'twat-fs[all,dev]'` (all features)
+
+## Development Notes
+- Uses `uv` for Python package management
+- Quality tools: ruff, mypy, pytest
+- Clear provider protocol for adding new storage backends
+- Strong typing and runtime checks throughout
+
+================
+File: .cursor/rules/cleanup.mdc
+================
+---
+description: Run `cleanup.py` script before and after changes
+globs: 
+---
+Before you do any changes or if I say "cleanup", run the `cleanup.py update` script in the main folder. Analyze the results, describe recent changes in @LOG.md and edit @TODO.md to update priorities and plan next changes. PERFORM THE CHANGES, then run the `cleanup.py status` script and react to the results.
+
+When you edit @TODO.md, lead in lines with empty GFM checkboxes if things aren't done (`- [ ] `) vs. filled (`- [x] `) if done.
+
+================
+File: .cursor/rules/filetree.mdc
+================
+---
+description: File tree of the project
+globs: 
+---
+[ 800]  .
+├── [  64]  .benchmarks
+├── [  96]  .cursor
+│   └── [ 224]  rules
+│       ├── [ 821]  0project.mdc
+│       ├── [ 516]  cleanup.mdc
+│       ├── [3.7K]  filetree.mdc
+│       └── [2.0K]  quality.mdc
+├── [  96]  .github
+│   └── [ 128]  workflows
+│       ├── [2.7K]  push.yml
+│       └── [1.4K]  release.yml
+├── [3.5K]  .gitignore
+├── [ 470]  .pre-commit-config.yaml
+├── [ 939]  CLEANUP.txt
+├── [1.0K]  LICENSE
+├── [3.1K]  LOG.md
+├── [6.8K]  README.md
+├── [   8]  TODO.md
+├── [   7]  VERSION.txt
+├── [ 13K]  cleanup.py
+├── [ 160]  dist
+├── [8.2K]  pyproject.toml
+├── [ 128]  src
+│   └── [ 352]  twat_hatch
+│       ├── [ 224]  __init__.py
+│       ├── [ 11K]  __main__.py
+│       ├── [5.0K]  config.py
+│       ├── [ 19K]  hatch.py
+│       ├── [ 448]  themes
+│       │   ├── [  46]  __init__.py
+│       │   ├── [  64]  _default
+│       │   ├── [ 160]  _shared
+│       │   │   ├── [1.1K]  base.toml.j2
+│       │   │   └── [ 256]  snippets
+│       │   │       ├── [ 128]  author.toml.j2
+│       │   │       ├── [ 896]  dependencies.toml.j2
+│       │   │       ├── [ 280]  development.toml.j2
+│       │   │       ├── [ 186]  features.toml.j2
+│       │   │       ├── [ 202]  package.toml.j2
+│       │   │       └── [2.0K]  tools.toml.j2
+│       │   ├── [ 352]  default
+│       │   │   ├── [  96]  .github
+│       │   │   │   └── [ 160]  workflows
+│       │   │   │       ├── [2.8K]  push.yml.j2
+│       │   │   │       └── [1.4K]  release.yml.j2
+│       │   │   ├── [ 502]  .pre-commit-config.yaml.j2
+│       │   │   ├── [1.1K]  LICENSE.j2
+│       │   │   ├── [ 820]  README.md.j2
+│       │   │   ├── [  96]  dist
+│       │   │   │   └── [   1]  .gitkeep.j2
+│       │   │   ├── [3.5K]  hidden.gitignore.j2
+│       │   │   ├── [6.5K]  pyproject.toml.j2
+│       │   │   └── [  96]  tests
+│       │   │       └── [ 173]  test_package.py.j2
+│       │   ├── [ 160]  package
+│       │   │   ├── [ 426]  package.toml.j2
+│       │   │   └── [ 128]  src
+│       │   │       └── [  96]  __package_name__
+│       │   │           └── [1.8K]  __package_name__.py.j2
+│       │   ├── [ 854]  package.toml.j2
+│       │   ├── [ 160]  plugin
+│       │   │   ├── [ 374]  README.md.j2
+│       │   │   ├── [ 355]  pyproject.toml.j2
+│       │   │   └── [  96]  src
+│       │   │       └── [  96]  __package_name__
+│       │   │           └── [ 130]  __init__.py.j2
+│       │   ├── [1.2K]  plugin.toml.j2
+│       │   ├── [ 160]  plugin_host
+│       │   │   ├── [ 561]  README.md.j2
+│       │   │   ├── [ 308]  pyproject.toml.j2
+│       │   │   └── [  96]  src
+│       │   │       └── [2.1K]  __init__.py.j2
+│       │   └── [1.3K]  plugin_host.toml.j2
+│       └── [8.3K]  utils.py
+└── [ 128]  tests
+    └── [ 154]  test_twat_hatch.py
+
+27 directories, 50 files
+
+================
+File: .cursor/rules/quality.mdc
+================
+---
+description: Quality
+globs: 
+---
+- **Verify Information**: Always verify information before presenting it. Do not make assumptions or speculate without clear evidence.
+- **No Apologies**: Never use apologies.
+- **No Whitespace Suggestions**: Don't suggest whitespace changes.
+- **No Inventions**: Don't invent major changes other than what's explicitly requested.
+- **No Unnecessary Confirmations**: Don't ask for confirmation of information already provided in the context.
+- **Preserve Existing Code**: Don't remove unrelated code or functionalities. Pay attention to preserving existing structures.
+- **No Implementation Checks**: Don't ask the user to verify implementations that are visible in the provided context.
+- **No Unnecessary Updates**: Don't suggest updates or changes to files when there are no actual modifications needed.
+- **No Current Implementation**: Don't show or discuss the current implementation unless specifically requested.
+- **Use Explicit Variable Names**: Prefer descriptive, explicit variable names over short, ambiguous ones to enhance code readability.
+- **Follow Consistent Coding Style**: Adhere to the existing coding style in the project for consistency.
+- **Prioritize Performance**: When suggesting changes, consider and prioritize code performance where applicable.
+- **Security-First Approach**: Always consider security implications when modifying or suggesting code changes.
+- **Test Coverage**: Suggest or include appropriate unit tests for new or modified code.
+- **Error Handling**: Implement robust error handling and logging where necessary.
+- **Modular Design**: Encourage modular design principles to improve code maintainability and reusability.
+- **Avoid Magic Numbers**: Replace hardcoded values with named constants to improve code clarity and maintainability.
+- **Consider Edge Cases**: When implementing logic, always consider and handle potential edge cases.
+- **Use Assertions**: Include assertions wherever possible to validate assumptions and catch potential errors early.
+
+================
+File: .github/workflows/push.yml
+================
+name: Build & Test
+on:
+  push:
+    branches: [main]
+    tags-ignore: ["v*"]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: write
+  id-token: write
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  quality:
+    name: Code Quality
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Run Ruff lint
+        uses: astral-sh/ruff-action@v3
+        with:
+          version: "latest"
+          args: "check --output-format=github"
+      - name: Run Ruff Format
+        uses: astral-sh/ruff-action@v3
+        with:
+          version: "latest"
+          args: "format --check --respect-gitignore"
+  test:
+    name: Run Tests
+    needs: quality
+    strategy:
+      matrix:
+        python-version: ["3.10"]
+        os: [ubuntu-latest]
+      fail-fast: true
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install UV
+        uses: astral-sh/setup-uv@v5
+        with:
+          version: "latest"
+          python-version: ${{ matrix.python-version }}
+          enable-cache: true
+          cache-suffix: ${{ matrix.os }}-${{ matrix.python-version }}
+      - name: Install test dependencies
+        run: |
+          uv pip install --system --upgrade pip
+          uv pip install --system ".[test]"
+      - name: Run tests with Pytest
+        run: uv run pytest -n auto --maxfail=1 --disable-warnings --cov-report=xml --cov-config=pyproject.toml --cov=src/twat_hatch --cov=tests tests/
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-${{ matrix.python-version }}-${{ matrix.os }}
+          path: coverage.xml
+  build:
+    name: Build Distribution
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install UV
+        uses: astral-sh/setup-uv@v5
+        with:
+          version: "latest"
+          python-version: "3.12"
+          enable-cache: true
+      - name: Install build tools
+        run: uv pip install build hatchling hatch-vcs
+      - name: Build distributions
+        run: uv run python -m build --outdir dist
+      - name: Upload distribution artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-files
+          path: dist/
+          retention-days: 5
+
+================
+File: .github/workflows/release.yml
+================
+name: Release
+on:
+  push:
+    tags: ["v*"]
+permissions:
+  contents: write
+  id-token: write
+jobs:
+  release:
+    name: Release to PyPI
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/twat-hatch
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install UV
+        uses: astral-sh/setup-uv@v5
+        with:
+          version: "latest"
+          python-version: "3.12"
+          enable-cache: true
+      - name: Install build tools
+        run: uv pip install build hatchling hatch-vcs
+      - name: Build distributions
+        run: uv run python -m build --outdir dist
+      - name: Verify distribution files
+        run: |
+          ls -la dist/
+          test -n "$(find dist -name '*.whl')" || (echo "Wheel file missing" && exit 1)
+          test -n "$(find dist -name '*.tar.gz')" || (echo "Source distribution missing" && exit 1)
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          password: ${{ secrets.PYPI_TOKEN }}
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: dist/*
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+================
+File: src/twat_hatch/themes/_shared/snippets/author.toml.j2
+================
+# Author information
+[author]
+name = "{{ author_name }}"
+email = "{{ author_email }}"
+github_username = "{{ github_username }}"
+
+================
+File: src/twat_hatch/themes/_shared/snippets/dependencies.toml.j2
+================
+# Dependencies
+[dependencies]
+# Regular package dependencies
+dependencies = [
+    {% if is_plugin_host %}
+    "importlib-metadata>=6.0.0",
+    "importlib-resources>=5.0.0",
+    "typing-extensions>=4.0.0; python_version < '3.10'",
+    {% elif is_plugin %}
+    "{{ plugin_host }}",
+    "pydantic>=2.0.0",
+    {% endif %}
+    {% for dep in dependencies | default([]) %}
+    "{{ dep }}",
+    {% endfor %}
+]
+
+{% if is_plugin %}
+# Plugin-specific dependencies
+plugin_dependencies = [
+    {% for dep in plugin_dependencies | default([]) %}
+    "{{ dep }}",
+    {% endfor %}
+]
+{% endif %}
+
+# Development dependencies
+dev_dependencies = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "pytest-xdist>=3.5.0",
+    "pytest-benchmark[histogram]>=4.0.0",
+    "ruff>=0.1.0",
+    "mypy>=1.0.0",
+    "pre-commit>=3.6.0",
+    {% for dep in dev_dependencies | default([]) %}
+    "{{ dep }}",
+    {% endfor %}
+]
+
+================
+File: src/twat_hatch/themes/_shared/snippets/development.toml.j2
+================
+# Development configuration
+[development]
+# Additional development dependencies
+additional_dependencies = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "ruff>=0.1.0",
+    "mypy>=1.0.0",
+    {% for dep in dev_dependencies | default([]) %}
+    "{{ dep }}",
+    {% endfor %}
+]
+
+================
+File: src/twat_hatch/themes/_shared/snippets/features.toml.j2
+================
+# Feature flags
+[features]
+mkdocs = {{ use_mkdocs | default(false) | lower }}  # Enable MkDocs documentation
+vcs = {{ use_vcs | default(true) | lower }}         # Enable VCS integration
+
+================
+File: src/twat_hatch/themes/_shared/snippets/package.toml.j2
+================
+# Package configuration
+[package]
+min_python = "{{ min_python }}"
+{% if max_python %}max_python = "{{ max_python }}"{% endif %}
+license = "{{ license }}"
+development_status = "{{ development_status }}"
+
+================
+File: src/twat_hatch/themes/_shared/snippets/tools.toml.j2
+================
+# Tool configurations
+[tool.ruff]
+target-version = "{{ python_version_info.ruff_target }}"
+line-length = 88
+lint.extend-select = [
+    "A",    # flake8-builtins
+    "ARG",  # flake8-unused-arguments
+    "B",    # flake8-bugbear
+    "C",    # flake8-comprehensions
+    "DTZ",  # flake8-datetimez
+    "E",    # pycodestyle errors
+    "EM",   # flake8-errmsg
+    "F",    # pyflakes
+    "FBT",  # flake8-boolean-trap
+    "I",    # isort
+    "ICN",  # flake8-import-conventions
+    "ISC",  # flake8-implicit-str-concat
+    "N",    # pep8-naming
+    "PLC",  # pylint convention
+    "PLE",  # pylint error
+    "PLR",  # pylint refactor
+    "PLW",  # pylint warning
+    "Q",    # flake8-quotes
+    "RUF",  # Ruff-specific rules
+    "S",    # flake8-bandit
+    "T",    # flake8-print
+    "TID",  # flake8-tidy-imports
+    "UP",   # pyupgrade
+    "W",    # pycodestyle warnings
+    "YTT",  # flake8-2020
+]
+lint.ignore = [
+    "ARG001", # Unused function argument
+    "E501",   # Line too long
+    "I001",
+]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "lf"
+
+[tool.ruff.per-file-ignores]
+"tests/*" = ["S101"]  # Allow assert in tests
+
+[tool.mypy]
+python_version = "{{ python_version_info.mypy_version }}"
+# Type checking
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = true
+no_implicit_optional = true
+strict_optional = true
+
+# Error reporting
+warn_return_any = true
+warn_unused_configs = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_unreachable = true
+show_error_codes = true
+pretty = true
+
+# Import discovery
+ignore_missing_imports = false
+follow_imports = "normal"
+follow_imports_for_stubs = true
+
+# Advanced
+strict_equality = true
+extra_checks = true
+
+{% if is_plugin_host or is_plugin %}
+plugins = ["pydantic.mypy"]
+
+[tool.pydantic-mypy]
+init_forbid_extra = true
+init_typed = true
+warn_required_dynamic_aliases = true
+warn_untyped_fields = true
+{% endif %}
+
+================
+File: src/twat_hatch/themes/_shared/base.toml.j2
+================
+# Base configuration for all package types
+{% block header_comment %}# Package configuration{% endblock %}
+
+[project]
+{% block project %}
+# List of packages to initialize
+packages = [
+    {% block packages %}
+    "{{ name }}"
+    {% endblock %}
+]
+
+{% block plugin_host %}
+{% if is_plugin_host %}
+# This package will be the plugin host
+plugin_host = "{{ name }}"
+{% elif is_plugin %}
+# Plugin host package
+plugin_host = "{{ plugin_host }}"
+{% endif %}
+{% endblock %}
+
+# Output directory (optional, defaults to current directory)
+output_dir = "."
+{% endblock %}
+
+{% include '_shared/snippets/author.toml.j2' %}
+
+{% include '_shared/snippets/package.toml.j2' %}
+
+{% block dependencies %}
+{% include '_shared/snippets/dependencies.toml.j2' %}
+
+{% if is_plugin_host %}
+plugin_dependencies = [
+    "pydantic>=2.0.0",
+    "importlib-resources>=5.0.0",
+    {% for dep in plugin_dependencies | default([]) %}
+    "{{ dep }}",
+    {% endfor %}
+]
+{% endif %}
+{% endblock %}
+
+{% include '_shared/snippets/development.toml.j2' %}
+
+{% include '_shared/snippets/tools.toml.j2' %}
+
+{% include '_shared/snippets/features.toml.j2' %}
+
+{% block additional_config %}{% endblock %}
+
+================
+File: src/twat_hatch/themes/default/.github/workflows/push.yml.j2
+================
+name: Build & Test
+
+on:
+  push:
+    branches: [main]
+    tags-ignore: ["v*"]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  id-token: write
+
+concurrency:
+  group: ${{ "{{ github.workflow }}" }}-${{ "{{ github.ref }}" }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    name: Code Quality
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run Ruff lint
+        uses: astral-sh/ruff-action@v3
+        with:
+          version: "latest"
+          args: "check --output-format=github"
+
+      - name: Run Ruff Format
+        uses: astral-sh/ruff-action@v3
+        with:
+          version: "latest"
+          args: "format --check --respect-gitignore"
+
+  test:
+    name: Run Tests
+    needs: quality
+    strategy:
+      matrix:
+        python-version: {{ python_version_info.classifiers | map('split', ' :: ') | map('last') | list | tojson }}
+        os: [ubuntu-latest]
+      fail-fast: true
+    runs-on: ${{ "{{ matrix.os }}" }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ "{{ matrix.python-version }}" }}
+
+      - name: Install UV
+        uses: astral-sh/setup-uv@v5
+        with:
+          version: "latest"
+          python-version: ${{ "{{ matrix.python-version }}" }}
+          enable-cache: true
+          cache-suffix: ${{ "{{ matrix.os }}" }}-${{ "{{ matrix.python-version }}" }}
+
+      - name: Install test dependencies
+        run: |
+          uv pip install --system --upgrade pip
+          uv pip install --system ".[test]"
+
+      - name: Run tests with Pytest
+        run: uv run pytest -n auto --maxfail=1 --disable-warnings --cov-report=xml --cov-config=pyproject.toml --cov=src/{{ import_name }} --cov=tests tests/
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-${{ "{{ matrix.python-version }}" }}-${{ "{{ matrix.os }}" }}
+          path: coverage.xml
+
+  build:
+    name: Build Distribution
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install UV
+        uses: astral-sh/setup-uv@v5
+        with:
+          version: "latest"
+          python-version: "3.12"
+          enable-cache: true
+
+      - name: Install build tools
+        run: uv pip install build hatchling hatch-vcs
+
+      - name: Build distributions
+        run: uv run python -m build --outdir dist
+
+      - name: Upload distribution artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-files
+          path: dist/
+          retention-days: 5
+
+================
+File: src/twat_hatch/themes/default/.github/workflows/release.yml.j2
+================
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+  id-token: write
+
+jobs:
+  release:
+    name: Release to PyPI
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/{{ name }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install UV
+        uses: astral-sh/setup-uv@v5
+        with:
+          version: "latest"
+          python-version: "3.12"
+          enable-cache: true
+
+      - name: Install build tools
+        run: uv pip install build hatchling hatch-vcs
+
+      - name: Build distributions
+        run: uv run python -m build --outdir dist
+
+      - name: Verify distribution files
+        run: |
+          ls -la dist/
+          test -n "$(find dist -name '*.whl')" || (echo "Wheel file missing" && exit 1)
+          test -n "$(find dist -name '*.tar.gz')" || (echo "Source distribution missing" && exit 1)
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          password: ${{ "{{ secrets.PYPI_TOKEN }}" }}
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: dist/*
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ "{{ secrets.GITHUB_TOKEN }}" }}
+
+================
+File: src/twat_hatch/themes/default/dist/.gitkeep.j2
+================
+
+
+================
+File: src/twat_hatch/themes/default/tests/test_package.py.j2
+================
+"""Test suite for {{ import_name }}."""
+
+def test_version():
+    """Verify package exposes version."""
+    import {{ import_name }}
+    assert {{ import_name }}.__version__
+
+================
+File: src/twat_hatch/themes/default/.pre-commit-config.yaml.j2
+================
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.3.4
+    hooks:
+      - id: ruff
+        args: [--fix]
+      - id: ruff-format
+        args: [--respect-gitignore]
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: trailing-whitespace
+      - id: check-yaml
+      - id: check-toml
+      - id: check-added-large-files
+      - id: debug-statements
+      - id: check-case-conflict
+      - id: mixed-line-ending
+        args: [--fix=lf]
+
+================
+File: src/twat_hatch/themes/default/hidden.gitignore.j2
+================
+*_autogen/
+.DS_Store
+__version__.py
+__pycache__/
+_Chutzpah*
+_deps
+_NCrunch_*
+_pkginfo.txt
+_Pvt_Extensions
+_ReSharper*/
+_TeamCity*
+_UpgradeReport_Files/
+!?*.[Cc]ache/
+!.axoCover/settings.json
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/settings.json
+!.vscode/tasks.json
+!**/[Pp]ackages/build/
+!Directory.Build.rsp
+.*crunch*.local.xml
+.axoCover/*
+.builds
+.cr/personal
+.fake/
+.history/
+.ionide/
+.localhistory/
+.mfractor/
+.ntvs_analysis.dat
+.paket/paket.exe
+.sass-cache/
+.vs/
+.vscode
+.vscode/*
+.vshistory/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+[Bb]in/
+[Bb]uild[Ll]og.*
+[Dd]ebug/
+[Dd]ebugPS/
+[Dd]ebugPublic/
+[Ee]xpress/
+[Ll]og/
+[Ll]ogs/
+[Oo]bj/
+[Rr]elease/
+[Rr]eleasePS/
+[Rr]eleases/
+[Tt]est[Rr]esult*/
+[Ww][Ii][Nn]32/
+*_h.h
+*_i.c
+*_p.c
+*_wpftmp.csproj
+*- [Bb]ackup ([0-9]).rdl
+*- [Bb]ackup ([0-9][0-9]).rdl
+*- [Bb]ackup.rdl
+*.[Cc]ache
+*.[Pp]ublish.xml
+*.[Rr]e[Ss]harper
+*.a
+*.app
+*.appx
+*.appxbundle
+*.appxupload
+*.aps
+*.azurePubxml
+*.bim_*.settings
+*.bim.layout
+*.binlog
+*.btm.cs
+*.btp.cs
+*.build.csdef
+*.cab
+*.cachefile
+*.code-workspace
+*.coverage
+*.coveragexml
+*.d
+*.dbmdl
+*.dbproj.schemaview
+*.dll
+*.dotCover
+*.DotSettings.user
+*.dsp
+*.dsw
+*.dylib
+*.e2e
+*.exe
+*.gch
+*.GhostDoc.xml
+*.gpState
+*.ilk
+*.iobj
+*.ipdb
+*.jfm
+*.jmconfig
+*.la
+*.lai
+*.ldf
+*.lib
+*.lo
+*.log
+*.mdf
+*.meta
+*.mm.*
+*.mod
+*.msi
+*.msix
+*.msm
+*.msp
+*.ncb
+*.ndf
+*.nuget.props
+*.nuget.targets
+*.nupkg
+*.nvuser
+*.o
+*.obj
+*.odx.cs
+*.opendb
+*.opensdf
+*.opt
+*.out
+*.pch
+*.pdb
+*.pfx
+*.pgc
+*.pgd
+*.pidb
+*.plg
+*.psess
+*.publishproj
+*.publishsettings
+*.pubxml
+*.pyc
+*.rdl.data
+*.rptproj.bak
+*.rptproj.rsuser
+*.rsp
+*.rsuser
+*.sap
+*.sbr
+*.scc
+*.sdf
+*.sln.docstates
+*.sln.iml
+*.slo
+*.smod
+*.snupkg
+*.so
+*.suo
+*.svclog
+*.tlb
+*.tlh
+*.tli
+*.tlog
+*.tmp
+*.tmp_proj
+*.tss
+*.user
+*.userosscache
+*.userprefs
+*.vbp
+*.vbw
+*.VC.db
+*.VC.VC.opendb
+*.VisualState.xml
+*.vsp
+*.vspscc
+*.vspx
+*.vssscc
+*.xsd.cs
+**/[Pp]ackages/*
+**/*.DesktopClient/GeneratedArtifacts
+**/*.DesktopClient/ModelManifest.xml
+**/*.HTMLClient/GeneratedArtifacts
+**/*.Server/GeneratedArtifacts
+**/*.Server/ModelManifest.xml
+*~
+~$*
+$tf/
+AppPackages/
+artifacts/
+ASALocalRun/
+AutoTest.Net/
+Backup*/
+BenchmarkDotNet.Artifacts/
+bld/
+BundleArtifacts/
+ClientBin/
+cmake_install.cmake
+CMakeCache.txt
+CMakeFiles
+CMakeLists.txt.user
+CMakeScripts
+CMakeUserPresets.json
+compile_commands.json
+coverage*.info
+coverage*.json
+coverage*.xml
+csx/
+CTestTestfile.cmake
+dlldata.c
+DocProject/buildhelp/
+DocProject/Help/*.hhc
+DocProject/Help/*.hhk
+DocProject/Help/*.hhp
+DocProject/Help/*.HxC
+DocProject/Help/*.HxT
+DocProject/Help/html
+DocProject/Help/Html2
+ecf/
+FakesAssemblies/
+FodyWeavers.xsd
+Generated_Code/
+Generated\ Files/
+healthchecksdb
+install_manifest.txt
+ipch/
+Makefile
+MigrationBackup/
+mono_crash.*
+nCrunchTemp_*
+node_modules/
+nunit-*.xml
+OpenCover/
+orleans.codegen.cs
+Package.StoreAssociation.xml
+paket-files/
+project.fragment.lock.json
+project.lock.json
+publish/
+PublishScripts/
+rcf/
+ScaffoldingReadMe.txt
+ServiceFabricBackup/
+StyleCopReport.xml
+Testing
+TestResult.xml
+UpgradeLog*.htm
+UpgradeLog*.XML
+x64/
+x86/
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Distribution / packaging
+!dist/.gitkeep
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+cover/
+.ruff_cache/
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Project specific
+__version__.py
+_private
+
+================
+File: src/twat_hatch/themes/default/LICENSE.j2
+================
+MIT License
+
+Copyright (c) {{ '%Y' | strftime }} {{ author_name }}
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+================
+File: src/twat_hatch/themes/default/pyproject.toml.j2
+================
+# this_file: pyproject.toml
+[project]
+name = "{{ name }}"
+dynamic = ["version"]
+description = "{{ description }}"
+readme = "README.md"
+requires-python = "{{ python_version_info.requires_python }}"
+license = "{{ license }}"
+keywords = []
+classifiers = [
+    "Development Status :: {{ development_status }}",
+    "Programming Language :: Python",
+    {% for classifier in python_version_info.classifiers %}
+    "{{ classifier }}",
+    {% endfor %}
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Programming Language :: Python :: Implementation :: PyPy",
+]
+
+{% block dependencies %}
+dependencies = [
+    {% for dep in dependencies | default([]) %}
+    "{{ dep }}",
+    {% endfor %}
+]
+{% endblock %}
+
+
+[project.optional-dependencies]
+{% block optional_dependencies %}
+
+dev = [
+{% block dev_dependencies %}
+    "pre-commit>=3.6.0",
+    "ruff>=0.1.0",
+    "mypy>=1.0.0",
+    "pyupgrade>=3.19.0",
+{% endblock %}
+]
+
+test = [
+{% block test_dependencies %}
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+{% endblock %}
+]
+
+{% endblock %}
+
+all = [
+{% block all_dependencies %}
+{% for dep in dev_dependencies | default([]) %}
+    "{{ dep }}",
+{% endfor %}
+{% for dep in test_dependencies | default([]) %}
+    "{{ dep }}",
+{% endfor %}
+{% if additional_dependencies %}
+    "{{ additional_dependencies | join('", "') }}",
+{% endif %}
+{% endblock %}
+]
+
+[project.scripts]
+{% block entry_points %}
+# CLINAME = "{{ import_name }}.__main__:main"
+{% endblock %}
+
+
+
+[[project.authors]]
+name = "{{ author_name }}"
+email = "{{ author_email }}"
+
+[project.urls]
+Documentation = "https://github.com/{{ github_username }}/{{ name }}#readme"
+Issues = "https://github.com/{{ github_username }}/{{ name }}/issues"
+Source = "https://github.com/{{ github_username }}/{{ name }}"
+
+
+[build-system]
+build-backend = "hatchling.build"
+requires = [
+    "hatchling>=1.21.0", 
+    "hatch-vcs>=0.3.0"
+]
+
+
+[tool.coverage.paths]
+{{ import_name }} = ["src/{{ import_name }}", "*/{{ name }}/src/{{ import_name }}"]
+tests = ["tests", "*/{{ name }}/tests"]
+
+
+
+[tool.coverage.report]
+exclude_lines = [
+    "no cov",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+]
+
+[tool.coverage.run]
+source_pkgs = ["{{ import_name }}", "tests"]
+branch = true
+parallel = true
+omit = [
+    "src/{{ import_name }}/__about__.py",
+]
+
+
+
+[tool.hatch.build.hooks.vcs]
+version-file = "src/{{ import_name }}/__version__.py"
+
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/{{ import_name }}"]
+
+
+
+[tool.hatch.envs.default]
+dependencies = [
+    {% for dep in test_dependencies | default([]) %}
+    "{{ dep }}",
+    {% endfor %}
+    {% for dep in dev_dependencies | default([]) %}
+    "{{ dep }}",
+    {% endfor %}
+    {% if additional_dependencies %}
+    "{{ additional_dependencies | join('", "') }}",
+    {% endif %}
+]
+
+[[tool.hatch.envs.all.matrix]]
+python = {{ python_version_info.classifiers | map('split', ' :: ') | map('last') | list | tojson }}
+
+
+[tool.hatch.envs.default.scripts]
+test = "pytest {args:tests}"
+test-cov = "pytest --cov-report=term-missing --cov-config=pyproject.toml --cov=src/{{ import_name }} --cov=tests {args:tests}"
+type-check = "mypy src/{{ import_name }} tests"
+lint = ["ruff check src/{{ import_name }} tests", "ruff format --respect-gitignore src/{{ import_name }} tests"]
+fix = ["ruff check  --fix --unsafe-fixes src/{{ import_name }} tests", "ruff format --respect-gitignore src/{{ import_name }} tests"]
+
+
+
+[tool.hatch.envs.lint]
+detached = true
+dependencies = [
+    {% for dep in dev_dependencies | default([]) %}
+    "{{ dep }}",
+    {% endfor %}
+    {% if additional_dependencies %}
+    "{{ additional_dependencies | join('", "') }}",
+    {% endif %}
+]
+
+
+[tool.hatch.envs.lint.scripts]
+typing = "mypy --install-types --non-interactive {args:src/{{ import_name }} tests}"
+style = ["ruff check {args:.}", "ruff format --respect-gitignore {args:.}"]
+fmt = ["ruff format --respect-gitignore {args:.}", "ruff check --fix {args:.}"]
+all = ["style", "typing"]
+
+
+[tool.hatch.envs.test]
+dependencies = [
+    {% for dep in test_dependencies | default([]) %}
+    "{{ dep }}",
+    {% endfor %}
+]
+
+[tool.hatch.envs.test.scripts]
+test = "python -m pytest -n auto -p no:briefcase {args:tests}"
+test-cov = "python -m pytest -n auto -p no:briefcase --cov-report=term-missing --cov-config=pyproject.toml --cov=src/{{ import_name }} --cov=tests {args:tests}"
+bench = "python -m pytest -v -p no:briefcase tests/test_benchmark.py --benchmark-only"
+bench-save = "python -m pytest -v -p no:briefcase tests/test_benchmark.py --benchmark-only --benchmark-json=benchmark/results.json"
+
+[tool.hatch.version]
+source = "vcs"
+
+
+[tool.hatch.version.raw-options]
+version_scheme = "post-release"
+
+
+[tool.mypy]
+python_version = "{{ python_version_info.mypy_version }}"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_unreachable = true
+
+
+[tool.ruff]
+target-version = "{{ python_version_info.ruff_target }}"
+line-length = 88
+
+[tool.ruff.lint]
+extend-select = [
+    "A",
+    "ARG",
+    "B",
+    "C",
+    "DTZ",
+    "E",
+    "EM",
+    "F",
+    "FBT",
+    "I",
+    "ICN",
+    "ISC",
+    "N",
+    "PLC",
+    "PLE",
+    "PLR",
+    "PLW",
+    "Q",
+    "RUF",
+    "S",
+    "T",
+    "TID",
+    "UP",
+    "W",
+    "YTT",
+]
+ignore = ["ARG001", "E501", "I001", "RUF001", "PLR2004", "EXE003", "ISC001"]
+
+
+
+[tool.ruff.per-file-ignores]
+"tests/*" = ["S101"]
+
+
+
+
+
+[tool.pytest.ini_options]
+addopts = "-v --durations=10 -p no:briefcase"
+asyncio_mode = "auto"
+console_output_style = "progress"
+filterwarnings = ["ignore::DeprecationWarning", "ignore::UserWarning"]
+log_cli = true
+log_cli_level = "INFO"
+markers = [
+  "benchmark: marks tests as benchmarks (select with '-m benchmark')",
+  "unit: mark a test as a unit test",
+  "integration: mark a test as an integration test",
+  "permutation: tests for permutation functionality",
+  "parameter: tests for parameter parsing",
+  "prompt: tests for prompt parsing",
+]
+norecursedirs = [
+  ".*",
+  "build",
+  "dist",
+  "venv",
+  "__pycache__",
+  "*.egg-info",
+  "_private",
+]
+
+python_classes = ["Test*"]
+python_files = ["test_*.py"]
+python_functions = ["test_*"]
+testpaths = ["tests"]
+
+
+[tool.pytest-benchmark]
+min_rounds = 100
+min_time = 0.1
+histogram = true
+storage = "file"
+save-data = true
+compare = [
+    "min",    # Minimum time
+    "max",    # Maximum time
+    "mean",   # Mean time
+    "stddev", # Standard deviation
+    "median", # Median time
+    "iqr",    # Inter-quartile range
+    "ops",    # Operations per second
+    "rounds", # Number of rounds
+]
+
+================
+File: src/twat_hatch/themes/default/README.md.j2
+================
+# {{ title }}
+
+{{ description }}
+
+## Features
+
+{% block features %}
+- Modern Python packaging with PEP 621 compliance
+- Type hints and runtime type checking
+- Comprehensive test suite and documentation
+- CI/CD ready configuration
+{% endblock %}
+
+## Installation
+
+```bash
+pip install {{ name }}
+```
+
+## Usage
+
+{% block usage %}
+```python
+import {{ import_name }}
+```
+{% endblock %}
+
+## Development
+
+This project uses [Hatch](https://hatch.pypa.io/) for development workflow management.
+
+### Setup Development Environment
+
+```bash
+# Install hatch if you haven't already
+pip install hatch
+
+# Create and activate development environment
+hatch shell
+
+# Run tests
+hatch run test
+
+# Run tests with coverage
+hatch run test-cov
+
+# Run linting
+hatch run lint
+
+# Format code
+hatch run format
+```
+
+## License
+
+{{ license }} License
+
+================
+File: src/twat_hatch/themes/package/src/__package_name__/__package_name__.py.j2
+================
+#!/usr/bin/env python3
+"""{{ import_name }}: {{ description }}
+
+Created by {{ author_name }}
+"""
+
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Union
+import logging
+
+__version__ = "{{ version | default('0.1.0') }}"
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+)
+logger = logging.getLogger(__name__)
+
+
+@dataclass
+class Config:
+    """Configuration settings for {{ import_name }}."""
+    name: str
+    value: Union[str, int, float]
+    options: Optional[Dict[str, Any]] = None
+
+
+def process_data(
+    data: List[Any],
+    config: Optional[Config] = None,
+    *,
+    debug: bool = False
+) -> Dict[str, Any]:
+    """Process the input data according to configuration.
+    
+    Args:
+        data: Input data to process
+        config: Optional configuration settings
+        debug: Enable debug mode
+        
+    Returns:
+        Processed data as a dictionary
+        
+    Raises:
+        ValueError: If input data is invalid
+    """
+    if debug:
+        logger.setLevel(logging.DEBUG)
+        logger.debug("Debug mode enabled")
+        
+    if not data:
+        raise ValueError("Input data cannot be empty")
+        
+    # TODO: Implement data processing logic
+    result: Dict[str, Any] = {}
+    return result
+
+
+def main() -> None:
+    """Main entry point for {{ import_name }}."""
+    try:
+        # Example usage
+        config = Config(
+            name="default",
+            value="test",
+            options={"key": "value"}
+        )
+        result = process_data([], config=config)
+        logger.info("Processing completed: %s", result)
+        
+    except Exception as e:
+        logger.error("An error occurred: %s", str(e))
+        raise
+
+
+if __name__ == "__main__":
+    main()
+
+================
+File: src/twat_hatch/themes/package/package.toml.j2
+================
+# Package configuration
+[package]
+include_cli = true        # Include CLI boilerplate
+include_logging = true    # Include logging setup
+use_pydantic = true      # Use Pydantic for data validation
+use_rich = true          # Use Rich for terminal output
+
+[features]
+mkdocs = false           # Enable MkDocs documentation
+vcs = true              # Initialize Git repository
+github_actions = true   # Add GitHub Actions workflows
+
+================
+File: src/twat_hatch/themes/plugin/src/__package_name__/__init__.py.j2
+================
+"""{{ plugin_host }} {{ plugin_import_name }} plugin"""
+
+from importlib import metadata
+
+__version__ = metadata.version(__name__)
+
+================
+File: src/twat_hatch/themes/plugin/pyproject.toml.j2
+================
+{% extends "default/pyproject.toml.j2" %}
+
+{% block dependencies %}
+dependencies = [
+    "{{ plugin_host }}",
+    {% for dep in plugin_dependencies | default([]) %}
+    "{{ dep }}",
+    {% endfor %}
+]
+{% endblock %}
+
+{% block entry_points %}
+[project.entry-points."{{ plugin_host }}.plugins"]
+{{ plugin_import_name }} = "{{ import_name }}"
+{% endblock %}
+
+================
+File: src/twat_hatch/themes/plugin/README.md.j2
+================
+{% extends "default/README.md.j2" %}
+
+{% block features %}
+- Plugin for {{ plugin_host }}
+- Modern Python packaging with PEP 621 compliance
+- Type hints and runtime type checking
+- Comprehensive test suite and documentation
+- CI/CD ready configuration
+{% endblock %}
+
+{% block usage %}
+```python
+import {{ import_name }}
+plugin = {{ import_name }}.plugin
+```
+{% endblock %}
+
+================
+File: src/twat_hatch/themes/plugin_host/src/__init__.py.j2
+================
+"""{{ description }}"""
+
+import sys
+from importlib import metadata
+from typing import Any
+
+__version__ = metadata.version(__name__)
+
+# Enable package-style imports for plugins
+__path__ = []
+__package__ = "{{ name }}"
+
+
+class PluginFinder:
+    """Finder for {{ name }} plugins to enable package-style imports."""
+
+    @classmethod
+    def find_spec(cls, fullname, path, target=None):
+        if not fullname.startswith("{{ name }}."):
+            return None
+
+        plugin_name = fullname.split(".")[-1]
+        try:
+            eps = metadata.entry_points(group="{{ name }}.plugins")
+            for ep in eps:
+                if ep.name == plugin_name:
+                    # Create a spec that will load the plugin module
+                    from importlib.machinery import ModuleSpec
+                    from importlib.util import module_from_spec, spec_from_loader
+
+                    plugin_module = ep.load()
+
+                    class Loader:
+                        @staticmethod
+                        def create_module(spec):
+                            return plugin_module
+
+                        @staticmethod
+                        def exec_module(module):
+                            pass
+
+                    return ModuleSpec(fullname, Loader())
+        except Exception:
+            return None
+        return None
+
+
+# Register the finder
+sys.meta_path.insert(0, PluginFinder())
+
+
+def __getattr__(name: str) -> Any:
+    """Dynamic attribute lookup for plugins.
+
+    To register a plugin, add the following to your pyproject.toml:
+
+    [project.entry-points."{{ name }}.plugins"]
+    plugin_name = "plugin_module"  # Just point to the module
+
+    Args:
+        name: Name of plugin to load
+
+    Returns:
+        Loaded plugin module
+
+    Raises:
+        AttributeError: If plugin cannot be found or loaded
+    """
+    try:
+        eps = metadata.entry_points(group="{{ name }}.plugins")
+        for ep in eps:
+            if ep.name == name:
+                return ep.load()
+    except Exception as e:
+        raise AttributeError(f"Failed to load plugin '{name}': {e}") from e
+
+    raise AttributeError(f"module '{__name__}' has no attribute '{name}'")
+
+================
+File: src/twat_hatch/themes/plugin_host/pyproject.toml.j2
+================
+{% extends "default/pyproject.toml.j2" %}
+
+{% block dependencies %}
+dependencies = [
+    "importlib-metadata>=6.0.0",
+    "importlib-resources>=5.0.0",
+    "typing-extensions>=4.0.0; python_version < '3.10'",
+    {% for dep in dependencies | default([]) %}
+    "{{ dep }}",
+    {% endfor %}
+]
+{% endblock %}
+
+================
+File: src/twat_hatch/themes/plugin_host/README.md.j2
+================
+{% extends "default/README.md.j2" %}
+
+{% block features %}
+- Plugin system for Python packages
+- Dynamic plugin loading and discovery
+- Modern Python packaging with PEP 621 compliance
+- Type hints and runtime type checking
+- Comprehensive test suite and documentation
+- CI/CD ready configuration
+{% endblock %}
+
+{% block usage %}
+```python
+import {{ import_name }}
+
+# Load a plugin
+plugin = {{ import_name }}.plugin_name
+
+# List available plugins
+from importlib.metadata import entry_points
+plugins = entry_points(group="{{ name }}.plugins")
+```
+{% endblock %}
+
+================
+File: src/twat_hatch/themes/__init__.py
+================
+
+
+================
+File: src/twat_hatch/themes/package.toml.j2
+================
+# Configuration for standalone Python package
+
+[project]
+# List of packages to initialize
+packages = [
+    "{{ name }}"  # Your package name
+]
+
+# Output directory (optional, defaults to current directory)
+output_dir = "."
+
+[author]
+name = "{{ author_name }}"
+email = "{{ author_email }}"
+github_username = "{{ github_username }}"
+
+[package]
+description = "{{ description }}"
+min_python = "3.10"
+license = "MIT"
+development_status = "4 - Beta"
+
+[package.options]
+include_cli = true        # Include CLI boilerplate
+include_logging = true    # Include logging setup
+use_pydantic = true      # Use Pydantic for data validation
+use_rich = true          # Use Rich for terminal output
+
+[features]
+mkdocs = false           # Enable MkDocs documentation
+vcs = true              # Initialize Git repository
+github_actions = true   # Add GitHub Actions workflows
+
+================
+File: src/twat_hatch/themes/plugin_host.toml.j2
+================
+{% extends "_shared/base.toml.j2" %}
+
+{% block header_comment %}# Plugin host package configuration{% endblock %}
+
+{% set is_plugin_host = true %}
+
+{% block additional_config %}
+# Plugin host specific configuration
+[plugin.options]
+auto_discovery = {{ auto_discovery | default(true) | lower }}
+lazy_loading = {{ lazy_loading | default(true) | lower }}
+namespace_imports = {{ namespace_imports | default(true) | lower }}
+{% endblock %}
+
+[project]
+# List of packages to initialize
+packages = [
+    "{{ name }}"  # Plugin host package name
+]
+
+# Refers to the plugin host package (this package will be the plugin host)
+plugin_host = "{{ name }}"
+
+# Output directory (optional, defaults to current directory)
+output_dir = "."
+
+[author]
+name = "{{ author_name }}"
+email = "{{ author_email }}"
+github_username = "{{ github_username }}"
+
+[package]
+description = "{{ description }}"
+min_python = "3.10"
+license = "MIT"
+development_status = "4 - Beta"
+
+[package.options]
+include_cli = true        # Include CLI boilerplate
+include_logging = true    # Include logging setup
+use_pydantic = true      # Use Pydantic for data validation
+use_rich = true          # Use Rich for terminal output
+
+[features]
+mkdocs = false           # Enable MkDocs documentation
+vcs = true              # Initialize Git repository
+github_actions = true   # Add GitHub Actions workflows
+
+================
+File: src/twat_hatch/themes/plugin.toml.j2
+================
+{% extends "_shared/base.toml.j2" %}
+
+{% block header_comment %}# Plugin package configuration{% endblock %}
+
+{% set is_plugin = true %}
+
+{% block additional_config %}
+# Plugin-specific configuration
+[plugin.options]
+auto_discovery = {{ auto_discovery | default(true) | lower }}
+namespace_imports = {{ namespace_imports | default(true) | lower }}
+{% endblock %}
+
+[project]
+# List of packages to initialize
+packages = [
+    "{{ name }}"  # Your plugin name
+]
+
+# Plugin host package (required)
+plugin_host = "{{ plugin_host }}"
+
+# Output directory (optional, defaults to current directory)
+output_dir = "."
+
+[author]
+name = "{{ author_name }}"
+email = "{{ author_email }}"
+github_username = "{{ github_username }}"
+
+[package]
+description = "{{ description }}"
+min_python = "3.10"
+license = "MIT"
+development_status = "4 - Beta"
+
+[package.options]
+include_cli = true        # Include CLI boilerplate
+include_logging = true    # Include logging setup
+use_pydantic = true      # Use Pydantic for data validation
+use_rich = true          # Use Rich for terminal output
+
+[features]
+mkdocs = false           # Enable MkDocs documentation
+vcs = true              # Initialize Git repository
+github_actions = true   # Add GitHub Actions workflows
+
+================
+File: src/twat_hatch/__init__.py
+================
+__version__ = metadata.version(__name__)
+
+================
+File: src/twat_hatch/__main__.py
+================
+install(show_locals=True)
+ansi_decoder = AnsiDecoder()
+console = Console(theme=Theme({"prompt": "cyan", "question": "bold cyan"}))
+class ConfigurationPrompts:
+    def get_package_name(self, package_type: PackageType) -> str:
+        return Prompt.ask(
+    def get_plugin_host(self) -> str:
+    def get_author_info(self) -> dict[str, str]:
+            "author_name": Prompt.ask(
+            "author_email": Prompt.ask(
+            "github_username": Prompt.ask(
+    def get_python_versions(self) -> dict[str, str | None]:
+        min_major = IntPrompt.ask(
+        min_minor = IntPrompt.ask(
+        min_ver = PyVer(min_major, min_minor)
+        if Confirm.ask(
+            max_major = IntPrompt.ask(
+            max_minor = IntPrompt.ask(
+            max_ver = PyVer(max_major, max_minor)
+            max_python = str(max_ver)
+            "min_python": str(min_ver),
+    def get_package_info(self) -> dict[str, Any]:
+            "license": Prompt.ask(
+            "development_status": Prompt.ask(
+    def get_features(self) -> dict[str, bool]:
+            "use_mkdocs": Confirm.ask(
+            "use_vcs": Confirm.ask(
+def init(
+            min_ver = PyVer.from_cli_input(min_python)
+                PyVer.from_cli_input(max_python) if max_python is not None else None
+            console.print(f"[red]Error: {e}[/]")
+            sys.exit(1)
+            for k, v in locals().items()
+        interactive = not bool(user_provided_values)
+            prompts = ConfigurationPrompts()
+            name = prompts.get_package_name(type)
+                plugin_host = prompts.get_plugin_host()
+            author_info = prompts.get_author_info()
+            python_versions = prompts.get_python_versions()
+            min_ver = PyVer.parse(python_versions["min_python"])
+            max_ver = PyVer.parse(python_versions.get("max_python"))
+            package_info = prompts.get_package_info()
+            features = prompts.get_features()
+        config_generator = ConfigurationGenerator()
+        config = config_generator.generate_config(
+            min_python=str(min_ver),
+            max_python=str(max_ver) if max_ver else None,
+        output_path = Path(output)
+        output_path.write_text(config)
+        console.print(
+            Panel(
+        console.print("[red]Error: Invalid configuration[/]")
+        console.print(e)
+def config(command: str = "show", type: PackageType = "package") -> None:
+        console.print("[red]Invalid command. Use 'show'.[/]")
+        generator = ConfigurationGenerator()
+        content = generator.generate_config(type, interactive=False)
+        console.print(Panel(content, title=f"Example {type} configuration"))
+        console.print(f"[red]Error showing configuration: {e!s}[/]")
+def create(config_path: str | None = None) -> None:
+        initializer = PackageInitializer(config_path=config_path)
+        initializer.initialize_all()
+        console.print(f"[red]Error creating packages: {e!s}[/]")
+def main() -> None:
+    def display(lines, out):
+        console.print(Group(*map(ansi_decoder.decode_line, lines)))
+    fire.Fire(
+    main()
+
+================
+File: src/twat_hatch/config.py
+================
+class PackageTemplate:
+    "package": PackageTemplate(
+    "plugin": PackageTemplate(
+    "plugin-host": PackageTemplate(
+class ConfigurationGenerator:
+    def __init__(self) -> None:
+        with path("twat_hatch.themes", "") as themes_dir:
+            self.loader = FileSystemLoader(str(themes_dir), followlinks=True)
+            self.env = Environment(
+                autoescape=select_autoescape(),
+            self.env.filters["split"] = lambda value, delimiter: value.split(delimiter)
+    def generate_config(
+        context = kwargs.copy()
+        if not context.get("name"):
+        if package_type == "plugin" and not context.get("plugin_host"):
+        if not context.get("author_name"):
+        if not context.get("author_email"):
+        if not context.get("github_username"):
+        if not context.get("license"):
+        if not context.get("development_status"):
+        context["use_mkdocs"] = bool(context.get("use_mkdocs", False))
+        context["use_vcs"] = bool(context.get("use_vcs", True))
+        min_ver = PyVer.parse(context.get("min_python")) or PyVer(3, 10)
+            PyVer.parse(context.get("max_python"))
+            if context.get("max_python")
+        context["min_python"] = str(min_ver)
+        context["max_python"] = str(max_ver) if max_ver else None
+            "requires_python": min_ver.requires_python(max_ver),
+            "classifiers": PyVer.get_supported_versions(min_ver, max_ver),
+        template_obj = self.env.get_template(template.template_path)
+        return template_obj.render(**context)
+    def write_config(
+        content = self.generate_config(package_type, interactive, **kwargs)
+        output_file = Path(output_path)
+        output_file.write_text(content)
+
+================
+File: src/twat_hatch/hatch.py
+================
+console = Console()
+class TemplateEngine:
+    def __init__(self, themes_dir: Path) -> None:
+        self.loader = FileSystemLoader(str(themes_dir))
+        self.env = Environment(
+            autoescape=select_autoescape(),
+        self.env.filters["split"] = lambda value, delimiter: value.split(delimiter)
+        self.env.filters["strftime"] = lambda format: datetime.now().strftime(format)
+    def render_template(self, template_path: str, context: dict[str, Any]) -> str:
+        template = self.env.get_template(template_path)
+        return template.render(**context)
+    def apply_theme(
+        theme_dir = Path(cast(list[str], self.loader.searchpath)[0]) / theme_name
+        if not theme_dir.exists():
+            raise FileNotFoundError(msg)
+        for template_file in theme_dir.rglob("*.j2"):
+            rel_path = template_file.relative_to(theme_dir)
+            parts = list(rel_path.parts)
+            for i, part in enumerate(parts):
+                if part.startswith("hidden."):
+                    parts[i] = part.replace("hidden.", ".")
+                    parts[i] = part.replace("__package_name__", context["import_name"])
+            rel_path = Path(*parts)
+            output_path = target_dir / rel_path.with_suffix("")
+            output_path.parent.mkdir(parents=True, exist_ok=True)
+            content = self.render_template(
+                f"{theme_name}/{template_file.relative_to(theme_dir)}", context
+            output_path.write_text(content, encoding="utf-8")
+            console.print(f"Created: [cyan]{output_path}[/]")
+class PackageConfig(BaseModel):
+    packages: list[str] = Field(description="List of packages to initialize")
+    plugin_host: str | None = Field(
+    output_dir: Path | None = Field(None, description="Where to create packages")
+    author_name: str = Field(..., description="Name of the package author")
+    author_email: str = Field(..., description="Email of the package author")
+    github_username: str = Field(..., description="GitHub username")
+    min_python: str = Field(..., description="Minimum Python version required")
+    max_python: str | None = Field(
+    license: str = Field(..., description="Package license")
+    development_status: str = Field(..., description="Package development status")
+    dependencies: list[str] = Field(
+    plugin_dependencies: list[str] = Field(
+    dev_dependencies: list[str] = Field(
+    ruff_config: dict[str, Any] = Field(default_factory=dict)
+    mypy_config: dict[str, Any] = Field(default_factory=dict)
+    use_mkdocs: bool = Field(
+    use_semver: bool = Field(
+    use_vcs: bool = Field(
+    def python_version_info(self) -> dict[str, Any]:
+        min_ver = PyVer.parse(self.min_python) or PyVer(3, 10)
+        max_ver = PyVer.parse(self.max_python) if self.max_python else None
+            raise ValueError(msg)
+            "requires_python": min_ver.requires_python(max_ver),
+            "classifiers": PyVer.get_supported_versions(min_ver, max_ver),
+    def from_toml(cls, config_path: Path | str) -> PackageConfig:
+        config_file = Path(config_path)
+        if not config_file.exists():
+        data = tomli.loads(config_file.read_text())
+        project_data = data.get("project", {})
+        author_data = data.get("author", {})
+        package_data = data.get("package", {})
+        dependencies_data = data.get("dependencies", {})
+        development_data = data.get("development", {})
+        tools_data = data.get("tools", {})
+        features_data = data.get("features", {})
+        min_ver = PyVer.parse(package_data.get("min_python")) or PyVer(3, 10)
+            PyVer.parse(package_data.get("max_python"))
+            if package_data.get("max_python")
+            "packages": project_data.get("packages", []),
+            "plugin_host": project_data.get("plugin_host"),
+            "output_dir": project_data.get("output_dir"),
+            "author_name": author_data.get("name"),
+            "author_email": author_data.get("email"),
+            "github_username": author_data.get("github_username"),
+            "min_python": str(min_ver),
+            "max_python": str(max_ver) if max_ver else None,
+            "license": package_data.get("license"),
+            "development_status": package_data.get("development_status"),
+            "dependencies": dependencies_data.get("dependencies", []),
+            "plugin_dependencies": dependencies_data.get("plugin_dependencies", []),
+            "dev_dependencies": development_data.get("additional_dependencies", []),
+            "ruff_config": tools_data.get("ruff", {}),
+            "mypy_config": tools_data.get("mypy", {}),
+            "use_mkdocs": features_data.get("mkdocs", False),
+            "use_semver": features_data.get("semver", False),
+            "use_vcs": features_data.get("vcs", False),
+        return cls(**config_dict)
+class PackageInitializer:
+    def _convert_name(name: str, to_import: bool = True) -> str:
+        return name.replace("-", "_") if to_import else name.replace("_", "-")
+    def __init__(
+        self.base_dir = Path(base_dir) if base_dir else Path.cwd()
+            self.config = PackageConfig.from_toml(config_path)
+                config_out_dir = Path(self.config.output_dir)
+                if not config_out_dir.is_absolute():
+                    out_dir = str(self.base_dir / config_out_dir)
+                    out_dir = str(config_out_dir)
+        self.out_dir = Path(out_dir) if out_dir else self.base_dir
+        with path("twat_hatch.themes", "") as themes_dir:
+            self.template_engine = TemplateEngine(Path(themes_dir))
+    def _init_git_repo(self, pkg_path: Path) -> None:
+            subprocess.run(
+            console.print(f"[green]Initialized Git repo: {pkg_path} (branch: main)[/]")
+            console.print(f"[yellow]Git init failed: {err}[/]")
+    def _create_github_repo(self, pkg_path: Path, name: str) -> None:
+                    str(pkg_path),
+            console.print(f"[green]Linked GitHub repo: {full_repo}[/]")
+            console.print(f"[yellow]GitHub repo creation failed: {e}[/]")
+    def _create_version_file(self, pkg_path: Path, import_name: str) -> None:
+        version_file.parent.mkdir(parents=True, exist_ok=True)
+        version_file.touch()
+        console.print(f"[green]Created version file: {version_file}[/]")
+    def _get_context(self, name: str) -> dict[str, Any]:
+            raise RuntimeError(msg)
+        import_name = name.replace("-", "_")
+            if import_name.startswith(plugin_host_prefix):
+                plugin_import_name = import_name[len(plugin_host_prefix) :]
+            elif import_name.startswith(self.config.plugin_host):
+                plugin_import_name = import_name[len(self.config.plugin_host) :]
+                if plugin_import_name.startswith(("-", "_")):
+    def initialize_package(self, name: str) -> None:
+        import_name = self._convert_name(name, to_import=True)
+        context = self._get_context(name)  # Pass original name to get context
+        src_path.mkdir(parents=True, exist_ok=True)
+        self.template_engine.apply_theme("default", pkg_path, context)
+                self.template_engine.apply_theme("plugin_host", pkg_path, context)
+                self.template_engine.apply_theme("plugin", pkg_path, context)
+            self.template_engine.apply_theme("package", pkg_path, context)
+            self.template_engine.apply_theme("mkdocs", pkg_path, context)
+        self._create_version_file(pkg_path, context["import_name"])
+            self._init_git_repo(pkg_path)
+                console.print(f"[green]Created initial commit in: {pkg_path}[/]")
+                console.print(f"[yellow]Git commit failed: {err}[/]")
+                self._create_github_repo(pkg_path, name)
+    def initialize_all(self) -> None:
+            self.initialize_package(self.config.plugin_host)
+                self.initialize_package(name)
+
+================
+File: src/twat_hatch/utils.py
+================
+@dataclass(frozen=True)
+class PyVer:
+    def __post_init__(self) -> None:
+            raise ValueError(msg)
+    def __str__(self) -> str:
+    def __repr__(self) -> str:
+    def as_tuple(self) -> tuple[int, int, int]:
+    def ruff_target(self) -> str:
+    def mypy_version(self) -> str:
+        return str(self)
+    def classifier_version(self) -> str:
+    def full_version(self) -> str:
+    def parse(cls, version: str | tuple[int, ...] | Any | None = None) -> PyVer:
+            return cls(major=3, minor=10)
+        if isinstance(version, tuple) or hasattr(version, "major"):
+                major = int(getattr(version, "major", version[0]))
+                minor = int(
+                    getattr(version, "minor", version[1] if len(version) > 1 else 0)
+                micro = int(
+                    getattr(version, "micro", version[2] if len(version) > 2 else 0)
+                return cls(major=major, minor=minor, micro=micro)
+                raise ValueError(msg) from e
+        version_str = str(version).strip().lower()
+        if version_str.startswith("py"):
+            match = re.match(r"py(\d)(\d{2,})", version_str)
+                major = int(match.group(1))
+                minor = int(match.group(2))
+                return cls(major=major, minor=minor)
+        version_str = version_str.split()[0]
+        match = re.match(r"(\d+)\.(\d+)", version_str)
+        match = re.match(r"(\d+)\.(\d+)\.(\d+)", version_str)
+            micro = int(match.group(3))
+            major = int(version_str)
+            return cls(major=major, minor=0)
+    def from_sys_version(cls) -> PyVer:
+        return cls.parse(sys.version_info)
+    def get_supported_versions(
+            for i in range(min_ver.minor, max_minor + 1)
+    def requires_python(self, max_ver: PyVer | None = None) -> str:
+    def from_cli_input(
+        if isinstance(version, float):
+        if isinstance(version, tuple):
+            if len(version) != 2:
+            return cls(major=version[0], minor=version[1])
+        if isinstance(version, str):
+                major, minor = map(int, version.split(","))
+
+================
+File: tests/test_twat_hatch.py
+================
+def test_version():
+
+================
+File: .gitignore
+================
+*_autogen/
+.DS_Store
+__version__.py
+__pycache__/
+_Chutzpah*
+_deps
+_NCrunch_*
+_pkginfo.txt
+_Pvt_Extensions
+_ReSharper*/
+_TeamCity*
+_UpgradeReport_Files/
+!?*.[Cc]ache/
+!.axoCover/settings.json
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/settings.json
+!.vscode/tasks.json
+!**/[Pp]ackages/build/
+!Directory.Build.rsp
+.*crunch*.local.xml
+.axoCover/*
+.builds
+.cr/personal
+.fake/
+.history/
+.ionide/
+.localhistory/
+.mfractor/
+.ntvs_analysis.dat
+.paket/paket.exe
+.sass-cache/
+.vs/
+.vscode
+.vscode/*
+.vshistory/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+[Bb]in/
+[Bb]uild[Ll]og.*
+[Dd]ebug/
+[Dd]ebugPS/
+[Dd]ebugPublic/
+[Ee]xpress/
+[Ll]og/
+[Ll]ogs/
+[Oo]bj/
+[Rr]elease/
+[Rr]eleasePS/
+[Rr]eleases/
+[Tt]est[Rr]esult*/
+[Ww][Ii][Nn]32/
+*_h.h
+*_i.c
+*_p.c
+*_wpftmp.csproj
+*- [Bb]ackup ([0-9]).rdl
+*- [Bb]ackup ([0-9][0-9]).rdl
+*- [Bb]ackup.rdl
+*.[Cc]ache
+*.[Pp]ublish.xml
+*.[Rr]e[Ss]harper
+*.a
+*.app
+*.appx
+*.appxbundle
+*.appxupload
+*.aps
+*.azurePubxml
+*.bim_*.settings
+*.bim.layout
+*.binlog
+*.btm.cs
+*.btp.cs
+*.build.csdef
+*.cab
+*.cachefile
+*.code-workspace
+*.coverage
+*.coveragexml
+*.d
+*.dbmdl
+*.dbproj.schemaview
+*.dll
+*.dotCover
+*.DotSettings.user
+*.dsp
+*.dsw
+*.dylib
+*.e2e
+*.exe
+*.gch
+*.GhostDoc.xml
+*.gpState
+*.ilk
+*.iobj
+*.ipdb
+*.jfm
+*.jmconfig
+*.la
+*.lai
+*.ldf
+*.lib
+*.lo
+*.log
+*.mdf
+*.meta
+*.mm.*
+*.mod
+*.msi
+*.msix
+*.msm
+*.msp
+*.ncb
+*.ndf
+*.nuget.props
+*.nuget.targets
+*.nupkg
+*.nvuser
+*.o
+*.obj
+*.odx.cs
+*.opendb
+*.opensdf
+*.opt
+*.out
+*.pch
+*.pdb
+*.pfx
+*.pgc
+*.pgd
+*.pidb
+*.plg
+*.psess
+*.publishproj
+*.publishsettings
+*.pubxml
+*.pyc
+*.rdl.data
+*.rptproj.bak
+*.rptproj.rsuser
+*.rsp
+*.rsuser
+*.sap
+*.sbr
+*.scc
+*.sdf
+*.sln.docstates
+*.sln.iml
+*.slo
+*.smod
+*.snupkg
+*.so
+*.suo
+*.svclog
+*.tlb
+*.tlh
+*.tli
+*.tlog
+*.tmp
+*.tmp_proj
+*.tss
+*.user
+*.userosscache
+*.userprefs
+*.vbp
+*.vbw
+*.VC.db
+*.VC.VC.opendb
+*.VisualState.xml
+*.vsp
+*.vspscc
+*.vspx
+*.vssscc
+*.xsd.cs
+**/[Pp]ackages/*
+**/*.DesktopClient/GeneratedArtifacts
+**/*.DesktopClient/ModelManifest.xml
+**/*.HTMLClient/GeneratedArtifacts
+**/*.Server/GeneratedArtifacts
+**/*.Server/ModelManifest.xml
+*~
+~$*
+$tf/
+AppPackages/
+artifacts/
+ASALocalRun/
+AutoTest.Net/
+Backup*/
+BenchmarkDotNet.Artifacts/
+bld/
+BundleArtifacts/
+ClientBin/
+cmake_install.cmake
+CMakeCache.txt
+CMakeFiles
+CMakeLists.txt.user
+CMakeScripts
+CMakeUserPresets.json
+compile_commands.json
+coverage*.info
+coverage*.json
+coverage*.xml
+csx/
+CTestTestfile.cmake
+dlldata.c
+DocProject/buildhelp/
+DocProject/Help/*.hhc
+DocProject/Help/*.hhk
+DocProject/Help/*.hhp
+DocProject/Help/*.HxC
+DocProject/Help/*.HxT
+DocProject/Help/html
+DocProject/Help/Html2
+ecf/
+FakesAssemblies/
+FodyWeavers.xsd
+Generated_Code/
+Generated\ Files/
+healthchecksdb
+install_manifest.txt
+ipch/
+Makefile
+MigrationBackup/
+mono_crash.*
+nCrunchTemp_*
+node_modules/
+nunit-*.xml
+OpenCover/
+orleans.codegen.cs
+Package.StoreAssociation.xml
+paket-files/
+project.fragment.lock.json
+project.lock.json
+publish/
+PublishScripts/
+rcf/
+ScaffoldingReadMe.txt
+ServiceFabricBackup/
+StyleCopReport.xml
+Testing
+TestResult.xml
+UpgradeLog*.htm
+UpgradeLog*.XML
+x64/
+x86/
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Distribution / packaging
+!dist/.gitkeep
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+cover/
+.ruff_cache/
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Project specific
+__version__.py
+_private
+
+================
+File: .pre-commit-config.yaml
+================
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.3.4
+    hooks:
+      - id: ruff
+        args: [--fix]
+      - id: ruff-format
+        args: [--respect-gitignore]
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: check-yaml
+      - id: check-toml
+      - id: check-added-large-files
+      - id: debug-statements
+      - id: check-case-conflict
+      - id: mixed-line-ending
+        args: [--fix=lf]
+
+================
+File: cleanup.py
+================
+LOG_FILE = Path("CLEANUP.txt")
+os.chdir(Path(__file__).parent)
+def new() -> None:
+    if LOG_FILE.exists():
+        LOG_FILE.unlink()
+def prefix() -> None:
+    readme = Path(".cursor/rules/0project.mdc")
+    if readme.exists():
+        log_message("\n=== PROJECT STATEMENT ===")
+        content = readme.read_text()
+        log_message(content)
+def suffix() -> None:
+    todo = Path("TODO.md")
+    if todo.exists():
+        log_message("\n=== TODO.md ===")
+        content = todo.read_text()
+def log_message(message: str) -> None:
+    timestamp = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
+    with LOG_FILE.open("a") as f:
+        f.write(log_line)
+def run_command(cmd: list[str], check: bool = True) -> subprocess.CompletedProcess:
+        result = subprocess.run(
+            log_message(result.stdout)
+        log_message(f"Command failed: {' '.join(cmd)}")
+        log_message(f"Error: {e.stderr}")
+        return subprocess.CompletedProcess(cmd, 1, "", str(e))
+def check_command_exists(cmd: str) -> bool:
+        return which(cmd) is not None
+class Cleanup:
+    def __init__(self) -> None:
+        self.workspace = Path.cwd()
+    def _print_header(self, message: str) -> None:
+        log_message(f"\n=== {message} ===")
+    def _check_required_files(self) -> bool:
+            if not (self.workspace / file).exists():
+                log_message(f"Error: {file} is missing")
+    def _generate_tree(self) -> None:
+        if not check_command_exists("tree"):
+            log_message("Warning: 'tree' command not found. Skipping tree generation.")
+            rules_dir = Path(".cursor/rules")
+            rules_dir.mkdir(parents=True, exist_ok=True)
+            tree_result = run_command(
+            with open(rules_dir / "filetree.mdc", "w") as f:
+                f.write("---\ndescription: File tree of the project\nglobs: \n---\n")
+                f.write(tree_text)
+            log_message("\nProject structure:")
+            log_message(tree_text)
+            log_message(f"Failed to generate tree: {e}")
+    def _git_status(self) -> bool:
+        result = run_command(["git", "status", "--porcelain"], check=False)
+        return bool(result.stdout.strip())
+    def _venv(self) -> None:
+        log_message("Setting up virtual environment")
+            run_command(["uv", "venv"])
+            if venv_path.exists():
+                os.environ["VIRTUAL_ENV"] = str(self.workspace / ".venv")
+                log_message("Virtual environment created and activated")
+                log_message("Virtual environment created but activation failed")
+            log_message(f"Failed to create virtual environment: {e}")
+    def _install(self) -> None:
+        log_message("Installing package with all extras")
+            self._venv()
+            run_command(["uv", "pip", "install", "-e", ".[test,dev]"])
+            log_message("Package installed successfully")
+            log_message(f"Failed to install package: {e}")
+    def _run_checks(self) -> None:
+        log_message("Running code quality checks")
+            log_message(">>> Running code fixes...")
+            run_command(
+            log_message(">>>Running type checks...")
+            run_command(["python", "-m", "mypy", "src", "tests"], check=False)
+            log_message(">>> Running tests...")
+            run_command(["python", "-m", "pytest", "tests"], check=False)
+            log_message("All checks completed")
+            log_message(f"Failed during checks: {e}")
+    def status(self) -> None:
+        prefix()  # Add README.md content at start
+        self._print_header("Current Status")
+        self._check_required_files()
+        self._generate_tree()
+        result = run_command(["git", "status"], check=False)
+        self._print_header("Environment Status")
+        self._install()
+        self._run_checks()
+        suffix()  # Add TODO.md content at end
+    def venv(self) -> None:
+        self._print_header("Virtual Environment Setup")
+    def install(self) -> None:
+        self._print_header("Package Installation")
+    def update(self) -> None:
+        self.status()
+        if self._git_status():
+            log_message("Changes detected in repository")
+                run_command(["git", "add", "."])
+                run_command(["git", "commit", "-m", commit_msg])
+                log_message("Changes committed successfully")
+                log_message(f"Failed to commit changes: {e}")
+            log_message("No changes to commit")
+    def push(self) -> None:
+        self._print_header("Pushing Changes")
+            run_command(["git", "push"])
+            log_message("Changes pushed successfully")
+            log_message(f"Failed to push changes: {e}")
+def repomix(
+            cmd.append("--compress")
+            cmd.append("--remove-empty-lines")
+            cmd.append("-i")
+            cmd.append(ignore_patterns)
+        cmd.extend(["-o", output_file])
+        run_command(cmd)
+        log_message(f"Repository content mixed into {output_file}")
+        log_message(f"Failed to mix repository: {e}")
+def print_usage() -> None:
+    log_message("Usage:")
+    log_message("  cleanup.py status   # Show current status and run all checks")
+    log_message("  cleanup.py venv     # Create virtual environment")
+    log_message("  cleanup.py install  # Install package with all extras")
+    log_message("  cleanup.py update   # Update and commit changes")
+    log_message("  cleanup.py push     # Push changes to remote")
+def main() -> NoReturn:
+    new()  # Clear log file
+    if len(sys.argv) < 2:
+        print_usage()
+        sys.exit(1)
+    cleanup = Cleanup()
+            cleanup.status()
+            cleanup.venv()
+            cleanup.install()
+            cleanup.update()
+            cleanup.push()
+        log_message(f"Error: {e}")
+    repomix()
+    sys.stdout.write(Path("CLEANUP.txt").read_text())
+    sys.exit(0)  # Ensure we exit with a status code
+    main()
+
+================
+File: LICENSE
+================
+MIT License
+
+Copyright (c) 2025 Adam Twardoch
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+================
+File: LOG.md
+================
+---
+this_file: LOG.md
+---
+
+
+
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [v1.7.5] - 2025-02-15
+
+### Changed
+
+- Minor documentation updates in README.md
+
+## [v1.7.3] - 2025-02-15
+
+### Changed
+
+- Improved import statements to use absolute imports throughout the codebase
+- Added `from __future__ import annotations` to all Python files
+- Code quality improvements and type hint optimizations
+- Simplified conditional expressions in package initialization
+
+## [v1.7.0] - 2025-02-13
+
+### Added
+
+- GitHub repository creation functionality using `gh` CLI
+- New `_create_github_repo` method in PackageInitializer
+- Enhanced test configuration in pyproject.toml template
+- Added benchmark configuration and markers
+- New development and test dependencies
+
+### Changed
+
+- Git initialization now uses 'main' as default branch
+- Restructured pyproject.toml template with better organization
+- Updated build system configuration
+- Enhanced test configuration with more detailed pytest settings
+- Improved package structure template
+
+### Fixed
+
+- Fixed package template directory structure
+- Updated gitignore to exclude _private directory
+
+## [v1.6.2] - 2025-02-06
+
+### Fixed
+
+- Bug fixes and stability improvements
+
+## [v1.6.1] - 2025-02-06
+
+### Changed
+
+- Minor updates and improvements
+
+## [v1.6.0] - 2025-02-06
+
+### Added
+
+- Major feature additions and improvements
+- Enhanced package initialization capabilities
+
+## [v1.2.0] - 2025-02-03
+
+### Added
+
+- Significant feature enhancements
+
+## [v1.1.1] - 2025-02-03
+
+### Fixed
+
+- Various bug fixes and improvements
+
+## [v1.1.0] - 2025-02-03
+
+### Added
+
+- New features and functionality
+
+## [v1.0.2] - 2025-02-03
+
+### Fixed
+
+- Minor bug fixes and improvements
+
+## [v1.0.1] - 2025-02-03
+
+### Fixed
+
+- Initial bug fixes after release
+
+## [v1.0.0] - 2025-02-03
+
+### Added
+
+- Initial stable release
+- Core package initialization functionality
+- Basic project templating system
+- Configuration management
+
+## [v0.1.0] - 2025-02-03
+
+### Added
+
+- Initial project setup
+- Basic functionality
+- Project structure and core files
+
+[v1.7.5]: https://github.com/twardoch/twat-hatch/compare/v1.7.3...v1.7.5
+[v1.7.3]: https://github.com/twardoch/twat-hatch/compare/v1.7.0...v1.7.3
+[v1.7.0]: https://github.com/twardoch/twat-hatch/compare/v1.6.2...v1.7.0
+[v1.6.2]: https://github.com/twardoch/twat-hatch/compare/v1.6.1...v1.6.2
+[v1.6.1]: https://github.com/twardoch/twat-hatch/compare/v1.6.0...v1.6.1
+[v1.6.0]: https://github.com/twardoch/twat-hatch/compare/v1.2.0...v1.6.0
+[v1.2.0]: https://github.com/twardoch/twat-hatch/compare/v1.1.1...v1.2.0
+[v1.1.1]: https://github.com/twardoch/twat-hatch/compare/v1.1.0...v1.1.1
+[v1.1.0]: https://github.com/twardoch/twat-hatch/compare/v1.0.2...v1.1.0
+[v1.0.2]: https://github.com/twardoch/twat-hatch/compare/v1.0.1...v1.0.2
+[v1.0.1]: https://github.com/twardoch/twat-hatch/compare/v1.0.0...v1.0.1
+[v1.0.0]: https://github.com/twardoch/twat-hatch/compare/v0.1.0...v1.0.0
+[v0.1.0]: https://github.com/twardoch/twat-hatch/releases/tag/v0.1.0
+
+================
+File: pyproject.toml
+================
+# this_file: twat_hatch/pyproject.toml
+
+# this_file: twat_hatch/pyproject.toml
+
+# Build System Configuration
+# -------------------------
+# Specifies the build system and its requirements for packaging the project
+# Specifies the build backend and its requirements for building the package
+[build-system]
+requires = [
+    "hatchling>=1.27.0",     # Core build backend for Hatch
+    "hatch-vcs>=0.4.0",      # Version Control System plugin for Hatch
+    "hatch-autorun",         # Plugin for running scripts during build
+    "hatch-minify",          # Plugin for minifying files during build
+    "hatch-pip-compile"      # Plugin for managing dependencies with pip-compile
+]
+build-backend = "hatchling.build"  # Use Hatchling as the build backend
+
+# Wheel build configuration
+# Specifies which packages to include in the wheel distribution
+[tool.hatch.build.targets.wheel]
+packages = ["src/twat_hatch"]
+
+# Project Metadata Configuration
+# ------------------------------
+# Comprehensive project description, requirements, and compatibility information
+[project]
+name = "twat-hatch"
+dynamic = ["version"]  # Version is determined dynamically from VCS
+description = "Plugin for twat that provides package initialization functionality"
+readme = "README.md"
+requires-python = ">=3.10"  # Minimum Python version required
+license = "MIT"
+keywords = ["twat", "twat-plugin", "package-template"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries :: Python Modules"
+]
+
+# Runtime Dependencies
+# -------------------
+# External packages required for the project to function
+dependencies = [
+    "twat>=1.8.1",           # Main twat package
+    "pydantic>=2.10.6",      # Data validation using Python type annotations
+    "tomli>=2.0.0; python_version < '3.11'",  # TOML parser for Python <3.11
+    "jinja2>=3.1.5"          # Template engine for Python
+]
+
+# Project Authors
+# ---------------
+[[project.authors]]
+name = "Adam Twardoch"
+email = "adam+github@twardoch.com"
+
+# Project URLs
+# ------------
+# Links to project resources for documentation, issues, and source code
+[project.urls]
+Documentation = "https://github.com/twardoch/twat-hatch#readme"
+Issues = "https://github.com/twardoch/twat-hatch/issues"
+Source = "https://github.com/twardoch/twat-hatch"
+
+# Twat Plugin Registration
+# -----------------------
+# Registers this package as a plugin for the twat ecosystem
+[project.entry-points."twat.plugins"]
+hatch = "twat_hatch"
+
+# Command-line scripts provided by the package
+[project.scripts]
+twat-hatch = "twat_hatch.__main__:main"
+
+# Version configuration using VCS (Git)
+[tool.hatch.version]
+source = "vcs"
+
+[tool.hatch.version.raw-options]
+version_scheme = "post-release"
+
+# VCS hook configuration for version file generation
+[tool.hatch.build.hooks.vcs]
+version-file = "src/twat_hatch/__version__.py"
+
+# Build hooks configuration
+[tool.hatch.build.hooks]
+minify = {  }  # Minification configuration (empty for defaults)
+
+# Default development environment configuration
+[tool.hatch.envs.default]
+dependencies = [
+    "pytest",
+    "pytest-cov",
+    "mypy>=1.15.0",         # Static type checker
+    "ruff>=0.9.6",          # Fast Python linter and formatter
+]
+
+# Scripts available in the default environment
+[tool.hatch.envs.default.scripts]
+test = "pytest {args:tests}"
+test-cov = "pytest --cov-report=term-missing --cov-config=pyproject.toml --cov=src/twat_hatch --cov=tests {args:tests}"
+type-check = "mypy src/twat_hatch tests"
+lint = ["ruff check src/twat_hatch tests", "ruff format src/twat_hatch tests"]
+autorun = ["python", "-m", "twat_hatch.autorun"]
+
+# Python version matrix for testing
+[[tool.hatch.envs.default.matrix]]
+python = ["3.10", "3.11", "3.12"]
+
+# Environment plugin configuration
+[tool.hatch.plugins.environment]
+pip-compile = {  }  # pip-compile configuration (empty for defaults)
+
+# Linting environment configuration
+[tool.hatch.envs.lint]
+detached = true  # Run in isolated environment
+dependencies = [
+    "mypy>=1.15.0",
+    "ruff>=0.9.6",
+]
+
+# Linting environment scripts
+[tool.hatch.envs.lint.scripts]
+typing = "mypy --install-types --non-interactive {args:src/twat_hatch tests}"
+style = ["ruff check {args:.}", "ruff format {args:.}"]
+fmt = ["ruff format {args:.}", "ruff check --fix {args:.}"]
+all = ["style", "typing"]
+
+# Ruff (linter) configuration
+[tool.ruff]
+target-version = "py310"
+line-length = 88
+
+# Ruff lint rules configuration
+[tool.ruff.lint]
+extend-select = [
+    "A",     # flake8-builtins
+    "ARG",   # flake8-unused-arguments
+    "B",     # flake8-bugbear
+    "C",     # flake8-comprehensions
+    "DTZ",   # flake8-datetimez
+    "E",     # pycodestyle errors
+    "EM",    # flake8-errmsg
+    "F",     # pyflakes
+    "FBT",   # flake8-boolean-trap
+    "I",     # isort
+    "ICN",   # flake8-import-conventions
+    "ISC",   # flake8-implicit-str-concat
+    "N",     # pep8-naming
+    "PLC",   # pylint convention
+    "PLE",   # pylint error
+    "PLR",   # pylint refactor
+    "PLW",   # pylint warning
+    "Q",     # flake8-quotes
+    "RUF",   # Ruff-specific rules
+    "S",     # flake8-bandit
+    "T",     # flake8-debugger
+    "TID",   # flake8-tidy-imports
+    "UP",    # pyupgrade
+    "W",     # pycodestyle warnings
+    "YTT",   # flake8-2020
+]
+ignore = ["ARG001", "E501", "I001", "RUF001", "PLR2004", "EXE003", "ISC001"]
+
+# File-specific Ruff configurations
+[tool.ruff.per-file-ignores]
+"tests/*" = ["S101"]  # Allow assert in tests
+
+# MyPy (type checker) configuration
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+disallow_untyped_decorators = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_unreachable = true
+
+# Pydantic MyPy plugin configuration
+[tool.pydantic-mypy]
+init_forbid_extra = true
+init_typed = true
+warn_required_dynamic_aliases = true
+warn_untyped_fields = true
+
+# Coverage.py configuration for test coverage
+[tool.coverage.run]
+source_pkgs = ["twat_hatch", "tests"]
+branch = true
+parallel = true
+omit = [
+    "src/twat_hatch/__about__.py",
+]
+
+# Coverage path mappings
+[tool.coverage.paths]
+twat_hatch = ["src/twat_hatch", "*/twat-hatch/src/twat_hatch"]
+tests = ["tests", "*/twat-hatch/tests"]
+
+# Coverage report configuration
+[tool.coverage.report]
+exclude_lines = [
+    "no cov",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+]
+
+# Optional dependencies
+[project.optional-dependencies]
+test = [
+    "pytest>=8.3.4",
+    "pytest-cov>=6.0.0",
+    "pytest-xdist>=3.6.1",                # For parallel test execution
+    "pytest-benchmark[histogram]>=5.1.0",  # For performance testing
+]
+
+dev = [
+    "pre-commit>=4.1.0",
+    "ruff>=0.9.6",
+    "mypy>=1.15.0",
+]
+
+all = [
+    "twat>=1.8.1",
+    "pydantic>=2.10.6",
+    "tomli>=2.0.0; python_version < '3.11'",
+    "jinja2>=3.1.5"
+]
+
+# Test environment configuration
+[tool.hatch.envs.test]
+dependencies = [".[test]"]
+
+# Test environment scripts
+[tool.hatch.envs.test.scripts]
+test = "python -m pytest -n auto {args:tests}"
+test-cov = "python -m pytest -n auto --cov-report=term-missing --cov-config=pyproject.toml --cov=src/twat_hatch --cov=tests {args:tests}"
+bench = "python -m pytest -v -p no:briefcase tests/test_benchmark.py --benchmark-only"
+bench-save = "python -m pytest -v -p no:briefcase tests/test_benchmark.py --benchmark-only --benchmark-json=benchmark/results.json"
+
+# Pytest configuration
+[tool.pytest.ini_options]
+markers = ["benchmark: marks tests as benchmarks (select with '-m benchmark')"]
+addopts = "-v -p no:briefcase"
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+filterwarnings = ["ignore::DeprecationWarning", "ignore::UserWarning"]
+asyncio_mode = "auto"
+
+# Pytest-benchmark configuration
+[tool.pytest-benchmark]
+min_rounds = 100
+min_time = 0.1
+histogram = true
+storage = "file"
+save-data = true
+compare = [
+    "min",    # Minimum time
+    "max",    # Maximum time
+    "mean",   # Mean time
+    "stddev", # Standard deviation
+    "median", # Median time
+    "iqr",    # Inter-quartile range
+    "ops",    # Operations per second
+    "rounds", # Number of rounds
+]
+
+================
+File: README.md
+================
+# `twat-hatch`
+
+(work in progress)
+
+A powerful Python package initializer that supports both standalone packages and plugin-based architectures. Built with modern Python practices and robust configuration management.
+
+## Features
+
+- 🎯 **Flexible package creation**: Create standalone packages or plugin-based architectures
+- 🔧 **Modern configuration**: Type-safe configuration using Pydantic
+- 📦 **Multiple package types**: Support for core packages and plugins
+- 🎨 **Templating system**: Jinja2-based templating with multiple themes
+- 📚 **Documentation support**: Optional MkDocs integration
+- 🔄 **Version control**: Git integration and semantic versioning support
+- ✨ **Best practices**: Enforces Python packaging best practices
+
+## Why `twat-hatch`?
+
+`twat-hatch` helps you create modern Python packages with a focus on plugin systems. It implements best practices for:
+
+### Modern python packaging
+
+- PEP 621-style configuration via `pyproject.toml`
+- `src/` layout pattern for better packaging practices
+- Type hints and runtime type checking with Pydantic
+- Automated dependency management
+
+### Plugin system architecture
+
+- **Namespace packages**: Create plugin host packages that dynamically expose plugins
+- **Dynamic discovery**: Automatic plugin registration via entry points
+- **Flexible usage**: Support both direct imports and namespace-based imports
+- **Clean dependencies**: Proper handling of optional plugin dependencies
+
+### Best practices implementation
+
+- **Code organization**: Enforced `src/` layout and modern project structure
+- **Error handling**: Built-in validation and error checking
+- **Documentation**: Automated documentation setup with MkDocs
+- **Testing**: Pre-configured test structure with pytest
+- **Type safety**: MyPy configuration and Pydantic validation
+
+## Installation
+
+```bash
+uv pip install twat-hatch
+```
+
+Or with `pip`:
+
+```bash
+pip install twat-hatch
+```
+
+
+## Quick start
+
+1. Create a configuration file `twat-hatch.toml`:
+
+```toml
+[project]
+packages = ["my-package"]
+output_dir = "packages"
+
+[author]
+name = "Your Name"
+email = "your.email@example.com"
+github_username = "yourusername"
+
+[package]
+min_python = "3.8"
+license = "MIT"
+development_status = "4 - Beta"
+```
+
+1. Run the package initializer:
+
+```bash
+twat-hatch --config twat-hatch.toml
+```
+
+## Creating plugin-based packages
+
+### Plugin system overview
+
+When creating a plugin-based architecture, `twat-hatch` generates:
+
+1. **Plugin host package**: The core package that provides plugin discovery and management
+2. **Plugin packages**: Individual plugins that integrate with the host package
+
+Example configuration:
+
+```toml
+[project]
+packages = ["my-plugin-a", "my-plugin-b"]
+plugin_host = "my-core-package"
+output_dir = "packages"
+
+# ... other configuration ...
+```
+
+### Plugin system usage
+
+Once packages are created, they can be used in several ways:
+
+```python
+# Direct import of a plugin
+import my_plugin_a
+instance = my_plugin_a.SomeClass()
+
+# Via namespace package (if configured)
+from my_core_package import plugin_a
+instance = plugin_a.SomeClass()
+```
+
+Installation options:
+
+```bash
+# Install a plugin directly
+pip install my-plugin-a
+
+# Install via the host package with extras
+pip install my-core-package[plugin-a]
+
+# Install multiple plugins
+pip install my-core-package[plugin-a,plugin-b]
+
+# Install all available plugins
+pip install my-core-package[all]
+```
+
+## Configuration reference
+
+The configuration file ( `twat-hatch.toml` ) supports the following sections:
+
+### Project configuration
+
+```toml
+[project]
+packages = ["package-name"]        # List of packages to create
+plugin_host = "host-package"       # Optional plugin host package
+output_dir = "path/to/output"      # Output directory (optional)
+```
+
+### Author information
+
+```toml
+[author]
+name = "Author Name"
+email = "author@example.com"
+github_username = "username"
+```
+
+### Package settings
+
+```toml
+[package]
+min_python = "3.8"                 # Minimum Python version
+license = "MIT"                    # Package license
+development_status = "4 - Beta"    # PyPI development status
+```
+
+### Dependencies
+
+```toml
+[dependencies]
+dependencies = [                   # Regular dependencies
+    "package>=1.0.0"
+]
+plugin_dependencies = [            # Plugin-specific dependencies
+    "plugin-package>=1.0.0"
+]
+dev_dependencies = [               # Development dependencies
+    "pytest>=7.0.0"
+]
+```
+
+### Features
+
+```toml
+[features]
+mkdocs = false                     # Enable MkDocs documentation
+semver = true                      # Use semantic versioning
+vcs = true                        # Initialize Git repository
+```
+
+## Generated package structure
+
+### Standalone package
+
+```
+my-package/
+├── README.md
+├── pyproject.toml                 # Project configuration
+├── src/
+│   └── my_package/               # Package source
+│       ├── __init__.py
+│       └── core.py
+└── tests/                        # Test directory
+    ├── conftest.py
+    └── test_my_package.py
+```
+
+### Plugin host package
+
+```
+my-core-package/
+├── README.md
+├── pyproject.toml
+├── src/
+│   └── my_core_package/
+│       ├── __init__.py           # Plugin discovery logic
+│       └── core.py               # Core functionality
+└── tests/
+    ├── conftest.py
+    └── test_my_core_package.py
+```
+
+### Plugin package
+
+```
+my-plugin/
+├── README.md
+├── pyproject.toml                # Includes plugin entry points
+├── src/
+│   └── my_plugin/
+│       ├── __init__.py
+│       └── plugin.py             # Plugin implementation
+└── tests/
+    ├── conftest.py
+    └── test_my_plugin.py
+```
+
+## Development
+
+To set up the development environment:
+
+```bash
+git clone https://github.com/twardoch/twat-hatch.git
+cd twat-hatch
+uv venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+uv pip install -e ".[dev]"
+```
+
+Run tests:
+
+```bash
+pytest
+```
+
+Run linting:
+
+```bash
+ruff check .
+mypy src/
+```
+
+## Technical details
+
+### Package naming convention
+
+- Distribution names use hyphens: `my-plugin`
+- Import names use underscores: `my_plugin`
+- Plugin host packages follow the same convention
+
+### Plugin discovery
+
+- Plugins register via entry points under `{host}.plugins`
+- Plugin host packages support both direct imports and entry point discovery
+- Dynamic loading ensures plugins are only imported when needed
+
+### Dependencies management
+
+- Plugin packages can depend on their host package
+- Host packages define optional dependencies via extras
+- Version compatibility is managed through dependency specifications
+
+### Building and publishing
+
+1. Build and publish the plugin host package first
+2. Build and publish plugin packages separately
+3. Use consistent versioning across packages
+
+## License
+
+MIT License, see <LICENSE> for details.
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+ 
+.
+
+================
+File: TODO.md
+================
+# TODO
+
+================
+File: VERSION.txt
+================
+v2.5.3
+
+
+
+================================================================
+End of Codebase
+================================================================

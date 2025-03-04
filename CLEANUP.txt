@@ -535,3 +535,62 @@ tests/test_twat_hatch.py::test_version PASSED                            [100%]
 ?? CLEANUP.txt
 
 2025-03-04 07:19:17 - Changes detected in repository
+2025-03-04 07:19:17 - [main 30c6d8f] Update repository files
+ 4 files changed, 546 insertions(+), 8 deletions(-)
+ create mode 100644 CLEANUP.txt
+
+2025-03-04 07:19:17 - Changes committed successfully
+2025-03-04 07:19:19 - 
+📦 Repomix v0.2.29
+
+No custom config found at repomix.config.json or global config at /Users/adam/.config/repomix/repomix.config.json.
+You can add a config file for additional settings. Please check https://github.com/yamadashy/repomix for more information.
+⠙ Searching for files...
+[2K[1A[2K[G⠹ Collecting files...
+[2K[1A[2K[G⠸ Collecting files...
+[2K[1A[2K[G⠼ Collecting files...
+[2K[1A[2K[G⠴ Collect file... (21/49) src/twat_hatch/themes/default/pyproject.toml.j2
+[2K[1A[2K[G⠦ Running security check...
+[2K[1A[2K[G⠧ Running security check...
+[2K[1A[2K[G⠇ Running security check... (32/49) src/twat_hatch/themes/package.toml.j2
+[2K[1A[2K[G⠏ Processing files...
+[2K[1A[2K[G⠋ Processing files...
+[2K[1A[2K[G⠙ Processing file... (30/49) src/twat_hatch/themes/plugin_host/README.md.j2
+[2K[1A[2K[G⠹ Processing file... (38/49) src/twat_hatch/hatch.py
+[2K[1A[2K[G⠸ Calculating metrics...
+[2K[1A[2K[G⠼ Calculating metrics...
+[2K[1A[2K[G⠴ Calculating metrics...
+[2K[1A[2K[G⠦ Calculating metrics...
+[2K[1A[2K[G⠧ Calculating metrics...
+[2K[1A[2K[G⠇ Calculating metrics...
+[2K[1A[2K[G⠏ Calculating metrics...
+[2K[1A[2K[G⠋ Calculating metrics...
+[2K[1A[2K[G⠙ Calculating metrics... (30/49) src/twat_hatch/themes/plugin_host/README.md.j2
+[2K[1A[2K[G✔ Packing completed successfully!
+
+📈 Top 5 Files by Character Count and Token Count:
+──────────────────────────────────────────────────
+1.  pyproject.toml (8,427 chars, 2,400 tokens)
+2.  src/twat_hatch/hatch.py (7,876 chars, 1,693 tokens)
+3.  README.md (6,809 chars, 1,580 tokens)
+4.  src/twat_hatch/themes/default/pyproject.toml.j2 (6,692 chars, 1,858 tokens)
+5.  cleanup.py (5,904 chars, 1,316 tokens)
+
+🔎 Security Check:
+──────────────────
+✔ No suspicious files detected.
+
+📊 Pack Summary:
+────────────────
+  Total Files: 49 files
+  Total Chars: 94,048 chars
+ Total Tokens: 24,692 tokens
+       Output: REPO_CONTENT.txt
+     Security: ✔ No suspicious files detected
+
+🎉 All Done!
+Your repository has been successfully packed.
+
+💡 Repomix is now available in your browser! Try it at https://repomix.com
+
+2025-03-04 07:19:19 - Repository content mixed into REPO_CONTENT.txt
