@@ -1,35 +1,36 @@
-# this_file: twat_hatch/pyproject.toml
+#==============================================================================
+# TWAT-HATCH PACKAGE CONFIGURATION
+# This pyproject.toml defines the package metadata, dependencies, build system,
+# and development environment for the twat-hatch package.
+#==============================================================================
 
-# this_file: twat_hatch/pyproject.toml
-
-# Build System Configuration
-# -------------------------
-# Specifies the build system and its requirements for packaging the project
-# Specifies the build backend and its requirements for building the package
+#------------------------------------------------------------------------------
+# BUILD SYSTEM CONFIGURATION
+#------------------------------------------------------------------------------
 [build-system]
 requires = [
-    "hatchling>=1.27.0",     # Core build backend for Hatch
-    "hatch-vcs>=0.4.0",      # Version Control System plugin for Hatch
-    "hatch-autorun",         # Plugin for running scripts during build
-    "hatch-minify",          # Plugin for minifying files during build
-    "hatch-pip-compile"      # Plugin for managing dependencies with pip-compile
+    "hatchling>=1.27.0", # Core build backend for Hatch
+    "hatch-vcs>=0.4.0", # Version Control System plugin for Hatch
+    "hatch-autorun", # Plugin for running scripts during build
+    "hatch-minify", # Plugin for minifying files during build
+    "hatch-pip-compile" # Plugin for managing dependencies with pip-compile
 ]
-build-backend = "hatchling.build"  # Use Hatchling as the build backend
+build-backend = "hatchling.build" # Use Hatchling as the build backend
 
 # Wheel build configuration
 # Specifies which packages to include in the wheel distribution
 [tool.hatch.build.targets.wheel]
 packages = ["src/twat_hatch"]
 
-# Project Metadata Configuration
-# ------------------------------
-# Comprehensive project description, requirements, and compatibility information
+#------------------------------------------------------------------------------
+# PROJECT METADATA
+#------------------------------------------------------------------------------
 [project]
 name = "twat-hatch"
-dynamic = ["version"]  # Version is determined dynamically from VCS
+dynamic = ["version"] # Version is determined dynamically from VCS
 description = "Plugin for twat that provides package initialization functionality"
 readme = "README.md"
-requires-python = ">=3.10"  # Minimum Python version required
+requires-python = ">=3.10" # Minimum Python version required
 license = "MIT"
 keywords = ["twat", "twat-plugin", "package-template"]
 classifiers = [
@@ -40,17 +41,19 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Programming Language :: Python :: Implementation :: PyPy",
+    "Operating System :: OS Independent",
     "Topic :: Software Development :: Libraries :: Python Modules"
 ]
-
 # Runtime Dependencies
 # -------------------
 # External packages required for the project to function
 dependencies = [
-    "twat>=1.8.1",           # Main twat package
-    "pydantic>=2.10.6",      # Data validation using Python type annotations
-    "tomli>=2.0.0; python_version < '3.11'",  # TOML parser for Python <3.11
-    "jinja2>=3.1.5"          # Template engine for Python
+    "twat>=1.8.1", # Main twat package
+    "pydantic>=2.10.6", # Data validation using Python type annotations
+    "tomli>=2.0.0; python_version < '3.11'", # TOML parser for Python <3.11
+    "jinja2>=3.1.5" # Template engine for Python
 ]
 
 # Project Authors
@@ -90,15 +93,33 @@ version-file = "src/twat_hatch/__version__.py"
 
 # Build hooks configuration
 [tool.hatch.build.hooks]
-minify = {  }  # Minification configuration (empty for defaults)
+minify = {  } # Minification configuration (empty for defaults)
+
+#------------------------------------------------------------------------------
+# OPTIONAL DEPENDENCIES
+#------------------------------------------------------------------------------
+[project.optional-dependencies]
+test = [
+    "pytest>=8.3.4",
+    "pytest-cov>=6.0.0",
+    "pytest-xdist>=3.6.1", # For parallel test execution
+    "pytest-benchmark[histogram]>=5.1.0" # For performance testing
+]
+dev = ["pre-commit>=4.1.0", "ruff>=0.9.6", "mypy>=1.15.0"]
+all = [
+    "twat>=1.8.1",
+    "pydantic>=2.10.6",
+    "tomli>=2.0.0; python_version < '3.11'",
+    "jinja2>=3.1.5"
+]
 
 # Default development environment configuration
 [tool.hatch.envs.default]
 dependencies = [
     "pytest",
     "pytest-cov",
-    "mypy>=1.15.0",         # Static type checker
-    "ruff>=0.9.6",          # Fast Python linter and formatter
+    "mypy>=1.15.0", # Static type checker
+    "ruff>=0.9.6" # Fast Python linter and formatter
 ]
 
 # Scripts available in the default environment
@@ -115,15 +136,12 @@ python = ["3.10", "3.11", "3.12"]
 
 # Environment plugin configuration
 [tool.hatch.plugins.environment]
-pip-compile = {  }  # pip-compile configuration (empty for defaults)
+pip-compile = {  } # pip-compile configuration (empty for defaults)
 
 # Linting environment configuration
 [tool.hatch.envs.lint]
-detached = true  # Run in isolated environment
-dependencies = [
-    "mypy>=1.15.0",
-    "ruff>=0.9.6",
-]
+detached = true # Run in isolated environment
+dependencies = ["mypy>=1.15.0", "ruff>=0.9.6"]
 
 # Linting environment scripts
 [tool.hatch.envs.lint.scripts]
@@ -132,6 +150,9 @@ style = ["ruff check {args:.}", "ruff format {args:.}"]
 fmt = ["ruff format {args:.}", "ruff check --fix {args:.}"]
 all = ["style", "typing"]
 
+#------------------------------------------------------------------------------
+# CODE QUALITY TOOLS
+#------------------------------------------------------------------------------
 # Ruff (linter) configuration
 [tool.ruff]
 target-version = "py310"
@@ -140,37 +161,52 @@ line-length = 88
 # Ruff lint rules configuration
 [tool.ruff.lint]
 extend-select = [
-    "A",     # flake8-builtins
-    "ARG",   # flake8-unused-arguments
-    "B",     # flake8-bugbear
-    "C",     # flake8-comprehensions
-    "DTZ",   # flake8-datetimez
-    "E",     # pycodestyle errors
-    "EM",    # flake8-errmsg
-    "F",     # pyflakes
-    "FBT",   # flake8-boolean-trap
-    "I",     # isort
-    "ICN",   # flake8-import-conventions
-    "ISC",   # flake8-implicit-str-concat
-    "N",     # pep8-naming
-    "PLC",   # pylint convention
-    "PLE",   # pylint error
-    "PLR",   # pylint refactor
-    "PLW",   # pylint warning
-    "Q",     # flake8-quotes
-    "RUF",   # Ruff-specific rules
-    "S",     # flake8-bandit
-    "T",     # flake8-debugger
-    "TID",   # flake8-tidy-imports
-    "UP",    # pyupgrade
-    "W",     # pycodestyle warnings
-    "YTT",   # flake8-2020
+    "A", # flake8-builtins
+    "ARG", # flake8-unused-arguments
+    "B", # flake8-bugbear
+    "C", # flake8-comprehensions
+    "DTZ", # flake8-datetimez
+    "E", # pycodestyle errors
+    "EM", # flake8-errmsg
+    "F", # pyflakes
+    "FBT", # flake8-boolean-trap
+    "I", # isort
+    "ICN", # flake8-import-conventions
+    "ISC", # flake8-implicit-str-concat
+    "N", # pep8-naming
+    "PLC", # pylint convention
+    "PLE", # pylint error
+    "PLR", # pylint refactor
+    "PLW", # pylint warning
+    "Q", # flake8-quotes
+    "RUF", # Ruff-specific rules
+    "S", # flake8-bandit
+    "T", # flake8-debugger
+    "TID", # flake8-tidy-imports
+    "UP", # pyupgrade
+    "W", # pycodestyle warnings
+    "YTT", # flake8-2020
 ]
 ignore = ["ARG001", "E501", "I001", "RUF001", "PLR2004", "EXE003", "ISC001"]
 
-# File-specific Ruff configurations
-[tool.ruff.per-file-ignores]
-"tests/*" = ["S101"]  # Allow assert in tests
+# isort configuration within Ruff
+[tool.ruff.lint.isort]
+known-first-party = [
+    '{{ import_name }}'
+] # Treat as first-party imports for sorting
+
+# flake8-tidy-imports configuration within Ruff
+[tool.ruff.lint.flake8-tidy-imports]
+ban-relative-imports = 'all' # Ban all relative imports for consistency
+
+# Per-file rule exceptions
+[tool.ruff.lint.per-file-ignores]
+# Tests can use magic values, assertions, and relative imports
+'tests/**/*' = [
+    'PLR2004', # Allow magic values in tests for readability
+    'S101', # Allow assertions in tests
+    'TID252' # Allow relative imports in tests for convenience
+]
 
 # MyPy (type checker) configuration
 [tool.mypy]
@@ -199,9 +235,7 @@ warn_untyped_fields = true
 source_pkgs = ["twat_hatch", "tests"]
 branch = true
 parallel = true
-omit = [
-    "src/twat_hatch/__about__.py",
-]
+omit = ["src/twat_hatch/__about__.py"]
 
 # Coverage path mappings
 [tool.coverage.paths]
@@ -210,27 +244,20 @@ tests = ["tests", "*/twat-hatch/tests"]
 
 # Coverage report configuration
 [tool.coverage.report]
-exclude_lines = [
-    "no cov",
-    "if __name__ == .__main__.:",
-    "if TYPE_CHECKING:",
-]
+exclude_lines = ["no cov", "if __name__ == .__main__.:", "if TYPE_CHECKING:"]
 
+#------------------------------------------------------------------------------
+# TESTING CONFIGURATION
+#------------------------------------------------------------------------------
 # Optional dependencies
 [project.optional-dependencies]
 test = [
     "pytest>=8.3.4",
     "pytest-cov>=6.0.0",
-    "pytest-xdist>=3.6.1",                # For parallel test execution
-    "pytest-benchmark[histogram]>=5.1.0",  # For performance testing
+    "pytest-xdist>=3.6.1", # For parallel test execution
+    "pytest-benchmark[histogram]>=5.1.0", # For performance testing
 ]
-
-dev = [
-    "pre-commit>=4.1.0",
-    "ruff>=0.9.6",
-    "mypy>=1.15.0",
-]
-
+dev = ["pre-commit>=4.1.0", "ruff>=0.9.6", "mypy>=1.15.0"]
 all = [
     "twat>=1.8.1",
     "pydantic>=2.10.6",
@@ -266,13 +293,12 @@ histogram = true
 storage = "file"
 save-data = true
 compare = [
-    "min",    # Minimum time
-    "max",    # Maximum time
-    "mean",   # Mean time
+    "min", # Minimum time
+    "max", # Maximum time
+    "mean", # Mean time
     "stddev", # Standard deviation
     "median", # Median time
-    "iqr",    # Inter-quartile range
-    "ops",    # Operations per second
-    "rounds", # Number of rounds
-] 
-
+    "iqr", # Inter-quartile range
+    "ops", # Operations per second
+    "rounds" # Number of rounds
+]
