@@ -99,9 +99,6 @@ class PyVer:
                 micro = int(
                     getattr(version, "micro", version[2] if len(version) > 2 else 0)
                 )
-                if minor < 0 or minor > 99:
-                    msg = f"Invalid minor version: {minor}"
-                    raise ValueError(msg)
                 return cls(major=major, minor=minor, micro=micro)
             except (IndexError, AttributeError, ValueError) as e:
                 msg = f"Invalid version tuple/object: {version}"
@@ -116,25 +113,16 @@ class PyVer:
             if match:
                 major = int(match.group(1))
                 minor = int(match.group(2))
-                if minor < 0 or minor > 99:
-                    msg = f"Invalid minor version: {minor}"
-                    raise ValueError(msg)
                 return cls(major=major, minor=minor)
             msg = f"Invalid Ruff version format: {version_str}"
             raise ValueError(msg)
 
-        # Handle version strings (3.10 or 3.10.0 or 3.10 Final)
-        # Split on first space to ignore any additional text
-        version_str = version_str.split()[0]
-
+        # Handle version strings (e.g., "3.10" or "3.10.0")
         # Try to parse as X.Y format first
         match = re.match(r"(\d+)\.(\d+)", version_str)
         if match:
             major = int(match.group(1))
             minor = int(match.group(2))
-            if minor < 0 or minor > 99:
-                msg = f"Invalid minor version: {minor}"
-                raise ValueError(msg)
             return cls(major=major, minor=minor)
 
         # Then try to parse as X.Y.Z format
@@ -143,12 +131,9 @@ class PyVer:
             major = int(match.group(1))
             minor = int(match.group(2))
             micro = int(match.group(3))
-            if minor < 0 or minor > 99:
-                msg = f"Invalid minor version: {minor}"
-                raise ValueError(msg)
             return cls(major=major, minor=minor, micro=micro)
 
-        # Finally try to parse as just X format
+        # Finally, try to parse as just X format (e.g., "3")
         try:
             major = int(version_str)
             return cls(major=major, minor=0)
@@ -237,9 +222,9 @@ class PyVer:
             try:
                 major, minor = map(int, version.split(","))
                 return cls(major=major, minor=minor)
-            except ValueError:
+            except ValueError as e:
                 msg = 'Version string must be comma-separated integers (e.g. "3,10")'
-                raise ValueError(msg)
+                raise ValueError(msg) from e
 
         msg = f"Unsupported version format: {version}"
         raise ValueError(msg)

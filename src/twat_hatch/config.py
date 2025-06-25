@@ -64,14 +64,12 @@ class ConfigurationGenerator:
     def generate_config(
         self,
         package_type: PackageType,
-        interactive: bool = True,
         **kwargs: Any,
     ) -> str:
         """Generate configuration content.
 
         Args:
             package_type: Type of package to create
-            interactive: Whether to prompt for missing values (unused, handled by CLI)
             **kwargs: Configuration values to use
 
         Returns:
@@ -137,7 +135,6 @@ class ConfigurationGenerator:
         self,
         package_type: PackageType,
         output_path: Path | str,
-        interactive: bool = True,
         **kwargs: Any,
     ) -> None:
         """Generate and write configuration file.
@@ -145,9 +142,8 @@ class ConfigurationGenerator:
         Args:
             package_type: Type of package to generate config for
             output_path: Where to write the configuration file
-            interactive: Whether to prompt for values (unused, handled by CLI)
             **kwargs: Optional pre-defined values
         """
-        content = self.generate_config(package_type, interactive, **kwargs)
+        content = self.generate_config(package_type, **kwargs)
         output_file = Path(output_path)
         output_file.write_text(content)

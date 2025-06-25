@@ -1,6 +1,6 @@
-2025-03-05 12:14:36 - 
+2025-06-25 13:29:40 -
 === PROJECT STATEMENT ===
-2025-03-05 12:14:36 - ---
+2025-06-25 13:29:40 - ---
 description: About this project
 globs:
 ---
@@ -20,175 +20,171 @@ globs:
 - Clear provider protocol for adding new storage backends
 - Strong typing and runtime checks throughout
 
-2025-03-05 12:14:36 - 
+2025-06-25 13:29:40 -
 === Current Status ===
-2025-03-05 12:14:36 - [ 800]  .
-├── [  64]  .benchmarks
-├── [  96]  .cursor
-│   └── [ 224]  rules
+2025-06-25 13:29:40 - [4.0K]  .
+├── [4.0K]  .benchmarks
+├── [4.0K]  .cursor
+│   └── [4.0K]  rules
 │       ├── [ 821]  0project.mdc
 │       ├── [ 516]  cleanup.mdc
-│       ├── [3.7K]  filetree.mdc
+│       ├── [3.6K]  filetree.mdc
 │       └── [2.0K]  quality.mdc
-├── [  96]  .github
-│   └── [ 128]  workflows
+├── [4.0K]  .github
+│   └── [4.0K]  workflows
 │       ├── [2.7K]  push.yml
 │       └── [1.4K]  release.yml
-├── [3.5K]  .gitignore
+├── [1.4K]  .gitignore
 ├── [ 470]  .pre-commit-config.yaml
-├── [ 939]  CLEANUP.txt
 ├── [1.0K]  LICENSE
-├── [3.1K]  LOG.md
+├── [3.7K]  LOG.md
+├── [7.4K]  PLAN.md
 ├── [6.8K]  README.md
-├── [ 93K]  REPO_CONTENT.txt
-├── [   8]  TODO.md
+├── [ 849]  TODO.md
 ├── [   7]  VERSION.txt
 ├── [ 13K]  cleanup.py
-├── [ 160]  dist
-├── [8.2K]  pyproject.toml
-├── [ 128]  src
-│   └── [ 352]  twat_hatch
+├── [9.4K]  pyproject.toml
+├── [4.0K]  src
+│   └── [4.0K]  twat_hatch
 │       ├── [ 224]  __init__.py
 │       ├── [ 11K]  __main__.py
-│       ├── [5.0K]  config.py
+│       ├── [4.0K]  __pycache__
+│       ├── [4.9K]  config.py
 │       ├── [ 19K]  hatch.py
-│       ├── [ 448]  themes
+│       ├── [4.0K]  themes
 │       │   ├── [  46]  __init__.py
-│       │   ├── [  64]  _default
-│       │   ├── [ 160]  _shared
+│       │   ├── [4.0K]  _shared
 │       │   │   ├── [1.1K]  base.toml.j2
-│       │   │   └── [ 256]  snippets
+│       │   │   └── [4.0K]  snippets
 │       │   │       ├── [ 128]  author.toml.j2
 │       │   │       ├── [ 896]  dependencies.toml.j2
 │       │   │       ├── [ 280]  development.toml.j2
 │       │   │       ├── [ 186]  features.toml.j2
 │       │   │       ├── [ 202]  package.toml.j2
 │       │   │       └── [2.0K]  tools.toml.j2
-│       │   ├── [ 352]  default
-│       │   │   ├── [  96]  .github
-│       │   │   │   └── [ 160]  workflows
+│       │   ├── [4.0K]  default
+│       │   │   ├── [4.0K]  .github
+│       │   │   │   └── [4.0K]  workflows
 │       │   │   │       ├── [2.8K]  push.yml.j2
 │       │   │   │       └── [1.4K]  release.yml.j2
 │       │   │   ├── [ 502]  .pre-commit-config.yaml.j2
 │       │   │   ├── [1.1K]  LICENSE.j2
 │       │   │   ├── [ 820]  README.md.j2
-│       │   │   ├── [  96]  dist
+│       │   │   ├── [4.0K]  dist
 │       │   │   │   └── [   1]  .gitkeep.j2
 │       │   │   ├── [3.5K]  hidden.gitignore.j2
-│       │   │   ├── [6.5K]  pyproject.toml.j2
-│       │   │   └── [  96]  tests
+│       │   │   ├── [ 18K]  pyproject.toml.j2
+│       │   │   └── [4.0K]  tests
 │       │   │       └── [ 173]  test_package.py.j2
-│       │   ├── [ 160]  package
+│       │   ├── [4.0K]  package
 │       │   │   ├── [ 426]  package.toml.j2
-│       │   │   └── [ 128]  src
-│       │   │       └── [  96]  __package_name__
+│       │   │   └── [4.0K]  src
+│       │   │       └── [4.0K]  __package_name__
 │       │   │           └── [1.8K]  __package_name__.py.j2
 │       │   ├── [ 854]  package.toml.j2
-│       │   ├── [ 160]  plugin
+│       │   ├── [4.0K]  plugin
 │       │   │   ├── [ 374]  README.md.j2
 │       │   │   ├── [ 355]  pyproject.toml.j2
-│       │   │   └── [  96]  src
-│       │   │       └── [  96]  __package_name__
+│       │   │   └── [4.0K]  src
+│       │   │       └── [4.0K]  __package_name__
 │       │   │           └── [ 130]  __init__.py.j2
 │       │   ├── [1.2K]  plugin.toml.j2
-│       │   ├── [ 160]  plugin_host
+│       │   ├── [4.0K]  plugin_host
 │       │   │   ├── [ 561]  README.md.j2
 │       │   │   ├── [ 308]  pyproject.toml.j2
-│       │   │   └── [  96]  src
+│       │   │   └── [4.0K]  src
 │       │   │       └── [2.1K]  __init__.py.j2
 │       │   └── [1.3K]  plugin_host.toml.j2
-│       └── [8.3K]  utils.py
-└── [ 128]  tests
-    └── [ 154]  test_twat_hatch.py
+│       └── [7.6K]  utils.py
+└── [4.0K]  tests
+    ├── [4.0K]  __pycache__
+    └── [ 157]  test_twat_hatch.py
 
-27 directories, 51 files
+27 directories, 50 files
 
-2025-03-05 12:14:36 - 
+2025-06-25 13:29:40 -
 Project structure:
-2025-03-05 12:14:36 - [ 800]  .
-├── [  64]  .benchmarks
-├── [  96]  .cursor
-│   └── [ 224]  rules
+2025-06-25 13:29:40 - [4.0K]  .
+├── [4.0K]  .benchmarks
+├── [4.0K]  .cursor
+│   └── [4.0K]  rules
 │       ├── [ 821]  0project.mdc
 │       ├── [ 516]  cleanup.mdc
-│       ├── [3.7K]  filetree.mdc
+│       ├── [3.6K]  filetree.mdc
 │       └── [2.0K]  quality.mdc
-├── [  96]  .github
-│   └── [ 128]  workflows
+├── [4.0K]  .github
+│   └── [4.0K]  workflows
 │       ├── [2.7K]  push.yml
 │       └── [1.4K]  release.yml
-├── [3.5K]  .gitignore
+├── [1.4K]  .gitignore
 ├── [ 470]  .pre-commit-config.yaml
-├── [ 939]  CLEANUP.txt
 ├── [1.0K]  LICENSE
-├── [3.1K]  LOG.md
+├── [3.7K]  LOG.md
+├── [7.4K]  PLAN.md
 ├── [6.8K]  README.md
-├── [ 93K]  REPO_CONTENT.txt
-├── [   8]  TODO.md
+├── [ 849]  TODO.md
 ├── [   7]  VERSION.txt
 ├── [ 13K]  cleanup.py
-├── [ 160]  dist
-├── [8.2K]  pyproject.toml
-├── [ 128]  src
-│   └── [ 352]  twat_hatch
+├── [9.4K]  pyproject.toml
+├── [4.0K]  src
+│   └── [4.0K]  twat_hatch
 │       ├── [ 224]  __init__.py
 │       ├── [ 11K]  __main__.py
-│       ├── [5.0K]  config.py
+│       ├── [4.0K]  __pycache__
+│       ├── [4.9K]  config.py
 │       ├── [ 19K]  hatch.py
-│       ├── [ 448]  themes
+│       ├── [4.0K]  themes
 │       │   ├── [  46]  __init__.py
-│       │   ├── [  64]  _default
-│       │   ├── [ 160]  _shared
+│       │   ├── [4.0K]  _shared
 │       │   │   ├── [1.1K]  base.toml.j2
-│       │   │   └── [ 256]  snippets
+│       │   │   └── [4.0K]  snippets
 │       │   │       ├── [ 128]  author.toml.j2
 │       │   │       ├── [ 896]  dependencies.toml.j2
 │       │   │       ├── [ 280]  development.toml.j2
 │       │   │       ├── [ 186]  features.toml.j2
 │       │   │       ├── [ 202]  package.toml.j2
 │       │   │       └── [2.0K]  tools.toml.j2
-│       │   ├── [ 352]  default
-│       │   │   ├── [  96]  .github
-│       │   │   │   └── [ 160]  workflows
+│       │   ├── [4.0K]  default
+│       │   │   ├── [4.0K]  .github
+│       │   │   │   └── [4.0K]  workflows
 │       │   │   │       ├── [2.8K]  push.yml.j2
 │       │   │   │       └── [1.4K]  release.yml.j2
 │       │   │   ├── [ 502]  .pre-commit-config.yaml.j2
 │       │   │   ├── [1.1K]  LICENSE.j2
 │       │   │   ├── [ 820]  README.md.j2
-│       │   │   ├── [  96]  dist
+│       │   │   ├── [4.0K]  dist
 │       │   │   │   └── [   1]  .gitkeep.j2
 │       │   │   ├── [3.5K]  hidden.gitignore.j2
-│       │   │   ├── [6.5K]  pyproject.toml.j2
-│       │   │   └── [  96]  tests
+│       │   │   ├── [ 18K]  pyproject.toml.j2
+│       │   │   └── [4.0K]  tests
 │       │   │       └── [ 173]  test_package.py.j2
-│       │   ├── [ 160]  package
+│       │   ├── [4.0K]  package
 │       │   │   ├── [ 426]  package.toml.j2
-│       │   │   └── [ 128]  src
-│       │   │       └── [  96]  __package_name__
+│       │   │   └── [4.0K]  src
+│       │   │       └── [4.0K]  __package_name__
 │       │   │           └── [1.8K]  __package_name__.py.j2
 │       │   ├── [ 854]  package.toml.j2
-│       │   ├── [ 160]  plugin
+│       │   ├── [4.0K]  plugin
 │       │   │   ├── [ 374]  README.md.j2
 │       │   │   ├── [ 355]  pyproject.toml.j2
-│       │   │   └── [  96]  src
-│       │   │       └── [  96]  __package_name__
+│       │   │   └── [4.0K]  src
+│       │   │       └── [4.0K]  __package_name__
 │       │   │           └── [ 130]  __init__.py.j2
 │       │   ├── [1.2K]  plugin.toml.j2
-│       │   ├── [ 160]  plugin_host
+│       │   ├── [4.0K]  plugin_host
 │       │   │   ├── [ 561]  README.md.j2
 │       │   │   ├── [ 308]  pyproject.toml.j2
-│       │   │   └── [  96]  src
+│       │   │   └── [4.0K]  src
 │       │   │       └── [2.1K]  __init__.py.j2
 │       │   └── [1.3K]  plugin_host.toml.j2
-│       └── [8.3K]  utils.py
-└── [ 128]  tests
-    └── [ 154]  test_twat_hatch.py
+│       └── [7.6K]  utils.py
+└── [4.0K]  tests
+    ├── [4.0K]  __pycache__
+    └── [ 157]  test_twat_hatch.py
 
-27 directories, 51 files
+27 directories, 50 files
 
-2025-03-05 12:14:36 - On branch main
-Your branch is up to date with 'origin/main'.
-
+2025-06-25 13:29:40 - HEAD detached from b10c237
 Changes not staged for commit:
   (use "git add <file>..." to update what will be committed)
   (use "git restore <file>..." to discard changes in working directory)
@@ -197,9 +193,7 @@ Changes not staged for commit:
 
 no changes added to commit (use "git add" and/or "git commit -a")
 
-2025-03-05 12:14:36 - On branch main
-Your branch is up to date with 'origin/main'.
-
+2025-06-25 13:29:40 - HEAD detached from b10c237
 Changes not staged for commit:
   (use "git add <file>..." to update what will be committed)
   (use "git restore <file>..." to discard changes in working directory)
@@ -208,17 +202,17 @@ Changes not staged for commit:
 
 no changes added to commit (use "git add" and/or "git commit -a")
 
-2025-03-05 12:14:36 - 
+2025-06-25 13:29:40 -
 === Environment Status ===
-2025-03-05 12:14:36 - Setting up virtual environment
-2025-03-05 12:14:38 - Virtual environment created and activated
-2025-03-05 12:14:38 - Installing package with all extras
-2025-03-05 12:14:38 - Setting up virtual environment
-2025-03-05 12:14:38 - Virtual environment created and activated
-2025-03-05 12:14:38 - Package installed successfully
-2025-03-05 12:14:38 - Running code quality checks
-2025-03-05 12:14:38 - >>> Running code fixes...
-2025-03-05 12:14:38 - src/twat_hatch/__main__.py:190:5: PLR0913 Too many arguments in function definition (13 > 5)
+2025-06-25 13:29:40 - Setting up virtual environment
+2025-06-25 13:29:40 - Virtual environment created and activated
+2025-06-25 13:29:40 - Installing package with all extras
+2025-06-25 13:29:40 - Setting up virtual environment
+2025-06-25 13:29:40 - Virtual environment created and activated
+2025-06-25 13:29:47 - Package installed successfully
+2025-06-25 13:29:47 - Running code quality checks
+2025-06-25 13:29:47 - >>> Running code fixes...
+2025-06-25 13:29:47 - src/twat_hatch/__main__.py:190:5: PLR0913 Too many arguments in function definition (13 > 5)
     |
 190 | def init(
     |     ^^^^ PLR0913
@@ -245,6 +239,26 @@ src/twat_hatch/__main__.py:199:5: A002 Function argument `license` is shadowing 
 201 |     use_mkdocs: bool | None = None,
     |
 
+src/twat_hatch/__main__.py:201:5: FBT001 Boolean-typed positional argument in function definition
+    |
+199 |     license: str | None = None,
+200 |     development_status: str | None = None,
+201 |     use_mkdocs: bool | None = None,
+    |     ^^^^^^^^^^ FBT001
+202 |     use_vcs: bool | None = None,
+203 |     plugin_host: str | None = None,
+    |
+
+src/twat_hatch/__main__.py:202:5: FBT001 Boolean-typed positional argument in function definition
+    |
+200 |     development_status: str | None = None,
+201 |     use_mkdocs: bool | None = None,
+202 |     use_vcs: bool | None = None,
+    |     ^^^^^^^ FBT001
+203 |     plugin_host: str | None = None,
+204 | ) -> None:
+    |
+
 src/twat_hatch/__main__.py:273:13: A001 Variable `license` is shadowing a Python builtin
     |
 271 |             max_ver = PyVer.parse(python_versions.get("max_python"))
@@ -255,11 +269,11 @@ src/twat_hatch/__main__.py:273:13: A001 Variable `license` is shadowing a Python
 275 |             features = prompts.get_features()
     |
 
-src/twat_hatch/__main__.py:317:35: A002 Function argument `type` is shadowing a Python builtin
+src/twat_hatch/__main__.py:316:35: A002 Function argument `type` is shadowing a Python builtin
     |
-317 | def config(command: str = "show", type: PackageType = "package") -> None:
+316 | def config(command: str = "show", type: PackageType = "package") -> None:
     |                                   ^^^^ A002
-318 |     """Show example configuration for a package type.
+317 |     """Show example configuration for a package type.
     |
 
 src/twat_hatch/config.py:64:9: C901 `generate_config` is too complex (11 > 10)
@@ -272,72 +286,32 @@ src/twat_hatch/config.py:64:9: C901 `generate_config` is too complex (11 > 10)
 66 |         package_type: PackageType,
    |
 
-src/twat_hatch/config.py:67:9: FBT001 Boolean-typed positional argument in function definition
-   |
-65 |         self,
-66 |         package_type: PackageType,
-67 |         interactive: bool = True,
-   |         ^^^^^^^^^^^ FBT001
-68 |         **kwargs: Any,
-69 |     ) -> str:
-   |
-
-src/twat_hatch/config.py:67:9: FBT002 Boolean default positional argument in function definition
-   |
-65 |         self,
-66 |         package_type: PackageType,
-67 |         interactive: bool = True,
-   |         ^^^^^^^^^^^ FBT002
-68 |         **kwargs: Any,
-69 |     ) -> str:
-   |
-
-src/twat_hatch/config.py:67:9: ARG002 Unused method argument: `interactive`
-   |
-65 |         self,
-66 |         package_type: PackageType,
-67 |         interactive: bool = True,
-   |         ^^^^^^^^^^^ ARG002
-68 |         **kwargs: Any,
-69 |     ) -> str:
-   |
-
-src/twat_hatch/config.py:140:9: FBT001 Boolean-typed positional argument in function definition
+src/twat_hatch/config.py:138:9: FBT001 Boolean-typed positional argument in function definition
     |
-138 |         package_type: PackageType,
-139 |         output_path: Path | str,
-140 |         interactive: bool = True,
+136 |         package_type: PackageType,
+137 |         output_path: Path | str,
+138 |         interactive: bool = True,
     |         ^^^^^^^^^^^ FBT001
-141 |         **kwargs: Any,
-142 |     ) -> None:
+139 |         **kwargs: Any,
+140 |     ) -> None:
     |
 
-src/twat_hatch/config.py:140:9: FBT002 Boolean default positional argument in function definition
+src/twat_hatch/config.py:138:9: FBT002 Boolean default positional argument in function definition
     |
-138 |         package_type: PackageType,
-139 |         output_path: Path | str,
-140 |         interactive: bool = True,
+136 |         package_type: PackageType,
+137 |         output_path: Path | str,
+138 |         interactive: bool = True,
     |         ^^^^^^^^^^^ FBT002
-141 |         **kwargs: Any,
-142 |     ) -> None:
+139 |         **kwargs: Any,
+140 |     ) -> None:
     |
 
-src/twat_hatch/hatch.py:40:47: A006 Lambda argument `format` is shadowing a Python builtin
+src/twat_hatch/hatch.py:40:56: DTZ005 `datetime.datetime.now()` called without a `tz` argument
    |
 38 |         # Add filters
 39 |         self.env.filters["split"] = lambda value, delimiter: value.split(delimiter)
-40 |         self.env.filters["strftime"] = lambda format: datetime.now().strftime(format)
-   |                                               ^^^^^^ A006
-41 |
-42 |     def render_template(self, template_path: str, context: dict[str, Any]) -> str:
-   |
-
-src/twat_hatch/hatch.py:40:55: DTZ005 `datetime.datetime.now()` called without a `tz` argument
-   |
-38 |         # Add filters
-39 |         self.env.filters["split"] = lambda value, delimiter: value.split(delimiter)
-40 |         self.env.filters["strftime"] = lambda format: datetime.now().strftime(format)
-   |                                                       ^^^^^^^^^^^^^^ DTZ005
+40 |         self.env.filters["strftime"] = lambda fmt_str: datetime.now().strftime(fmt_str)
+   |                                                        ^^^^^^^^^^^^^^ DTZ005
 41 |
 42 |     def render_template(self, template_path: str, context: dict[str, Any]) -> str:
    |
@@ -359,16 +333,6 @@ src/twat_hatch/hatch.py:238:34: FBT002 Boolean default positional argument in fu
 239 |         """Convert between package name formats.
     |
 
-src/twat_hatch/hatch.py:290:13: S603 `subprocess` call: check for execution of untrusted input
-    |
-288 |         """
-289 |         try:
-290 |             subprocess.run(
-    |             ^^^^^^^^^^^^^^ S603
-291 |                 ["git", "init"],
-292 |                 cwd=pkg_path,
-    |
-
 src/twat_hatch/hatch.py:291:17: S607 Starting a process with a partial executable path
     |
 289 |         try:
@@ -377,16 +341,6 @@ src/twat_hatch/hatch.py:291:17: S607 Starting a process with a partial executabl
     |                 ^^^^^^^^^^^^^^^ S607
 292 |                 cwd=pkg_path,
 293 |                 check=True,
-    |
-
-src/twat_hatch/hatch.py:299:13: S603 `subprocess` call: check for execution of untrusted input
-    |
-297 |             )
-298 |             # Rename default branch to 'main'
-299 |             subprocess.run(
-    |             ^^^^^^^^^^^^^^ S603
-300 |                 ["git", "branch", "-M", "main"],
-301 |                 cwd=pkg_path,
     |
 
 src/twat_hatch/hatch.py:300:17: S607 Starting a process with a partial executable path
@@ -399,170 +353,96 @@ src/twat_hatch/hatch.py:300:17: S607 Starting a process with a partial executabl
 302 |                 check=True,
     |
 
-src/twat_hatch/hatch.py:323:13: S603 `subprocess` call: check for execution of untrusted input
+src/twat_hatch/hatch.py:325:13: S603 `subprocess` call: check for execution of untrusted input
     |
-321 |         full_repo = f"{owner}/{name}"
-322 |         try:
-323 |             subprocess.run(
+323 |         full_repo = f"{owner}/{name}"
+324 |         try:
+325 |             subprocess.run(
     |             ^^^^^^^^^^^^^^ S603
-324 |                 [
-325 |                     "gh",
+326 |                 [
+327 |                     "gh",
     |
 
-src/twat_hatch/hatch.py:324:17: S607 Starting a process with a partial executable path
+src/twat_hatch/hatch.py:326:17: S607 Starting a process with a partial executable path
     |
-322 |           try:
-323 |               subprocess.run(
-324 | /                 [
-325 | |                     "gh",
-326 | |                     "repo",
-327 | |                     "create",
-328 | |                     full_repo,
-329 | |                     "--public",
-330 | |                     "--source",
-331 | |                     str(pkg_path),
-332 | |                     "--remote=origin",
-333 | |                     "--push",
-334 | |                 ],
+324 |           try:
+325 |               subprocess.run(
+326 | /                 [
+327 | |                     "gh",
+328 | |                     "repo",
+329 | |                     "create",
+330 | |                     full_repo,
+331 | |                     "--public",
+332 | |                     "--source",
+333 | |                     str(pkg_path),
+334 | |                     "--remote=origin",
+335 | |                     "--push",
+336 | |                 ],
     | |_________________^ S607
-335 |                   cwd=pkg_path,
-336 |                   check=True,
+337 |                   cwd=pkg_path,
+338 |                   check=True,
     |
 
-src/twat_hatch/hatch.py:456:17: S603 `subprocess` call: check for execution of untrusted input
+src/twat_hatch/hatch.py:459:21: S607 Starting a process with a partial executable path
     |
-454 |             # Add all files and make initial commit
-455 |             try:
-456 |                 subprocess.run(
-    |                 ^^^^^^^^^^^^^^ S603
-457 |                     ["git", "add", "."],
-458 |                     cwd=pkg_path,
-    |
-
-src/twat_hatch/hatch.py:457:21: S607 Starting a process with a partial executable path
-    |
-455 |             try:
-456 |                 subprocess.run(
-457 |                     ["git", "add", "."],
+457 |             try:
+458 |                 subprocess.run(
+459 |                     ["git", "add", "."],
     |                     ^^^^^^^^^^^^^^^^^^^ S607
-458 |                     cwd=pkg_path,
-459 |                     check=True,
+460 |                     cwd=pkg_path,
+461 |                     check=True,
     |
 
-src/twat_hatch/hatch.py:464:17: S603 `subprocess` call: check for execution of untrusted input
+src/twat_hatch/hatch.py:467:21: S607 Starting a process with a partial executable path
     |
-462 |                     shell=False,
-463 |                 )
-464 |                 subprocess.run(
-    |                 ^^^^^^^^^^^^^^ S603
-465 |                     ["git", "commit", "-m", "Initial commit"],
-466 |                     cwd=pkg_path,
-    |
-
-src/twat_hatch/hatch.py:465:21: S607 Starting a process with a partial executable path
-    |
-463 |                 )
-464 |                 subprocess.run(
-465 |                     ["git", "commit", "-m", "Initial commit"],
+465 |                 )
+466 |                 subprocess.run(
+467 |                     ["git", "commit", "-m", "Initial commit"],
     |                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ S607
-466 |                     cwd=pkg_path,
-467 |                     check=True,
+468 |                     cwd=pkg_path,
+469 |                     check=True,
     |
 
-src/twat_hatch/utils.py:71:9: C901 `parse` is too complex (13 > 10)
-   |
-70 |     @classmethod
-71 |     def parse(cls, version: str | tuple[int, ...] | Any | None = None) -> PyVer:
-   |         ^^^^^ C901
-72 |         """Parse a version from various formats into a PyVer instance.
-   |
+Found 20 errors (1 fixed, 19 remaining).
 
-src/twat_hatch/utils.py:242:17: B904 Within an `except` clause, raise exceptions with `raise ... from err` or `raise ... from None` to distinguish them from errors in exception handling
-    |
-240 |             except ValueError:
-241 |                 msg = 'Version string must be comma-separated integers (e.g. "3,10")'
-242 |                 raise ValueError(msg)
-    |                 ^^^^^^^^^^^^^^^^^^^^^ B904
-243 |
-244 |         msg = f"Unsupported version format: {version}"
-    |
+2025-06-25 13:29:47 - 2 files reformatted, 5 files left unchanged
 
-Found 27 errors.
-
-2025-03-05 12:14:39 - 7 files left unchanged
-
-2025-03-05 12:14:39 - >>>Running type checks...
-2025-03-05 12:14:51 - src/twat_hatch/hatch.py:68: error: Redundant cast to "list[str]"  [redundant-cast]
-src/twat_hatch/hatch.py:319: error: Item "None" of "PackageConfig | None" has no attribute "github_username"  [union-attr]
+2025-06-25 13:29:47 - >>>Running type checks...
+2025-06-25 13:29:49 - src/twat_hatch/config.py:149: error: Too many arguments for "generate_config" of "ConfigurationGenerator"  [call-arg]
 src/twat_hatch/__main__.py:18: error: Skipping analyzing "fire": module is installed, but missing library stubs or py.typed marker  [import-untyped]
 src/twat_hatch/__main__.py:18: note: See https://mypy.readthedocs.io/en/stable/running_mypy.html#missing-imports
-src/twat_hatch/__main__.py:357: error: Function is missing a type annotation  [no-untyped-def]
-tests/test_twat_hatch.py:4: error: Function is missing a return type annotation  [no-untyped-def]
-tests/test_twat_hatch.py:4: note: Use "-> None" if function does not return a value
-Found 5 errors in 3 files (checked 8 source files)
+Found 2 errors in 2 files (checked 8 source files)
 
-2025-03-05 12:14:51 - >>> Running tests...
-2025-03-05 12:14:53 - ============================= test session starts ==============================
-platform darwin -- Python 3.12.8, pytest-8.3.5, pluggy-1.5.0 -- /Users/adam/Developer/vcs/github.twardoch/pub/twat-packages/_good/twat/plugins/repos/twat_hatch/.venv/bin/python
+2025-06-25 13:29:49 - >>> Running tests...
+2025-06-25 13:29:51 - ============================= test session starts ==============================
+platform linux -- Python 3.12.11, pytest-8.4.1, pluggy-1.6.0 -- /app/.venv/bin/python
 cachedir: .pytest_cache
 benchmark: 5.1.0 (defaults: timer=time.perf_counter disable_gc=False min_rounds=5 min_time=0.000005 max_time=1.0 calibration_precision=10 warmup=False warmup_iterations=100000)
-rootdir: /Users/adam/Developer/vcs/github.twardoch/pub/twat-packages/_good/twat/plugins/repos/twat_hatch
+rootdir: /app
 configfile: pyproject.toml
-plugins: cov-6.0.0, benchmark-5.1.0, xdist-3.6.1
+plugins: cov-6.2.1, benchmark-5.1.0, xdist-3.7.0
 collecting ... collected 1 item
 
 tests/test_twat_hatch.py::test_version PASSED                            [100%]
 
-============================== 1 passed in 0.67s ===============================
+============================== 1 passed in 0.84s ===============================
 
-2025-03-05 12:14:53 - All checks completed
-2025-03-05 12:14:53 - 
+2025-06-25 13:29:51 - All checks completed
+2025-06-25 13:29:51 -
 === TODO.md ===
-2025-03-05 12:14:53 - # TODO
+2025-06-25 13:29:51 - # TODO: Streamlining `twat-hatch` Codebase (MVP v1.0)
 
+- [x] Analyze `cleanup.py` and `repomix` usage.
+- [x] Review `PyVer` in `src/twat_hatch/utils.py` and simplify its parsing logic.
+- [x] Examine `PackageConfig.from_toml` in `src/twat_hatch/hatch.py` for simplification opportunities.
+- [x] Simplify `.gitignore` file.
+- [x] Review CLI arguments in `src/twat_hatch/__main__.py`.
+- [x] Review comments in `pyproject.toml.j2` templates and simplify.
+- [x] Create `PLAN.md` with the detailed plan.
+- [x] Create `TODO.md` (this file).
+- [x] Update `CHANGELOG.md` and `VERSION.txt` to record all modifications made during this streamlining effort.
+- [ ] Perform a final review of all changes.
+- [ ] Run all checks (`ruff`, `mypy`, `pytest`) to ensure the codebase is clean and tests pass.
+- [ ] Submit the changes with a comprehensive commit message.
 
-2025-03-05 12:14:54 - 
-📦 Repomix v0.2.29
-
-No custom config found at repomix.config.json or global config at /Users/adam/.config/repomix/repomix.config.json.
-You can add a config file for additional settings. Please check https://github.com/yamadashy/repomix for more information.
-⠙ Collecting files...
-[2K[1A[2K[G⠹ Collecting files...
-[2K[1A[2K[G⠸ Running security check...
-[2K[1A[2K[G⠼ Running security check... (15/49) src/twat_hatch/themes/default/.github/workfl
-ows/release.yml.j2
-[2K[1A[2K[1A[2K[G⠴ Processing files...
-[2K[1A[2K[G⠦ Processing file... (37/49) src/twat_hatch/config.py
-[2K[1A[2K[G⠧ Calculating metrics...
-[2K[1A[2K[G⠇ Calculating metrics...
-[2K[1A[2K[G⠏ Calculating metrics...
-[2K[1A[2K[G⠋ Calculating metrics...
-[2K[1A[2K[G⠙ Calculating metrics... (2/49) .cursor/rules/cleanup.mdc
-[2K[1A[2K[G✔ Packing completed successfully!
-
-📈 Top 5 Files by Character Count and Token Count:
-──────────────────────────────────────────────────
-1.  pyproject.toml (8,427 chars, 2,400 tokens)
-2.  src/twat_hatch/hatch.py (7,876 chars, 1,693 tokens)
-3.  README.md (6,809 chars, 1,580 tokens)
-4.  src/twat_hatch/themes/default/pyproject.toml.j2 (6,692 chars, 1,858 tokens)
-5.  cleanup.py (5,904 chars, 1,316 tokens)
-
-🔎 Security Check:
-──────────────────
-✔ No suspicious files detected.
-
-📊 Pack Summary:
-────────────────
-  Total Files: 49 files
-  Total Chars: 94,077 chars
- Total Tokens: 24,705 tokens
-       Output: REPO_CONTENT.txt
-     Security: ✔ No suspicious files detected
-
-🎉 All Done!
-Your repository has been successfully packed.
-
-💡 Repomix is now available in your browser! Try it at https://repomix.com
-
-2025-03-05 12:14:54 - Repository content mixed into REPO_CONTENT.txt
+2025-06-25 13:29:51 - Failed to mix repository: [Errno 2] No such file or directory: 'repomix'

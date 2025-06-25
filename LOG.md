@@ -11,6 +11,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v2.7.6] - 2025-03-07
+
+### Changed
+- Streamlined `PyVer.parse()` logic in `src/twat_hatch/utils.py` for stricter and simpler Python version string parsing.
+- Simplified `.gitignore` to be more focused on Python projects, removing many irrelevant patterns.
+- Reviewed and refined comments in the `pyproject.toml.j2` template (`src/twat_hatch/themes/default/pyproject.toml.j2`) for clarity and conciseness, removing prescriptive versioning advice.
+
 ## [v1.7.5] - 2025-02-15
 
 ### Changed
@@ -115,6 +122,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Basic functionality
 - Project structure and core files
 
+[v2.7.6]: https://github.com/twardoch/twat-hatch/compare/v2.7.5...v2.7.6
 [v1.7.5]: https://github.com/twardoch/twat-hatch/compare/v1.7.3...v1.7.5
 [v1.7.3]: https://github.com/twardoch/twat-hatch/compare/v1.7.0...v1.7.3
 [v1.7.0]: https://github.com/twardoch/twat-hatch/compare/v1.6.2...v1.7.0

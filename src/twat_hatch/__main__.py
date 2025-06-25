@@ -280,7 +280,6 @@ def init(
         config_generator = ConfigurationGenerator()
         config = config_generator.generate_config(
             package_type=type,
-            interactive=False,  # We handle interactive mode here
             name=name,
             author_name=author_name,
             author_email=author_email,
@@ -327,7 +326,7 @@ def config(command: str = "show", type: PackageType = "package") -> None:
 
     try:
         generator = ConfigurationGenerator()
-        content = generator.generate_config(type, interactive=False)
+        content = generator.generate_config(type)
         console.print(Panel(content, title=f"Example {type} configuration"))
     except Exception as e:
         console.print(f"[red]Error showing configuration: {e!s}[/]")
@@ -354,7 +353,7 @@ def create(config_path: str | None = None) -> None:
 def main() -> None:
     """Main entry point."""
 
-    def display(lines, out):
+    def display(lines: list[str], out: Any) -> None:
         console.print(Group(*map(ansi_decoder.decode_line, lines)))
 
     fire.core.Display = display

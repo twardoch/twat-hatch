@@ -2,83 +2,82 @@
 description: File tree of the project
 globs: 
 ---
-[ 800]  .
-├── [  64]  .benchmarks
-├── [  96]  .cursor
-│   └── [ 224]  rules
+[4.0K]  .
+├── [4.0K]  .benchmarks
+├── [4.0K]  .cursor
+│   └── [4.0K]  rules
 │       ├── [ 821]  0project.mdc
 │       ├── [ 516]  cleanup.mdc
-│       ├── [3.7K]  filetree.mdc
+│       ├── [3.6K]  filetree.mdc
 │       └── [2.0K]  quality.mdc
-├── [  96]  .github
-│   └── [ 128]  workflows
+├── [4.0K]  .github
+│   └── [4.0K]  workflows
 │       ├── [2.7K]  push.yml
 │       └── [1.4K]  release.yml
-├── [3.5K]  .gitignore
+├── [1.4K]  .gitignore
 ├── [ 470]  .pre-commit-config.yaml
-├── [ 939]  CLEANUP.txt
 ├── [1.0K]  LICENSE
-├── [3.1K]  LOG.md
+├── [3.7K]  LOG.md
+├── [7.4K]  PLAN.md
 ├── [6.8K]  README.md
-├── [ 93K]  REPO_CONTENT.txt
-├── [   8]  TODO.md
+├── [ 849]  TODO.md
 ├── [   7]  VERSION.txt
 ├── [ 13K]  cleanup.py
-├── [ 160]  dist
-├── [8.2K]  pyproject.toml
-├── [ 128]  src
-│   └── [ 352]  twat_hatch
+├── [9.4K]  pyproject.toml
+├── [4.0K]  src
+│   └── [4.0K]  twat_hatch
 │       ├── [ 224]  __init__.py
 │       ├── [ 11K]  __main__.py
-│       ├── [5.0K]  config.py
+│       ├── [4.0K]  __pycache__
+│       ├── [4.9K]  config.py
 │       ├── [ 19K]  hatch.py
-│       ├── [ 448]  themes
+│       ├── [4.0K]  themes
 │       │   ├── [  46]  __init__.py
-│       │   ├── [  64]  _default
-│       │   ├── [ 160]  _shared
+│       │   ├── [4.0K]  _shared
 │       │   │   ├── [1.1K]  base.toml.j2
-│       │   │   └── [ 256]  snippets
+│       │   │   └── [4.0K]  snippets
 │       │   │       ├── [ 128]  author.toml.j2
 │       │   │       ├── [ 896]  dependencies.toml.j2
 │       │   │       ├── [ 280]  development.toml.j2
 │       │   │       ├── [ 186]  features.toml.j2
 │       │   │       ├── [ 202]  package.toml.j2
 │       │   │       └── [2.0K]  tools.toml.j2
-│       │   ├── [ 352]  default
-│       │   │   ├── [  96]  .github
-│       │   │   │   └── [ 160]  workflows
+│       │   ├── [4.0K]  default
+│       │   │   ├── [4.0K]  .github
+│       │   │   │   └── [4.0K]  workflows
 │       │   │   │       ├── [2.8K]  push.yml.j2
 │       │   │   │       └── [1.4K]  release.yml.j2
 │       │   │   ├── [ 502]  .pre-commit-config.yaml.j2
 │       │   │   ├── [1.1K]  LICENSE.j2
 │       │   │   ├── [ 820]  README.md.j2
-│       │   │   ├── [  96]  dist
+│       │   │   ├── [4.0K]  dist
 │       │   │   │   └── [   1]  .gitkeep.j2
 │       │   │   ├── [3.5K]  hidden.gitignore.j2
-│       │   │   ├── [6.5K]  pyproject.toml.j2
-│       │   │   └── [  96]  tests
+│       │   │   ├── [ 18K]  pyproject.toml.j2
+│       │   │   └── [4.0K]  tests
 │       │   │       └── [ 173]  test_package.py.j2
-│       │   ├── [ 160]  package
+│       │   ├── [4.0K]  package
 │       │   │   ├── [ 426]  package.toml.j2
-│       │   │   └── [ 128]  src
-│       │   │       └── [  96]  __package_name__
+│       │   │   └── [4.0K]  src
+│       │   │       └── [4.0K]  __package_name__
 │       │   │           └── [1.8K]  __package_name__.py.j2
 │       │   ├── [ 854]  package.toml.j2
-│       │   ├── [ 160]  plugin
+│       │   ├── [4.0K]  plugin
 │       │   │   ├── [ 374]  README.md.j2
 │       │   │   ├── [ 355]  pyproject.toml.j2
-│       │   │   └── [  96]  src
-│       │   │       └── [  96]  __package_name__
+│       │   │   └── [4.0K]  src
+│       │   │       └── [4.0K]  __package_name__
 │       │   │           └── [ 130]  __init__.py.j2
 │       │   ├── [1.2K]  plugin.toml.j2
-│       │   ├── [ 160]  plugin_host
+│       │   ├── [4.0K]  plugin_host
 │       │   │   ├── [ 561]  README.md.j2
 │       │   │   ├── [ 308]  pyproject.toml.j2
-│       │   │   └── [  96]  src
+│       │   │   └── [4.0K]  src
 │       │   │       └── [2.1K]  __init__.py.j2
 │       │   └── [1.3K]  plugin_host.toml.j2
-│       └── [8.3K]  utils.py
-└── [ 128]  tests
-    └── [ 154]  test_twat_hatch.py
+│       └── [7.6K]  utils.py
+└── [4.0K]  tests
+    ├── [4.0K]  __pycache__
+    └── [ 157]  test_twat_hatch.py
 
-27 directories, 51 files
+27 directories, 50 files
