@@ -249,6 +249,8 @@ exclude_lines = ["no cov", "if __name__ == .__main__.:", "if TYPE_CHECKING:"]
 #------------------------------------------------------------------------------
 # TESTING CONFIGURATION
 #------------------------------------------------------------------------------
+# Optional dependencies
+
 # Test environment configuration
 [tool.hatch.envs.test]
 dependencies = [".[test]"]
