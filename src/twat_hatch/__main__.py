@@ -15,7 +15,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
-import fire
+import fire  # type: ignore[import-untyped]
 from pydantic import ValidationError
 from rich.ansi import AnsiDecoder
 from rich.console import Console, Group
@@ -188,7 +188,7 @@ class ConfigurationPrompts:
 
 
 def init(
-    type: PackageType = "package",
+    package_type: PackageType = "package",
     output: str = "twat-hatch.toml",
     name: str | None = None,
     author_name: str | None = None,
@@ -196,8 +196,9 @@ def init(
     github_username: str | None = None,
     min_python: str | tuple[int, int] | None = None,
     max_python: str | tuple[int, int] | None = None,
-    license: str | None = None,
+    license_str: str | None = None,
     development_status: str | None = None,
+    *,  # Marks subsequent arguments as keyword-only
     use_mkdocs: bool | None = None,
     use_vcs: bool | None = None,
     plugin_host: str | None = None,
@@ -205,7 +206,7 @@ def init(
     """Initialize a new Python package or plugin.
 
     Args:
-        type: Type of package to create ("package", "plugin", or "plugin-host")
+        package_type: Type of package to create ("package", "plugin", or "plugin-host")
         output: Output path for configuration file
         name: Package name
         author_name: Author's name
@@ -246,7 +247,7 @@ def init(
                 "github_username",
                 "min_python",
                 "max_python",
-                "license",
+                "license_str",
                 "development_status",
                 "use_mkdocs",
                 "use_vcs",
@@ -259,8 +260,8 @@ def init(
         # If in interactive mode, gather values from prompts
         if interactive:
             prompts = ConfigurationPrompts()
-            name = prompts.get_package_name(type)
-            if type == "plugin":
+            name = prompts.get_package_name(package_type)
+            if package_type == "plugin":
                 plugin_host = prompts.get_plugin_host()
             author_info = prompts.get_author_info()
             author_name = author_info["author_name"]
@@ -270,23 +271,26 @@ def init(
             min_ver = PyVer.parse(python_versions["min_python"])
             max_ver = PyVer.parse(python_versions.get("max_python"))
             package_info = prompts.get_package_info()
-            license = package_info["license"]
+            license_val = package_info["license"]
             development_status = package_info["development_status"]
             features = prompts.get_features()
             use_mkdocs = features["use_mkdocs"]
             use_vcs = features["use_vcs"]
+        else:
+            # Use provided arguments if not interactive
+            license_val = license_str
 
         # Generate configuration
         config_generator = ConfigurationGenerator()
         config = config_generator.generate_config(
-            package_type=type,
+            package_type=package_type,
             name=name,
             author_name=author_name,
             author_email=author_email,
             github_username=github_username,
             min_python=str(min_ver),
             max_python=str(max_ver) if max_ver else None,
-            license=license,
+            license=license_val,
             development_status=development_status,
             use_mkdocs=use_mkdocs,
             use_vcs=use_vcs,
@@ -313,12 +317,12 @@ def init(
         sys.exit(1)
 
 
-def config(command: str = "show", type: PackageType = "package") -> None:
+def config(command: str = "show", package_type: PackageType = "package") -> None:
     """Show example configuration for a package type.
 
     Args:
         command: Command to execute (show)
-        type: Type of package to show config for
+        package_type: Type of package to show config for
     """
     if command != "show":
         console.print("[red]Invalid command. Use 'show'.[/]")
@@ -326,8 +330,8 @@ def config(command: str = "show", type: PackageType = "package") -> None:
 
     try:
         generator = ConfigurationGenerator()
-        content = generator.generate_config(type)
-        console.print(Panel(content, title=f"Example {type} configuration"))
+        content = generator.generate_config(package_type)
+        console.print(Panel(content, title=f"Example {package_type} configuration"))
     except Exception as e:
         console.print(f"[red]Error showing configuration: {e!s}[/]")
         sys.exit(1)

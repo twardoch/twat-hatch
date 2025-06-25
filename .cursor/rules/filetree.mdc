@@ -16,11 +16,12 @@ globs:
 │       └── [1.4K]  release.yml
 ├── [1.4K]  .gitignore
 ├── [ 470]  .pre-commit-config.yaml
+├── [1.6K]  CHANGELOG.md
 ├── [1.0K]  LICENSE
 ├── [3.7K]  LOG.md
 ├── [7.4K]  PLAN.md
 ├── [6.8K]  README.md
-├── [ 849]  TODO.md
+├── [1.0K]  TODO.md
 ├── [   7]  VERSION.txt
 ├── [ 13K]  cleanup.py
 ├── [9.4K]  pyproject.toml
@@ -29,7 +30,7 @@ globs:
 │       ├── [ 224]  __init__.py
 │       ├── [ 11K]  __main__.py
 │       ├── [4.0K]  __pycache__
-│       ├── [4.9K]  config.py
+│       ├── [4.8K]  config.py
 │       ├── [ 19K]  hatch.py
 │       ├── [4.0K]  themes
 │       │   ├── [  46]  __init__.py
@@ -78,6 +79,6 @@ globs:
 │       └── [7.6K]  utils.py
 └── [4.0K]  tests
     ├── [4.0K]  __pycache__
-    └── [ 157]  test_twat_hatch.py
+    └── [ 158]  test_twat_hatch.py
 
-27 directories, 50 files
+27 directories, 51 files
