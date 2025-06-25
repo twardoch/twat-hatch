@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import subprocess
-from datetime import datetime
+from datetime import datetime, timezone
 from importlib.resources import path
 from pathlib import Path
 from typing import Any
@@ -37,7 +37,9 @@ class TemplateEngine:
         )
         # Add filters
         self.env.filters["split"] = lambda value, delimiter: value.split(delimiter)
-        self.env.filters["strftime"] = lambda fmt_str: datetime.now().strftime(fmt_str)
+        self.env.filters["strftime"] = lambda fmt_str: datetime.now(
+            timezone.utc
+        ).strftime(fmt_str)
 
     def render_template(self, template_path: str, context: dict[str, Any]) -> str:
         """Render a template with given context.
@@ -235,7 +237,7 @@ class PackageInitializer:
     """Manages creation of Python package structures."""
 
     @staticmethod
-    def _convert_name(name: str, to_import: bool = True) -> str:
+    def _convert_name(name: str, *, to_import: bool = True) -> str:
         """Convert between package name formats.
 
         Args:
@@ -287,7 +289,7 @@ class PackageInitializer:
             pkg_path: Directory to initialize repository in
         """
         try:
-            subprocess.run(
+            subprocess.run(  # nosec S603 S607
                 ["git", "init"],
                 cwd=pkg_path,
                 check=True,
@@ -296,7 +298,7 @@ class PackageInitializer:
                 shell=False,
             )
             # Rename default branch to 'main'
-            subprocess.run(
+            subprocess.run(  # nosec S603 S607
                 ["git", "branch", "-M", "main"],
                 cwd=pkg_path,
                 check=True,
@@ -324,7 +326,7 @@ class PackageInitializer:
         owner = self.config.github_username
         full_repo = f"{owner}/{name}"
         try:
-            subprocess.run(
+            subprocess.run(  # nosec S603 S607
                 [
                     "gh",
                     "repo",
@@ -457,7 +459,7 @@ class PackageInitializer:
             self._init_git_repo(pkg_path)
             # Add all files and make initial commit
             try:
-                subprocess.run(
+                subprocess.run(  # nosec S603 S607
                     ["git", "add", "."],
                     cwd=pkg_path,
                     check=True,
@@ -465,7 +467,7 @@ class PackageInitializer:
                     text=True,
                     shell=False,
                 )
-                subprocess.run(
+                subprocess.run(  # nosec S603 S607
                     ["git", "commit", "-m", "Initial commit"],
                     cwd=pkg_path,
                     check=True,

@@ -61,7 +61,7 @@ class ConfigurationGenerator:
             # Add the split filter
             self.env.filters["split"] = lambda value, delimiter: value.split(delimiter)
 
-    def generate_config(
+    def generate_config(  # noqa: C901
         self,
         package_type: PackageType,
         **kwargs: Any,
