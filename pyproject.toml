@@ -249,22 +249,6 @@ exclude_lines = ["no cov", "if __name__ == .__main__.:", "if TYPE_CHECKING:"]
 #------------------------------------------------------------------------------
 # TESTING CONFIGURATION
 #------------------------------------------------------------------------------
-# Optional dependencies
-[project.optional-dependencies]
-test = [
-    "pytest>=8.3.4",
-    "pytest-cov>=6.0.0",
-    "pytest-xdist>=3.6.1", # For parallel test execution
-    "pytest-benchmark[histogram]>=5.1.0", # For performance testing
-]
-dev = ["pre-commit>=4.1.0", "ruff>=0.9.6", "mypy>=1.15.0"]
-all = [
-    "twat>=1.8.1",
-    "pydantic>=2.10.6",
-    "tomli>=2.0.0; python_version < '3.11'",
-    "jinja2>=3.1.5"
-]
-
 # Test environment configuration
 [tool.hatch.envs.test]
 dependencies = [".[test]"]

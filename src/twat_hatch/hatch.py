@@ -6,7 +6,7 @@ import subprocess
 from datetime import datetime
 from importlib.resources import path
 from pathlib import Path
-from typing import Any, cast
+from typing import Any
 
 import tomli
 from jinja2 import Environment, FileSystemLoader, select_autoescape
@@ -37,7 +37,7 @@ class TemplateEngine:
         )
         # Add filters
         self.env.filters["split"] = lambda value, delimiter: value.split(delimiter)
-        self.env.filters["strftime"] = lambda format: datetime.now().strftime(format)
+        self.env.filters["strftime"] = lambda fmt_str: datetime.now().strftime(fmt_str)
 
     def render_template(self, template_path: str, context: dict[str, Any]) -> str:
         """Render a template with given context.
@@ -65,7 +65,7 @@ class TemplateEngine:
             target_dir: Directory to write rendered files to
             context: Template variables
         """
-        theme_dir = Path(cast(list[str], self.loader.searchpath)[0]) / theme_name
+        theme_dir = Path(self.loader.searchpath[0]) / theme_name
         if not theme_dir.exists():
             msg = f"Theme '{theme_name}' not found"
             raise FileNotFoundError(msg)
@@ -315,9 +315,13 @@ class PackageInitializer:
             pkg_path: Package directory path.
             name: Package name from pyproject.toml (distribution name)
         """
-        owner = (
-            self.config.github_username
-        )  # Assumes non-empty if GitHub linking is desired
+        if not self.config or not self.config.github_username:
+            console.print(
+                "[yellow]Skipping GitHub repo creation: config or GitHub username missing.[/]"
+            )
+            return
+
+        owner = self.config.github_username
         full_repo = f"{owner}/{name}"
         try:
             subprocess.run(
