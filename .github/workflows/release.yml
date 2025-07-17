@@ -2,58 +2,135 @@ name: Release
 
 on:
   push:
-    tags: ["v*"]
+    tags:
+      - 'v*'
 
 permissions:
   contents: write
   id-token: write
 
 jobs:
-  release:
-    name: Release to PyPI
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: ["3.10", "3.11", "3.12"]
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install hatch
+
+    - name: Run tests
+      run: |
+        hatch run test
+
+  build:
+    needs: test
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: ["3.10", "3.11", "3.12"]
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install build dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install hatch
+
+    - name: Build package
+      run: |
+        hatch build
+
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: dist-${{ matrix.os }}-py${{ matrix.python-version }}-${{ github.sha }}
+        path: dist/
+        retention-days: 90
+
+  create-release:
+    needs: build
     runs-on: ubuntu-latest
     environment:
       name: pypi
       url: https://pypi.org/p/twat-hatch
+      
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.12"
 
-      - name: Install UV
-        uses: astral-sh/setup-uv@v5
-        with:
-          version: "latest"
-          python-version: "3.12"
-          enable-cache: true
+    - name: Install UV
+      uses: astral-sh/setup-uv@v5
+      with:
+        version: "latest"
+        python-version: "3.12"
+        enable-cache: true
 
-      - name: Install build tools
-        run: uv pip install build hatchling hatch-vcs
+    - name: Install build tools
+      run: uv pip install build hatchling hatch-vcs
 
-      - name: Build distributions
-        run: uv run python -m build --outdir dist
+    - name: Build distributions
+      run: uv run python -m build --outdir dist
 
-      - name: Verify distribution files
-        run: |
-          ls -la dist/
-          test -n "$(find dist -name '*.whl')" || (echo "Wheel file missing" && exit 1)
-          test -n "$(find dist -name '*.tar.gz')" || (echo "Source distribution missing" && exit 1)
+    - name: Verify distribution files
+      run: |
+        ls -la dist/
+        test -n "$(find dist -name '*.whl')" || (echo "Wheel file missing" && exit 1)
+        test -n "$(find dist -name '*.tar.gz')" || (echo "Source distribution missing" && exit 1)
 
-      - name: Publish to PyPI
-        uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          password: ${{ secrets.PYPI_TOKEN }}
+    - name: Download all artifacts
+      uses: actions/download-artifact@v4
+      with:
+        path: artifacts/
 
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v1
-        with:
-          files: dist/*
-          generate_release_notes: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+    - name: Extract version from tag
+      id: version
+      run: |
+        echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v2
+      with:
+        tag_name: ${{ github.ref }}
+        name: Release v${{ steps.version.outputs.VERSION }}
+        draft: false
+        prerelease: false
+        generate_release_notes: true
+        files: |
+          dist/*
+          artifacts/*/dist/*
+
+    - name: Publish to PyPI
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        print-hash: true
+        verify-metadata: true
