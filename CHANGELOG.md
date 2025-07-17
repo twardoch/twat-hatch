@@ -7,6 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **CI/CD**: Complete GitHub Actions workflow for testing, building, and releasing
+- **Scripts**: Local development scripts for build, test, and release management
+- **Testing**: Comprehensive test suite with multiplatform support
+- **Security**: Automated security scanning with bandit and safety
+- **Dependencies**: Automated dependency update checking
+- **Installation**: Universal installation script and comprehensive installation guide
+- **Packaging**: Improved build configuration for multiple distribution formats
+- **Documentation**: Enhanced installation and development documentation
+
+### Changed
+- **Versioning**: Updated to use `guess-next-dev` version scheme for better semver support
+- **Build**: Enhanced build configuration with proper source distribution includes/excludes
+- **Testing**: Expanded test coverage for all major components
+- **CI**: Multiplatform testing on Ubuntu, Windows, and macOS with Python 3.10-3.12
+
+### Fixed
+- **Versioning**: Improved git-tag-based semversioning with fallback version
+- **Build**: Fixed package metadata and build artifact generation
+- **Security**: Added security scanning and vulnerability checks
+
 ## [v2.7.6] - 2025-03-07
 
 ### Changed
