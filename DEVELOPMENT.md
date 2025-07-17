@@ -58,24 +58,36 @@ This document provides a comprehensive guide for developing, testing, and releas
 
 ## GitHub Actions Workflows
 
-### `.github/workflows/test.yml`
+> **Note**: The GitHub Actions workflow files need to be created manually due to repository permissions. The following workflows are recommended:
+
+### `.github/workflows/test.yml` (Manual Setup Required)
 - Runs on push/PR to main/develop branches
 - Tests on Ubuntu, Windows, macOS
 - Python 3.10, 3.11, 3.12 matrix
 - Includes security scanning
 - Uploads coverage reports
 
-### `.github/workflows/release.yml`
+### `.github/workflows/release.yml` (Manual Setup Required)
 - Triggers on git tags (v*)
 - Multiplatform builds
 - Automated PyPI publishing
 - GitHub release creation
 - Binary artifact generation
 
-### `.github/workflows/dependencies.yml`
+### `.github/workflows/dependencies.yml` (Manual Setup Required)
 - Weekly dependency security scans
 - Automated dependency update notifications
 - Security vulnerability checks
+
+### Setting up GitHub Actions
+
+1. Create `.github/workflows/` directory in your repository
+2. Add the workflow files as described in the original implementation
+3. Configure required secrets in GitHub repository settings:
+   - `PYPI_TOKEN` - For PyPI publishing
+   - `CODECOV_TOKEN` - For coverage reporting (optional)
+
+The workflow configurations are designed to work with the existing scripts and build system.
 
 ## Versioning Strategy
 
