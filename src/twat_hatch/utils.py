@@ -93,12 +93,8 @@ class PyVer:
         if isinstance(version, tuple) or hasattr(version, "major"):
             try:
                 major = int(getattr(version, "major", version[0]))
-                minor = int(
-                    getattr(version, "minor", version[1] if len(version) > 1 else 0)
-                )
-                micro = int(
-                    getattr(version, "micro", version[2] if len(version) > 2 else 0)
-                )
+                minor = int(getattr(version, "minor", version[1] if len(version) > 1 else 0))
+                micro = int(getattr(version, "micro", version[2] if len(version) > 2 else 0))
                 return cls(major=major, minor=minor, micro=micro)
             except (IndexError, AttributeError, ValueError) as e:
                 msg = f"Invalid version tuple/object: {version}"
@@ -147,9 +143,7 @@ class PyVer:
         return cls.parse(sys.version_info)
 
     @classmethod
-    def get_supported_versions(
-        cls, min_ver: PyVer, max_ver: PyVer | None = None
-    ) -> list[str]:
+    def get_supported_versions(cls, min_ver: PyVer, max_ver: PyVer | None = None) -> list[str]:
         """Get list of supported Python version classifiers.
 
         Args:
@@ -166,8 +160,7 @@ class PyVer:
             raise ValueError(msg)
 
         return [
-            f"Programming Language :: Python :: {min_ver.major}.{i:02d}"
-            for i in range(min_ver.minor, max_minor + 1)
+            f"Programming Language :: Python :: {min_ver.major}.{i:02d}" for i in range(min_ver.minor, max_minor + 1)
         ]
 
     def requires_python(self, max_ver: PyVer | None = None) -> str:
@@ -185,9 +178,7 @@ class PyVer:
         return requires
 
     @classmethod
-    def from_cli_input(
-        cls, version: str | tuple[int, ...] | Any | None = None
-    ) -> PyVer:
+    def from_cli_input(cls, version: str | tuple[int, ...] | Any | None = None) -> PyVer:
         """Parse Python version from command-line input.
 
         Args:
@@ -206,10 +197,7 @@ class PyVer:
             return cls(major=3, minor=10)
 
         if isinstance(version, float):
-            msg = (
-                "Python version must be specified as comma-separated integers. "
-                'Use: "3,10" NOT "3.10"'
-            )
+            msg = "Python version must be specified as comma-separated integers. " 'Use: "3,10" NOT "3.10"'
             raise ValueError(msg)
 
         if isinstance(version, tuple):

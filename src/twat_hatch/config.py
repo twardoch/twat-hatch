@@ -61,7 +61,7 @@ class ConfigurationGenerator:
             # Add the split filter
             self.env.filters["split"] = lambda value, delimiter: value.split(delimiter)
 
-    def generate_config(  # noqa: C901
+    def generate_config(
         self,
         package_type: PackageType,
         **kwargs: Any,
@@ -111,11 +111,7 @@ class ConfigurationGenerator:
 
         # Parse Python versions
         min_ver = PyVer.parse(context.get("min_python")) or PyVer(3, 10)
-        max_ver = (
-            PyVer.parse(context.get("max_python"))
-            if context.get("max_python")
-            else None
-        )
+        max_ver = PyVer.parse(context.get("max_python")) if context.get("max_python") else None
 
         # Update context with version info
         context["min_python"] = str(min_ver)

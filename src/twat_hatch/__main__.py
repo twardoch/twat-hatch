@@ -228,9 +228,7 @@ def init(
         # Parse Python versions using PyVer
         try:
             min_ver = PyVer.from_cli_input(min_python)
-            max_ver = (
-                PyVer.from_cli_input(max_python) if max_python is not None else None
-            )
+            max_ver = PyVer.from_cli_input(max_python) if max_python is not None else None
         except ValueError as e:
             console.print(f"[red]Error: {e}[/]")
             sys.exit(1)

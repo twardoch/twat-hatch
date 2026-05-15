@@ -37,9 +37,7 @@ class TemplateEngine:
         )
         # Add filters
         self.env.filters["split"] = lambda value, delimiter: value.split(delimiter)
-        self.env.filters["strftime"] = lambda fmt_str: datetime.now(
-            timezone.utc
-        ).strftime(fmt_str)
+        self.env.filters["strftime"] = lambda fmt_str: datetime.now(timezone.utc).strftime(fmt_str)
 
     def render_template(self, template_path: str, context: dict[str, Any]) -> str:
         """Render a template with given context.
@@ -57,9 +55,7 @@ class TemplateEngine:
         template = self.env.get_template(template_path)
         return template.render(**context)
 
-    def apply_theme(
-        self, theme_name: str, target_dir: Path, context: dict[str, Any]
-    ) -> None:
+    def apply_theme(self, theme_name: str, target_dir: Path, context: dict[str, Any]) -> None:
         """Apply a theme to target directory.
 
         Args:
@@ -91,9 +87,7 @@ class TemplateEngine:
             output_path.parent.mkdir(parents=True, exist_ok=True)
 
             # Render and write template
-            content = self.render_template(
-                f"{theme_name}/{template_file.relative_to(theme_dir)}", context
-            )
+            content = self.render_template(f"{theme_name}/{template_file.relative_to(theme_dir)}", context)
             output_path.write_text(content, encoding="utf-8")
             console.print(f"Created: [cyan]{output_path}[/]")
 
@@ -103,9 +97,7 @@ class PackageConfig(BaseModel):
 
     # Package configuration
     packages: list[str] = Field(description="List of packages to initialize")
-    plugin_host: str | None = Field(
-        None, description="Optional plugin host package name"
-    )
+    plugin_host: str | None = Field(None, description="Optional plugin host package name")
     output_dir: Path | None = Field(None, description="Where to create packages")
 
     # Package metadata
@@ -113,37 +105,23 @@ class PackageConfig(BaseModel):
     author_email: str = Field(..., description="Email of the package author")
     github_username: str = Field(..., description="GitHub username")
     min_python: str = Field(..., description="Minimum Python version required")
-    max_python: str | None = Field(
-        None, description="Maximum Python version supported (optional)"
-    )
+    max_python: str | None = Field(None, description="Maximum Python version supported (optional)")
     license: str = Field(..., description="Package license")
     development_status: str = Field(..., description="Package development status")
 
     # Dependencies
-    dependencies: list[str] = Field(
-        default_factory=list, description="Regular package dependencies"
-    )
-    plugin_dependencies: list[str] = Field(
-        default_factory=list, description="Additional dependencies for plugins"
-    )
-    dev_dependencies: list[str] = Field(
-        default_factory=list, description="Development dependencies"
-    )
+    dependencies: list[str] = Field(default_factory=list, description="Regular package dependencies")
+    plugin_dependencies: list[str] = Field(default_factory=list, description="Additional dependencies for plugins")
+    dev_dependencies: list[str] = Field(default_factory=list, description="Development dependencies")
 
     # Tool configurations
     ruff_config: dict[str, Any] = Field(default_factory=dict)
     mypy_config: dict[str, Any] = Field(default_factory=dict)
 
     # Features
-    use_mkdocs: bool = Field(
-        default=False, description="Whether to use MkDocs for documentation"
-    )
-    use_semver: bool = Field(
-        default=False, description="Whether to use semantic versioning"
-    )
-    use_vcs: bool = Field(
-        default=False, description="Whether to initialize version control"
-    )
+    use_mkdocs: bool = Field(default=False, description="Whether to use MkDocs for documentation")
+    use_semver: bool = Field(default=False, description="Whether to use semantic versioning")
+    use_vcs: bool = Field(default=False, description="Whether to initialize version control")
 
     @property
     def python_version_info(self) -> dict[str, Any]:
@@ -202,11 +180,7 @@ class PackageConfig(BaseModel):
 
         # Parse Python versions
         min_ver = PyVer.parse(package_data.get("min_python")) or PyVer(3, 10)
-        max_ver = (
-            PyVer.parse(package_data.get("max_python"))
-            if package_data.get("max_python")
-            else None
-        )
+        max_ver = PyVer.parse(package_data.get("max_python")) if package_data.get("max_python") else None
 
         # Combine all data into a single dict matching model structure
         config_dict = {
@@ -318,9 +292,7 @@ class PackageInitializer:
             name: Package name from pyproject.toml (distribution name)
         """
         if not self.config or not self.config.github_username:
-            console.print(
-                "[yellow]Skipping GitHub repo creation: config or GitHub username missing.[/]"
-            )
+            console.print("[yellow]Skipping GitHub repo creation: config or GitHub username missing.[/]")
             return
 
         owner = self.config.github_username

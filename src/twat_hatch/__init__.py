@@ -1,6 +1,6 @@
 """Package initialization functionality for twat."""
 
-from .__version__ import __version__  # noqa: F401
+from .__version__ import __version__
 
 from twat_hatch.hatch import PackageInitializer
 
