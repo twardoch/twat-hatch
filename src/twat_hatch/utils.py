@@ -167,15 +167,43 @@ class PyVer:
         """Get requires-python string.
 
         Args:
-            max_ver: Maximum Python version or None
+            max_ver: Maximum Python version (inclusive) or None
 
         Returns:
-            requires-python string (e.g. ">=3.10" or ">=3.10,<3.12")
+            requires-python string (e.g. ">=3.10" or ">=3.10, <3.13")
+
+        Note:
+            When max_ver is provided the upper bound is exclusive and set to
+            max_ver.minor + 1 so that the constraint reads as
+            "at least min_ver, up through max_ver".
         """
         requires = f">={self}"
         if max_ver:
-            requires += f",<{max_ver}"
+            next_minor = max_ver.minor + 1
+            requires += f", <{max_ver.major}.{next_minor:02d}"
         return requires
+
+    @property
+    def version(self) -> tuple[int, int]:
+        """Get version as a (major, minor) tuple."""
+        return (self.major, self.minor)
+
+    @property
+    def version_str(self) -> str:
+        """Get version as a dot-separated string (e.g. '3.10')."""
+        return str(self)
+
+    def classifiers(self, max_ver: PyVer | None = None) -> list[str]:
+        """Get Python version classifier strings for this version (range).
+
+        Args:
+            max_ver: Maximum Python version (inclusive) or None
+
+        Returns:
+            List of PyPI classifier strings, e.g.
+            ["Programming Language :: Python :: 3.10", ...]
+        """
+        return PyVer.get_supported_versions(self, max_ver)
 
     @classmethod
     def from_cli_input(cls, version: str | tuple[int, ...] | Any | None = None) -> PyVer:

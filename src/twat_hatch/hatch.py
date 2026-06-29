@@ -4,11 +4,13 @@ from __future__ import annotations
 
 import subprocess
 from datetime import datetime, timezone
-from importlib.resources import path
 from pathlib import Path
 from typing import Any
 
-import tomli
+try:
+    import tomllib
+except ImportError:
+    import tomli as tomllib  # type: ignore[no-redef]
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from pydantic import BaseModel, Field
 from rich.console import Console
@@ -167,7 +169,7 @@ class PackageConfig(BaseModel):
             msg = f"Missing config file: {config_file}"
             raise FileNotFoundError(msg)
 
-        data = tomli.loads(config_file.read_text())
+        data = tomllib.loads(config_file.read_text())
 
         # Extract sections
         project_data = data.get("project", {})
@@ -252,9 +254,9 @@ class PackageInitializer:
 
         self.out_dir = Path(out_dir) if out_dir else self.base_dir
 
-        # Initialize template engine
-        with path("twat_hatch.themes", "") as themes_dir:
-            self.template_engine = TemplateEngine(Path(themes_dir))
+        # Initialize template engine using the package's own themes directory
+        themes_dir = Path(__file__).parent / "themes"
+        self.template_engine = TemplateEngine(themes_dir)
 
     def _init_git_repo(self, pkg_path: Path) -> None:
         """Initialize Git repository in target directory with 'main' branch.

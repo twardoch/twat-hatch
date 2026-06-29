@@ -1,0 +1,61 @@
+site_name: twat-hatch
+site_description: Hatch build-system utilities and project scaffolding for the twat ecosystem
+site_url: https://twardoch.github.io/twat-hatch/
+repo_url: https://github.com/twardoch/twat-hatch
+repo_name: twardoch/twat-hatch
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - search.highlight
+    - content.code.copy
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            show_source: true
+            show_root_heading: true
+            docstring_style: google
+
+nav:
+  - Home: index.md
+  - Usage:
+    - Quick Start: usage/quickstart.md
+    - Configuration: usage/configuration.md
+    - Themes: usage/themes.md
+  - API Reference:
+    - PackageInitializer: api/hatch.md
+    - ConfigurationGenerator: api/config.md
+    - PyVer: api/utils.md
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.tabbed:
+      alternate_style: true
+  - tables
+  - toc:
+      permalink: true

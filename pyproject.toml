@@ -323,6 +323,7 @@ testpaths = ["tests"]
 python_files = ["test_*.py"]
 filterwarnings = ["ignore::DeprecationWarning", "ignore::UserWarning"]
 asyncio_mode = "auto"
+pythonpath = ["src"]
 
 # Pytest-benchmark configuration
 [tool.pytest-benchmark]

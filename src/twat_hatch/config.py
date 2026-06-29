@@ -4,7 +4,6 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from importlib.resources import path
 from pathlib import Path
 from typing import Any, Literal
 
@@ -48,18 +47,18 @@ class ConfigurationGenerator:
 
     def __init__(self) -> None:
         """Initialize generator with template engine."""
-        with path("twat_hatch.themes", "") as themes_dir:
-            self.loader = FileSystemLoader(str(themes_dir), followlinks=True)
-            self.env = Environment(
-                loader=self.loader,
-                autoescape=select_autoescape(),
-                trim_blocks=True,
-                lstrip_blocks=True,
-                keep_trailing_newline=True,
-                auto_reload=True,
-            )
-            # Add the split filter
-            self.env.filters["split"] = lambda value, delimiter: value.split(delimiter)
+        themes_dir = Path(__file__).parent / "themes"
+        self.loader = FileSystemLoader(str(themes_dir), followlinks=True)
+        self.env = Environment(
+            loader=self.loader,
+            autoescape=select_autoescape(),
+            trim_blocks=True,
+            lstrip_blocks=True,
+            keep_trailing_newline=True,
+            auto_reload=True,
+        )
+        # Add the split filter
+        self.env.filters["split"] = lambda value, delimiter: value.split(delimiter)
 
     def generate_config(
         self,

@@ -8,9 +8,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Docs**: MkDocs Material site (`mkdocs.yml` + `docs/`) explaining scaffolding
+  workflow, configuration reference, theme system, and auto-generated API docs
+- **Types**: `py.typed` PEP 561 marker so downstream packages see fully typed stubs
+- **PyVer API**: `.version` property (returns `(major, minor)` tuple),
+  `.version_str` property (returns `"3.10"` string), and `.classifiers(max_ver)`
+  instance method on `PyVer` for ergonomic version handling
 - **CI/CD**: Complete GitHub Actions workflow for testing, building, and releasing
 - **Scripts**: Local development scripts for build, test, and release management
-- **Testing**: Comprehensive test suite with multiplatform support
+- **Testing**: Comprehensive test suite with multiplatform support; added
+  `pythonpath = ["src"]` to pytest config so the local source tree is always
+  preferred over any installed wheel during development
 - **Security**: Automated security scanning with bandit and safety
 - **Dependencies**: Automated dependency update checking
 - **Installation**: Universal installation script and comprehensive installation guide
@@ -18,9 +26,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Documentation**: Enhanced installation and development documentation
 
 ### Changed
+- **`requires_python(max_ver)`**: now returns `">=3.10, <3.13"` style strings
+  (space after comma; upper bound is `max_ver.minor + 1` so `max_ver` is
+  inclusive) instead of the previous `">=3.10,<3.12"` form
+- **`importlib.resources`**: replaced deprecated `importlib.resources.path()`
+  calls in `hatch.py` and `config.py` with `Path(__file__).parent / "themes"`,
+  fixing compatibility with Python 3.13
+- **`tomli` import**: now uses stdlib `tomllib` on Python 3.11 + and falls back
+  to the `tomli` package on older versions; no runtime behaviour change
 - **Versioning**: Updated to use `guess-next-dev` version scheme for better semver support
 - **Build**: Enhanced build configuration with proper source distribution includes/excludes
-- **Testing**: Expanded test coverage for all major components
+- **Testing**: Expanded test coverage for all major components; tests updated to
+  use the actual `PyVer` dataclass constructor (`PyVer(3, 10)`) and `PyVer.parse()`
+  rather than passing strings directly to the constructor
 - **CI**: Multiplatform testing on Ubuntu, Windows, and macOS with Python 3.10-3.12
 
 ### Fixed
